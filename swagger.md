@@ -21,9 +21,10 @@ Valida al usuario que quiere ingresar a la app
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Se realizo la request con exito! | object |
-| 400 | Request Invalida! | object |
+| 404 | Request Invalida! | object |
+| 500 | Fallo el server | object |
 
-### /registro
+### /signUp
 
 #### POST
 ##### Summary:
@@ -41,7 +42,7 @@ Registra a un usuario nuevo o notifica que ya existe
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Request Exitoso! | object |
-| 400 | Request Invalida! | object |
+| 500 | Request Invalida! | object |
 
 ### /logFacebook
 
@@ -63,7 +64,7 @@ Envia el token de facebook del usuario que se logueo.
 | 200 | Se realizo la request con exito! | object |
 | 400 | Request Invalida! | object |
 
-### /modificarPerfil
+### /profile
 
 #### PUT
 ##### Summary:
@@ -75,6 +76,7 @@ Envia el token del usuario que quiere modificar los datos del perfil y los datos
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | usuario | body |  | No | [usuario_1](#usuario_1) |
+|  | body |  | Yes | [token](#token) |
 
 ##### Responses
 
@@ -83,7 +85,7 @@ Envia el token del usuario que quiere modificar los datos del perfil y los datos
 | 200 | Request Exitoso! | object |
 | 500 | Fallo el servidor | object |
 
-### /consultarPerfil/{email}
+### /profile/:email
 
 #### GET
 ##### Summary:
@@ -112,7 +114,7 @@ Se muestra el perfil del usuario al cual le corresponde el email del path (poner
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
 | email | string | el mail del usuario | Yes |
-| contraseña | string | la contraseña del usuario | Yes |
+| psw | string | la contraseña del usuario | Yes |
 
 #### usuario_1
 
@@ -120,7 +122,7 @@ Se muestra el perfil del usuario al cual le corresponde el email del path (poner
 | ---- | ---- | ----------- | -------- |
 | token | string | el token que el server le asigno al hacer login | Yes |
 | name | string | nombre nuevo del usuario | No |
-| apodo | string | nickname nuevo del usuario | No |
+| nickname | string | nickname nuevo del usuario | No |
 | email | string | email nuevo del usuario | No |
 | photo | string | url de la nueva foto del usuario | No |
 
@@ -128,7 +130,7 @@ Se muestra el perfil del usuario al cual le corresponde el email del path (poner
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| resultado | integer | Indica con un numero si fue registro exitoso o si el usuario ya existe en el sistema | No |
+| result | integer | Indica con un numero si fue registro exitoso o si el usuario ya existe en el sistema | No |
 
 #### inline_response_200
 
@@ -136,8 +138,8 @@ Se muestra el perfil del usuario al cual le corresponde el email del path (poner
 | ---- | ---- | ----------- | -------- |
 | valido | integer | Indica con un numero si las credenciales son validas o si el usuario o password son incorrectas | No |
 | token | string |  | No |
-| nombre | string |  | No |
-| apodo | string |  | No |
+| name | string |  | No |
+| nickname | string |  | No |
 | email | string |  | No |
 
 #### inline_response_200_2
@@ -150,19 +152,19 @@ Se muestra el perfil del usuario al cual le corresponde el email del path (poner
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| nombre | string | nombre del usuario | Yes |
-| apodo | string | nickname del usuario | Yes |
+| name | string | nombre del usuario | Yes |
+| nickname | string | nickname del usuario | Yes |
 | email | string | email del usuario | Yes |
-| contraseña | string | contraseña del usuario | Yes |
+| psw | string | contraseña del usuario | Yes |
 
 #### inline_response_200_3
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| nombre | string | nombre del usuario consultado | No |
-| apodo | string | nickname del usuario consultado | No |
+| name | string | nombre del usuario consultado | No |
+| nickname | string | apodo del usuario consultado | No |
 | email | string | email del usuario consultado | No |
-| foto | string | url de la foto del usuario consultado | No |
+| photo | string | url de la foto del usuario consultado | No |
 
 #### inline_response_500
 

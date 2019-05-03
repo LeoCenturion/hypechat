@@ -82,7 +82,7 @@ Se muestran los datos (sin pws y token) del usuario al cual le corresponde el em
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Request Exitoso! | [user](#user) |
+| 200 | Request Exitoso! | [userProfile](#userprofile) |
 | 400 | email del path no existe. | [Error](#error) |
 | 500 | Fallo el servidor | [Error](#error) |
 
@@ -97,7 +97,7 @@ updates information fields (with exception of the token), of the user identified
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| user | body |  | No | [user](#user) |
+| userProfile | body |  | No | [user](#user) |
 
 ##### Responses
 
@@ -161,6 +161,15 @@ updates password of the user identified by the token, provided in the body.
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
 | token | string | user token asigned by facebook api | Yes |
+
+#### userProfile
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| name | string | user name | No |
+| nickname | string | user nickname | No |
+| email | string | null | No |
+| photo | string | url de la nueva foto del usuario | No |
 
 #### Error
 

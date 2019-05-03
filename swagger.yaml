@@ -86,7 +86,7 @@ paths:
         200:
           description: Request Exitoso!
           schema:
-            $ref: '#/definitions/user'
+            $ref: '#/definitions/userProfile'
         400:
           description: email del path no existe.
           schema:
@@ -101,7 +101,7 @@ paths:
       summary: updates information fields (with exception of the token), of the user identified by the token, provided in the body.
       parameters:
       - in: body
-        name: user
+        name: userProfile
         required: false
         schema:
           $ref: '#/definitions/user'
@@ -197,6 +197,21 @@ definitions:
         type: string
         example: aB12874gk12sh37901nnlid2
         description: user token asigned by facebook api
+  userProfile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: user name
+      nickname:
+        type: string
+        description: user nickname
+      email:
+        type: string
+        description: 
+      photo:
+        type: string
+        description: url de la nueva foto del usuario
   Error:
     properties:
       code:

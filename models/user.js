@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
 	email:{type:String, unique:true,lowercase:true, required: true},
-	name: String,
+	name: {type:String, default:''},
 	psw: {type:String, default:''},//false para que cada vez que nos pidan al usuario no se mande la contraseña
-	photo: String, //guardamos la url de la imagen
+	photo: {type:String, default:''}, //guardamos la url de la imagen
 	nickname: {type:String, default:''},
 	token: String
 	//signupDate: {type: Date, default: Date.now()},

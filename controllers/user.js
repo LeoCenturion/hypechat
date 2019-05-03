@@ -122,7 +122,8 @@ function getUserProfile(req, res) {
 			return res.status(400).send({message: 'El usuario solicitado no existe'})}
 
 		logger.info(`getUserProfile - Se devolvió el perfil del usuario ${user.email}`)
-		return res.status(200).send({ name: user.name,
+		return res.status(200).send({ 
+			name: user.name,
 			nickname: user.nickname,
 			email: user.email,
 			photo: user.photo
@@ -143,6 +144,17 @@ function updateUser(req, res){
 	})
 }
 
+function getToken(req, res){
+	User.findOne({email: req.body.email}, (err, user) =>{
+		if(err) {
+			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})}
+		if(!user) {
+			return res.status(400).send({message: 'El usuario solicitado no existe'})}
+
+		return res.status(200).send({token: user.token})
+	})
+}
+
 module.exports={
 	getUser,
 	getUsers,
@@ -152,5 +164,6 @@ module.exports={
 	signUp,
 	logIn,
 	getUserProfile,
-	updateUser
+	updateUser,
+	getToken
 }

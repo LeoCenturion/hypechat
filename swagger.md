@@ -14,83 +14,64 @@ Valida al usuario que quiere ingresar a la app
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| datos | body |  | No | [datos](#datos) |
+| loginInfo | body |  | Yes | [loginCredentials](#logincredentials) |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
-| 404 | Request Invalida! | object |
-| 500 | Fallo el server | object |
+| 200 | Se realizo la request con exito! | [user](#user) |
+| 404 | Bad login information | [Error](#error) |
+| 500 | Server error | [Error](#error) |
 
 ### /signUp
 
 #### POST
 ##### Summary:
 
-Registra a un usuario nuevo o notifica que ya existe
+Receives user information through the body and registers it as a new user if it doesn't already exists.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| usuario | body |  | No | [usuario](#usuario) |
+| userSignUpData | body |  | Yes | [signUpCredentials](#signupcredentials) |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Request Exitoso! | object |
-| 500 | Request Invalida! | object |
+| 200 | Succesful request | [user](#user) |
+| 500 | Server error | [Error](#error) |
 
-### /logFacebook
+### /loginFacebook
 
 #### POST
 ##### Summary:
 
-Envia el token de facebook del usuario que se logueo.
+sends user's facebook token for login.
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| token | body |  | No | [token](#token) |
+| facebookToken | body |  | Yes | [facebookLoginCredentials](#facebooklogincredentials) |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
-| 400 | Request Invalida! | object |
+| 200 | Se realizo la request con exito! | [user](#user) |
+| 400 | Bad login information | [Error](#error) |
+| 500 | Server error | [Error](#error) |
 
-### /profile
 
-#### PUT
-##### Summary:
-
-Envia el token del usuario que quiere modificar los datos del perfil y los datos que quiere modificar.
-
-##### Parameters
-
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| usuario | body |  | No | [usuario_1](#usuario_1) |
-|  | body |  | Yes | [token](#token) |
-
-##### Responses
-
-| Code | Description | Schema |
-| ---- | ----------- | ------ |
-| 200 | Request Exitoso! | object |
-| 500 | Fallo el servidor | object |
-
-### /profile/:email
+### /profile/{userEmail}
 
 #### GET
 ##### Summary:
 
-Se muestra el perfil del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
+Se muestran los datos (sin pws y token) del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
 
 ##### Parameters
 
@@ -102,90 +83,99 @@ Se muestra el perfil del usuario al cual le corresponde el email del path (poner
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Request Exitoso! | object |
-| 400 | email del path no existe. | object |
-| 500 | Fallo el servidor | object |
+| 200 | Request Exitoso! | [userProfile](#userprofile) |
+| 400 | email del path no existe. | [Error](#error) |
+| 500 | Fallo el servidor | [Error](#error) |
+
+
+### /profile
+
+#### PUT
+##### Summary:
+
+updates information fields (with exception of the token), of the user identified by the token, provided in the body.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userProfile | body |  | No | [user](#user) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | string |
+| 500 | Fallo el servidor | [Error](#error) |
+
+### /psw
+
+#### PUT
+##### Summary:
+
+updates password of the user identified by the token, provided in the body.
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| user | body |  | No | [user](#user) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | string |
+| 500 | Fallo el servidor | [Error](#error) |
 
 ### Models
 
 
-#### datos
+#### user
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| email | string | el mail del usuario | Yes |
-| psw | string | la contraseña del usuario | Yes |
-
-#### usuario_1
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| token | string | el token que el server le asigno al hacer login | Yes |
-| name | string | nombre nuevo del usuario | No |
-| nickname | string | nickname nuevo del usuario | No |
-| email | string | email nuevo del usuario | No |
+| token | string | user login token | No |
+| name | string | user name | No |
+| nickname | string | user nickname | No |
+| email | string | null | No |
 | photo | string | url de la nueva foto del usuario | No |
 
-#### inline_response_200_1
+#### signUpCredentials
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| result | integer | Indica con un numero si fue registro exitoso o si el usuario ya existe en el sistema | No |
+| psw | string | user password | Yes |
+| name | string | user name | No |
+| nickname | string | user nickname | No |
+| email | string | null | Yes |
+| photo | string | url de la nueva foto del usuario | No |
 
-#### inline_response_200
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| valido | integer | Indica con un numero si las credenciales son validas o si el usuario o password son incorrectas | No |
-| token | string |  | No |
-| name | string |  | No |
-| nickname | string |  | No |
-| email | string |  | No |
-
-#### inline_response_200_2
+#### logInCredentials
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| message | string | El perfil se modificó correctamente | No |
+| email | string | user email | Yes |
+| psw | string | user password | Yes |
 
-#### usuario
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| name | string | nombre del usuario | Yes |
-| nickname | string | nickname del usuario | Yes |
-| email | string | email del usuario | Yes |
-| psw | string | contraseña del usuario | Yes |
-
-#### inline_response_200_3
+#### facebookLogInCredentials
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| name | string | nombre del usuario consultado | No |
-| nickname | string | apodo del usuario consultado | No |
-| email | string | email del usuario consultado | No |
-| photo | string | url de la foto del usuario consultado | No |
+| token | string | user token asigned by facebook api | Yes |
 
-#### inline_response_500
+#### userProfile
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| message | string | se muestra el error que se produjo en el servidor | No |
+| name | string | user name | No |
+| nickname | string | user nickname | No |
+| email | string | null | No |
+| photo | string | url de la nueva foto del usuario | No |
 
-#### inline_response_400
+#### Error
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
+| code | int32 |  | No |
 | message | string |  | No |
-
-#### token
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| token | string | el token de facebook asignado al usuario | Yes |
-
-#### inline_response_400_1
-
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| message | string | el usuario solicitado no existe. | No |

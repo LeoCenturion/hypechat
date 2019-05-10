@@ -1,113 +1,272 @@
+//During the test the env variable is set to test
+process.env.NODE_ENV = 'test';
+
+let mongoose = require("mongoose");
+let User = require('./models/user');
+
+//Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
+let server = require('./server');
+let should = chai.should();
 
-const expect = require('chai').expect;
-chai.use(chaiHttp)
 const url= 'http://localhost:5000';
-const bodyParser = require('body-parser')
-var jsonParser = bodyParser.json()
-
-var should = require('should');
-var assert = require('assert');
-
-const User = require('./models/user');
-const userControllers = require('./controllers/user')
-
-var sinon = require('sinon');
-
-describe("User validations", function(){
-	
-	describe('User creation', function(){
-		
-		it('should be an object', function(){
-			let user = new User({
-				email: 'user@gmail.com',
-				name: 'userName',
-				psw: 'psw'
-			})
-			assert(user!= undefined);
-		});
-
-		it('should have a property "email" with value user@gmail.com', function(){
-			let user = new User({
-				email: 'user@gmail.com',
-				name: 'userName',
-				psw: 'psw'
-			})
-			user.should.have.property("email").eql('user@gmail.com');
-		});
-
-		it('should have a property "psw" with value "userPsw"', function(){
-			let user = new User({
-				email: 'user@gmail.com',
-				name: 'userName',
-				psw: 'userPsw'
-			})
-			user.should.have.property("psw").eql('userPsw');
-		});
-
-	})
-})
-
-describe('User Controllers Validations', function (){
-	describe('signUp user', function(){
-		//HAY QUE USAR SINON
-/*
-
-		it('user signs up OK', function(){
-			let res = {"status":0};
-			let req = {"body": {
-			"email": 'user@gmail.com',
-			"name": 'userName',
-			"psw": 'userPsw'
-			}}
-			userControllers.signUp(req, res)
-			let user2 = User.findOne({email: 'user@gmail.com', psw: 'userPsw'}, (err, user) =>{
-        		assert(user!= undefined);
-        	})
-        	//console.log(err)
-		})
-
-		afterEach(function () { //esto se ejecuta despues de cada it
-        	User.findOne({email: 'user2@gmail.com', psw: 'userPsw'}, (err, user) =>{
-        		assert(user!= undefined);
-        		console.log('hola1')
-        	})
-    	});
-
-		it('user signs up with an alredy existent name and password', function (){
-			let res = {"status":0};
-			let req = {"body": {
-			"email": 'user2@gmail.com',
-			"name": 'userName',
-			"psw": 'userPsw'
-			}}
-			userControllers.signUp(req, res);
-		})*/
-	});
-})
+var token;
 
 
-describe('SERVER Validations', function(){
-	let server = require('./server');
+chai.use(chaiHttp);
 
-	describe('POST /registro', function(){
-		it('Correct sing up', function(done){
+describe('SERVER', () => {
+    beforeEach((done) => { //Before each test we empty the database
+        User.remove({}, (err) => { 
+           done();           
+        });        
+    });
+  	describe('GET /user', () => {
+		it('it should GET all users', (done) => {
 			chai.request(url)
-			.post('./registro')
-			.send({
-				"email": 'user2@gmail.com',
-				"name": 'userName',
-				"psw": 'userPsw'
-			})
-			.end((err, res) => {
-				console.log(err)
-				console.log(res)
-				assert(err != undefined);
-				//res.status.should.be.eql(200);
-				done();
-			})
-		})
+			    .get('/user')
+			    .end((err, res) => {
+			          res.should.have.status(200);
+			          res.body.should.be.eql({user: []})
+			      done();
+			    });
+		});
 	})
-})
+
+    describe('POST /signUp', () =>{
+    	beforeEach((done) => {
+	        let user = new User({
+			        "email": 'uniqueUser@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      })
+	        user.save()
+	        done()
+	    });
+    	it('sign up user OK', (done)=>{
+    		let user = {
+			        "email": 'user@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      }
+    		chai.request(url)
+    			.post('/signUp')
+    			.send(user)
+    			.end((err, res) => {
+    				res.should.have.status(200);
+    				res.body.should.be.a('object');
+    				res.body.should.have.property('email')
+			      	res.body.email.should.be.eql('user@gmail.com')
+			      	res.body.should.have.property('psw')
+			      	res.body.psw.should.be.eql('userPsw')
+			      	res.body.should.have.property('nickname')
+			      	res.body.nickname.should.be.eql('userNickname')
+    				done();
+    			})
+    	})
+
+    	it('sign up user OK, without nickname', (done)=>{
+    		let user = {
+			        "email": 'user2@gmail.com',
+			        "psw": 'userPsw'
+			      }
+    		chai.request(url)
+    			.post('/signUp')
+    			.send(user)
+    			.end((err, res) => {
+    				res.should.have.status(200);
+    				res.body.should.be.a('object');
+			      	res.body.should.have.property('email')
+			      	res.body.email.should.be.eql('user2@gmail.com')
+			      	
+			      	res.body.should.have.property('psw')
+			      	res.body.psw.should.be.eql('userPsw')
+			      	
+			      	res.body.should.have.property('nickname')
+			      	res.body.nickname.should.be.eql("")
+    				done();
+    			})
+    	})
+
+    	it('sign up user with an existent email', (done)=>{
+    		let user = {
+			        "email": 'uniqueUser@gmail.com',
+			        "psw": 'otherUserPsw'
+			      }
+    		chai.request(url)
+    			.post('/signUp')
+    			.send(user)
+    			.end((err, res) => {
+    				res.should.have.status(500);
+    				res.body.should.have.property('message')
+    				done();
+    			})
+    	})
+    })
+
+    describe('POST /login', () =>{
+    	beforeEach((done) => {
+	        let user = new User({
+			        "email": 'uniqueUser@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      })
+	        user.save()
+	        done()
+	    });
+
+    	it('user login Ok',(done)=>{
+    		let user = {
+			        "email": 'uniqueUser@gmail.com',
+			        "psw": 'userPsw'
+			    }
+    		chai.request(url)
+    			.post('/login')
+    			.send(user)
+    			.end((err, res) => {
+    				res.should.have.status(200);
+    				res.body.should.have.property('message')
+    				res.body.should.have.property('token')
+    				res.body.should.have.property('email')
+    				done();
+    			})
+    	})
+
+    	it('inexistent user login', (done)=>{
+    		let user = {
+			        "email": 'inexistentUser@gmail.com',
+			        "psw": 'userPsw'
+			    }
+    		chai.request(url)
+    			.post('/login')
+    			.send(user)
+    			.end((err, res) => {
+    				res.should.have.status(404);
+    				done();
+    			})
+    	})
+    })
+    
+    describe('GET /profile/:email', () =>{
+    	beforeEach((done) => {
+	        let user = new User({
+			        "email": 'uniqueUser@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      })
+	        user.save()
+	        done()
+	    });
+
+    	it('it should GET profile of the email user', (done) => {
+			chai.request(url)
+			    .get('/profile/uniqueUser@gmail.com')
+			    .end((err, res) => {
+			        res.should.have.status(200);
+
+			        res.body.should.have.property('name')
+			      	res.body.name.should.be.eql('')
+			      	
+			      	res.body.should.have.property('nickname')
+			      	res.body.nickname.should.be.eql('userNickname')
+			      	
+			      	res.body.should.have.property('email')
+			      	res.body.email.should.be.eql('uniqueuser@gmail.com')
+
+			      	res.body.should.have.property('photo')
+			      	res.body.photo.should.be.eql('')
+
+			      done();
+			    });
+		});
+
+		it('it should GET profile of inexistent email user', (done) => {
+			chai.request(url)
+			    .get('/profile/inexistentUser@gmail.com')
+			    .end((err, res) => {
+			        res.should.have.status(400);
+			        res.body.should.have.property('message')
+			      	done();
+			    });
+		});
+    })
+    
+    describe('PUT /profile', () =>{
+    	beforeEach((done) => {
+	        let user = new User({
+			        "email": 'uniqueUser@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      })
+	        user.save()
+
+	    	chai.request(url)
+			    .get('/token')
+			    .send({"email": 'uniqueUser@gmail.com'})
+			    .end((err, res) => {
+			        token = res.body.token
+			      	done();
+			    });
+
+	    });
+
+	    it('it should update user profile', (done)=>{
+	    	
+	    	let newUserProfile = {
+	    		"token": token,
+	    		"email": 'newEmmailUser@gmail.com',
+	    		"nickname":'newUserNickname',
+	    		"photo": 'newUrlPhoto',
+	    		"name": 'newUserName'
+	    	}
+	    	chai.request(url)
+			    .put('/profile')
+			    .send(newUserProfile)
+			    .end((err, res) => {
+			        res.should.have.status(200);
+			        res.body.should.have.property('message')
+			      	done();
+			    });
+	    })
+    })
+    
+    describe('PUT /psw', () =>{
+    	beforeEach((done) => {
+	        let user = new User({
+			        "email": 'uniqueUser@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      })
+	        user.save()
+
+	    	chai.request(url)
+			    .get('/token')
+			    .send({"email": 'uniqueUser@gmail.com'})
+			    .end((err, res) => {
+			        token = res.body.token
+			      	done();
+			    });
+	    });
+	    
+    	it('it should update user profile', (done)=>{
+	    	
+	    	let newUserProfile = {
+	    		"token": token,
+	    		"psw":'newPsw'
+	    	}
+	    	chai.request(url)
+			    .put('/psw')
+			    .send(newUserProfile)
+			    .end((err, res) => {
+			        res.should.have.status(200);
+			        res.body.should.have.property('message')
+			      	done();
+			    });
+	    })
+    })
+
+
+});
+
 

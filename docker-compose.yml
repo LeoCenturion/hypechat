@@ -14,6 +14,8 @@ services:
     - "27018:27017"
   test:
     build: .
+    depends_on:
+    - mongo
     volumes:
       - ./test:/data
     ports:

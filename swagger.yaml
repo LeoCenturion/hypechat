@@ -10,148 +10,72 @@ schemes:
 paths:
   /login:
     post:
-      tags: [user]
       summary: Valida al usuario que quiere ingresar a la app
       parameters:
       - in: body
-        name: datos
-        required: false
-        schema:
-          $ref: '#/definitions/datos'
-      responses:
-        200:
-          description: Se realizo la request con exito!
-          schema:
-            type: object
-            properties:
-              token:
-                type: string
-                example: "0000001"
-              name:
-                type: string
-                example: Lionel Messi
-              nickname:
-                type: string
-                example: liomessi
-              email:
-                type: string
-                example: liomessi@barcelona.com.ar
-        404:
-          description: Request Invalida!
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: La contraseña o usuario son invalidos!
-        500:
-          description: Fallo el server
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-  /signUp:
-    post:
-      summary: Registra a un usuario nuevo o notifica que ya existe
-      parameters:
-      - in: body
-        name: usuario
-        required: false
-        schema:
-          $ref: '#/definitions/usuario'
-      responses:
-        200:
-          description: Request Exitoso!
-          schema:
-            type: object
-            properties:
-              result:
-                type: integer
-                example: 1
-                description: Indica con un numero si fue registro exitoso o si el usuario ya existe en el sistema
-        500:
-          description: Request Invalida!
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Hubo un error con el servidor!
-  /logFacebook:
-    post:
-      summary: Envia el token de facebook del usuario que se logueo.
-      parameters:
-      - in: body
-        name: token
-        required: false
-        schema:
-          $ref: '#/definitions/token'
-      responses:
-        200:
-          description: Se realizo la request con exito!
-          schema:
-            type: object
-            properties:
-              valido:
-                type: integer
-                example: 1
-                description: Indica con un numero si las credenciales son validas o si el usuario o password son incorrectas
-              token:
-                type: string
-                example: "0000001"
-              name:
-                type: string
-                example: Lionel Messi
-              nickname:
-                type: string
-                example: liomessi
-              email:
-                type: string
-                example: liomessi@barcelona.com.ar
-        400:
-          description: Request Invalida!
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: Hubo un error con el servidor!
-  /profile:
-    put:
-      summary: Envia el token del usuario que quiere modificar los datos del perfil y los datos que quiere modificar.
-      parameters:
-      - in: body
-        name: usuario
-        required: false
-        schema:
-          $ref: '#/definitions/usuario_1'
-      - in: body
-        tname: token
+        name: loginInfo
         required: true
         schema:
-          $ref: '#/definitions/token'
-        
+          $ref: '#/definitions/loginCredentials'
       responses:
         200:
-          description: Request Exitoso!
+          description: Se realizo la request con exito!
           schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: El perfil se modificó correctamente
+            $ref: '#/definitions/user'
+        404:
+          description: Bad login information
+          schema:
+            $ref: '$/definitions/Error'
         500:
-          description: Fallo el servidor
+          description: Server error
           schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: se muestra el error que se produjo en el servidor
-  /profile/:email:
+            $ref: '#/definitions/Error'
+
+  /signUp:
+    post:
+      summary: Receives user information through the body and registers it as a new user if it doesn't already exists.
+      parameters:
+      - in: body
+        name: userSignUpData
+        required: true
+        schema:
+          $ref: '#/definitions/signUpCredentials'
+      responses:
+        200:
+          description: Succesful request
+          schema:
+            $ref: '#/definitions/user'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /loginFacebook:
+    post:
+      summary: sends user's facebook token for login.
+      parameters:
+      - in: body
+        name: facebookToken
+        required: true
+        schema:
+          $ref: '#/definitions/facebookLoginCredentials'
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            $ref: '#/definitions/user'
+        400:
+          description: Bad login information
+          schema:
+            $ref: '$/definitions/Error'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /profile/{userEmail}:
     get:
-      summary: Se muestra el perfil del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
+      summary: Se muestran los datos (sin pws y token) del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
       parameters:
       - name: email
         in: path
@@ -162,145 +86,109 @@ paths:
         200:
           description: Request Exitoso!
           schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: nombre del usuario consultado
-              nickname:
-                type: string
-                description: nickname del usuario consultado
-              email:
-                type: string
-                description: email del usuario consultado
-              photo:
-                type: string
-                description: url de la foto del usuario consultado
+            $ref: '#/definitions/userProfile'
         400:
           description: email del path no existe.
           schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: el usuario solicitado no existe.
+            $ref: '#/definitions/Error' 
         500:
           description: Fallo el servidor
           schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: se muestra el error que se produjo en el servidor
+            $ref: '#/definitions/Error' 
+
+  /profile:
+    put:
+      summary: updates information fields (with exception of the token), of the user identified by the token, provided in the body.
+      parameters:
+      - in: body
+        name: userProfile
+        required: false
+        schema:
+          $ref: '#/definitions/user'
+      responses:
+        200:
+          description: Successful request
+          schema:
+            type: string
+            description: user profile successfully updated
+        500:
+          description: Fallo el servidor
+          schema:
+            $ref: '#/definitions/Error'
+
+  /psw:
+    put:
+      summary: updates password of the user identified by the token, provided in the body.
+      parameters:
+      - in: body
+        name: user
+        required: false
+        schema:
+          $ref: '#/definitions/user'
+      responses:
+        200:
+          description: Successful request
+          schema:
+            type: string
+            description: user password successfully updated
+        500:
+          description: Fallo el servidor
+          schema:
+            $ref: '#/definitions/Error' 
+
 definitions:
-  datos:
+  user:
     type: object
-    required:
-    - psw
-    - email
-    properties:
-      email:
-        type: string
-        example: hypechat@taller2.com.ar
-        description: el mail del usuario
-      psw:
-        type: string
-        example: "12345678"
-        description: la contraseña del usuario
-  usuario_1:
-    type: object
-    required:
-    - token
     properties:
       token:
         type: string
-        description: el token que el server le asigno al hacer login
+        description: user login token
       name:
         type: string
-        description: nombre nuevo del usuario
+        description: user name
       nickname:
         type: string
-        description: nickname nuevo del usuario
+        description: user nickname
       email:
         type: string
-        description: email nuevo del usuario
+        description: 
       photo:
         type: string
         description: url de la nueva foto del usuario
-  inline_response_200_1:
-    properties:
-      result:
-        type: integer
-        example: 1
-        description: Indica con un numero si fue registro exitoso o si el usuario ya existe en el sistema
-  inline_response_200:
-    properties:
-      valido:
-        type: integer
-        example: 1
-        description: Indica con un numero si las credenciales son validas o si el usuario o password son incorrectas
-      token:
-        type: string
-        example: "0000001"
-      name:
-        type: string
-        example: Lionel Messi
-      nickname:
-        type: string
-        example: liomessi
-      email:
-        type: string
-        example: liomessi@barcelona.com.ar
-  inline_response_200_2:
-    properties:
-      message:
-        type: string
-        description: El perfil se modificó correctamente
-  usuario:
+  signUpCredentials:
     type: object
     required:
-    - nickname
     - psw
     - email
-    - name
     properties:
-      name:
-        type: string
-        description: nombre del usuario
-      nickname:
-        type: string
-        description: nickname del usuario
-      email:
-        type: string
-        description: email del usuario
       psw:
         type: string
-        description: contraseña del usuario
-  inline_response_200_3:
-    properties:
+        description: user password
       name:
         type: string
-        description: nombre del usuario consultado
+        description: user name
       nickname:
         type: string
-        description: apodo del usuario consultado
+        description: user nickname
       email:
         type: string
-        description: email del usuario consultado
+        description: 
       photo:
         type: string
-        description: url de la foto del usuario consultado
-  inline_response_500:
+        description: url de la nueva foto del usuario
+  logInCredentials:
+    type: object
+    required:
+    - email
+    - psw
     properties:
-      message:
+      email:
         type: string
-        description: se muestra el error que se produjo en el servidor
-  inline_response_400:
-    properties:
-      message:
+        description: user email
+      psw:
         type: string
-        example: Hubo un error con el servidor!
-  token:
+        description: user password
+  facebookLogInCredentials:
     type: object
     required:
     - token
@@ -308,9 +196,27 @@ definitions:
       token:
         type: string
         example: aB12874gk12sh37901nnlid2
-        description: el token de facebook asignado al usuario
-  inline_response_400_1:
+        description: user token asigned by facebook api
+  userProfile:
+    type: object
     properties:
+      name:
+        type: string
+        description: user name
+      nickname:
+        type: string
+        description: user nickname
+      email:
+        type: string
+        description: 
+      photo:
+        type: string
+        description: url de la nueva foto del usuario
+  Error:
+    properties:
+      code:
+        type: int32
+        example: 400
       message:
         type: string
-        description: el usuario solicitado no existe.
+        example: server error

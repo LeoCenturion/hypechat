@@ -10,13 +10,14 @@ api.get('/hello/:name',function(req, res){
 api.get('/user', userControllers.getUsers)
 api.get('/user/:userId', userControllers.getUser)
 api.post('/user', userControllers.saveUser)
-api.put('/user/:userId', userControllers.updateUser )
+api.put('/user/:userId', userControllers.updateUser2 )
 api.delete('/user/:userId', userControllers.deleteUser )
 
 api.post('/signUp', userControllers.signUp )
 api.post('/login', userControllers.logIn )
 api.get('/profile/:email', userControllers.getUserProfile)
-api.put('/profile', userControllers.updateUserProfile )
+api.put('/profile', userControllers.updateUser )
+api.put('/psw', userControllers.updateUser )
 
 
 

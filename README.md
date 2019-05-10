@@ -12,5 +12,7 @@ $ sudo docker-compose up
 
 ## API
 Para transformar la documentacion en .yaml a .md se utiliza swagger-markdown disponible en npm.
+Instalar del siguiente modo: $ npm install swagger-markdown
+Para ejecutarlo: $ ./node_modules/swagger-markdown/bin/index.js -i swagger.yaml
 
 [API](swagger.md)

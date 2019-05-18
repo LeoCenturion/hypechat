@@ -109,9 +109,27 @@ function logIn (req, res) {
 			name: user.name,
 			nickname: user.nickname,
 			email: user.email })
+		});
+	
+}
+/*
+function getUserByEmailAndPsw(email, password){
+	User.findOne({ email: req.body.email, psw: req.body.psw }, (err, user) => {
+		if (err) {
+			logger.error(`getUserByEmailAndPsw - Server Error (500): ${err}`)
+			return {status: 500,
+					message: `Error al logearse: ${err}`}
+		}
+		if (!user) {
+			logger.error(`getUserByEmailAndPsw - Error (404) al loguearse, email o psw invalidos: ${err}`)
+			return {status: 404,
+					message: `El mail o la contraseña son invalidos`}
+		}
+		return {status: 200,
+				user: user}
 	});
 }
-
+*/
 function getUserProfile(req, res) {
 	User.findOne({email: req.params.email}, (err, user) =>{
 		if(err) {

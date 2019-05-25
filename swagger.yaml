@@ -468,8 +468,8 @@ paths:
             type: object
             required: 
               - token
-              - id_organizacion
-              - psw_organizacion
+              - id_organization
+              - psw_organization
             properties:
               token:
                 type: string

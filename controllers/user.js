@@ -264,10 +264,10 @@ function updateNameOrganization (req, res){
 
 function updatePasswordOrganization (req, res){
 	let token = req.body.token
-	let psw_organization = req.body.psw_organizacion
+	let psw_organization = req.body.psw_organization
 	let update = {psw: req.body.psw_organization}
 
-	Organization.findByIdAndUpdate(id_organization, update, (err,orgUpdated)=>{
+	Organization.findByIdAndUpdate(req.body.id_organization, update, (err,orgUpdated)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
 
 		res.status(200).send({usuario: orgUpdated})

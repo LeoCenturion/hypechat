@@ -136,6 +136,373 @@ paths:
           schema:
             $ref: '#/definitions/Error' 
 
+
+  /organizaciones/{userEmail}:
+    get:
+      summary: Se muestran todas las organizaciones(sin pws y token) del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
+      parameters:
+      - name: email
+        in: path
+        description: email del usuario del cual se quiere ver todas las organizaciones
+        required: true
+        type: string
+      responses:
+        200:
+          description: Request Exitoso!
+          schema:
+            type: object
+            properties:
+              organizaciones:
+                type: array
+                items:
+                  type: string
+                example: [{"id":"taller2018","name":"Taller 1 2018"},{"id":"taller2019","name":"Taller 2 2019"},{"id":"grupo-cerrado-43","name":"Grupo los pibes"}]
+                description: lista con los id nombre de las organizaciones que tiene el usuario o esta agregado
+        400:
+          description: email del path no existe.
+          schema:
+            $ref: '#/definitions/Error' 
+        500:
+          description: Fallo el servidor
+          schema:
+            $ref: '#/definitions/Error' 
+                
+  /msjPrivados:
+    get:
+      description: Trae todas los mensajes privados de la organizacion del usuario
+      parameters:
+        - in: body
+          name: datos
+          schema:
+            type: object
+            required: 
+              - token
+              - organizacion_id
+              - email
+            properties:
+              token:
+                type: string
+                description: el token del usuario
+                example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+              organizacion_id:
+                type: string
+                description: el id de la organizacion
+                example: "taller2_2019"
+              email:
+                type: string
+                description: el email del usuario
+                example: "test@1.com"
+                
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            type: object
+            properties:
+              canales:
+                type: array
+                items:
+                  type: string
+                example: [{"name":"general"},{"name":"varios"},{"name":"tp1"}]
+                description: lista con los nombres de los canales que tiene el usuario en esa organizacion
+              msjPrivados:
+                type: array
+                items:
+                  type: string
+                example: [{"name":"CapitalMarvel"},{"name":"Iroman"},{"name":"Thor"}]
+                description: lista con los nombre de contactos con los que tiene msj privados en la organizacion 
+        400:
+          description: email no existe.
+          schema:
+            $ref: '#/definitions/Error' 
+        401:
+          description: la orgainzacion id no existe.
+          schema:
+            $ref: '#/definitions/Error'    
+        500:
+          description: Fallo el servidor
+          schema:
+            $ref: '#/definitions/Error' 
+                
+  /organizationID_valid/{organizacionID}:
+    get:
+      description: Responde si existe o no una organizacion con ese ID
+      parameters:
+        - name: id
+        in: path
+        description: organizacion id del usuario del cual se quiere ver si es valida
+        required: true
+        type: string
+                
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: No existe una organizacion con ese ID, por lo tanto es valido!
+  
+   
+        400:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Ya existe una organizacion con ese ID!
+
+  /organizacion:
+    post:
+      description: Crea una nueva organizacion
+      parameters: 
+        - in: body
+          name: datos
+          schema:
+            type: object
+            required: 
+              - token
+              - nombre
+              - id
+              - email_usuario
+              - contraseña
+            properties:
+              token:
+                type: string
+                description: el token del usuario
+                example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+              nombre:
+                type: string
+                description: nombre de la organizacion
+                example: "Organizacion de datos"
+              id:
+                type: string
+                description: id de la organizacion
+                example: "orga-2019"
+              email_usuario:
+                type: string
+                description: email del usuario que creo la organizacion
+                example: "test@1.com"
+              contraseña:
+                type: string
+                description: contraseña de la organizacion
+                example: "orga12345"
+
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Se creo la organizacion!
+        400:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Hubo un error con el servidor! 
+                
+  /usuarioOrganizacion:
+    post:
+      description: Agregar un usuario a la organizacion
+      parameters: 
+        - in: body
+          name: datos
+          schema:
+            type: object
+            required: 
+              - token
+              - id_organizacion
+              - email_usuario
+            properties:
+              token:
+                type: string
+                description: el token del usuario
+                example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+              id_organizacion:
+                type: string
+                description: id de la organizacion
+                example: "orga-2019"
+              email_usuario:
+                type: string
+                description: email del usuario que creo la organizacion
+                example: "test@1.com"
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Se ha agregado el usuario a la organizacion!
+        400:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Ya existe el usuario en la organizacion!  
+        401:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: No existe un usuario con ese email!
+        404:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: No existe una organizacion con ese id!
+
+  /organizacion/{token}/{organizacion_id}:
+    get:
+      description: Trae la informacion de la organizacion
+      parameters:
+        - name: token
+        in: path
+        description: el token del usuario
+        required: true
+        type: string
+        - name: id_organizacion
+        in: path
+        description: id de la organizacion
+        required: true
+        type: string
+                
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            type: object
+            properties:
+                nombre:
+                  type: string
+                  example: "Taller 2 2019"
+                  description: nombre de la organizacion consultada
+                id:
+                  type: string
+                  example: "taller2-19"
+                  description: id de la organizacion consultada
+                owner_email:
+                  type: string
+                  example: "test@1.com"
+                  description: email del usuario que creo la organizacion consultada
+                password:
+                  type: string
+                  example: "12345678"
+                  description: psw de la organizacion consultada
+   
+        400:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Hubo un error con el servidor!
+                
+  /nombreOrganizacion:
+    put:
+      description: Setea un nuevo nombre a la organizacion
+      parameters: 
+        - name: datos
+          in: body
+          schema:
+            type: object
+            required: 
+              - token
+              - id_organizacion
+              - nombre_organizacion
+            properties:
+              token:
+                type: string
+                example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+                description: el token del usuario
+              id_organizacion:
+                type: string
+                example: "orga-2019"
+                description: id de la organizacion
+              nombre_organizacion:
+                type: string
+                example: "Taller 2 fiuba"
+                description: nuevo nombre de la organizacion
+
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Se ha cambiado el nombre a la organizacion!
+        400:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: No existe la organizacion!  
+
+  /passwordOrganizacion:
+    put:
+      description: Setea un nuevo password a la organizacion
+      parameters: 
+        - name: datos
+          in: body
+          schema:
+            type: object
+            required: 
+              - token
+              - id_organizacion
+              - psw_organizacion
+            properties:
+              token:
+                type: string
+                description: el token del usuario
+                example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+              id_organizacion:
+                type: string
+                description: id de la organizacion
+                example: "orga-2019"
+              psw_organizacion:
+                type: string
+                description: nuevo password de la organizacion
+                example: "fiuba2taller"
+
+      responses:
+        200:
+          description: Se realizo la request con exito!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Se ha cambiado el password a la organizacion!
+        400:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: No existe la organizacion!
+  
+
 definitions:
   user:
     type: object
@@ -205,3 +572,4 @@ definitions:
       message:
         type: string
         example: server error
+

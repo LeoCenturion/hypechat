@@ -3,6 +3,8 @@
 const mongoose = require('mongoose');
 const service = require('../services')
 const User = require('../models/user');
+const Organization = require('../models/organization');
+const PrivateMsj = require('../models/privateMsj');
 const logger = require('../utils/logger');
 
 function getUser (req, res){
@@ -143,6 +145,135 @@ function updateUser(req, res){
 	})
 }
 
+
+
+function getUserOrganizations(req, res){
+	let userId = req.params.userEmail
+
+	User.findById(userId, (err, usuario)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+		if (!usuario) return res.status(404).send({message: 'El usuario no existe'})
+		res.status(200).send({organizations: usuario.organizations})
+	})
+	
+}
+
+
+function getPrivateMsj(req, res){
+	let token = req.body.token
+	let id_organization = req.body.organizacion_id
+	let userId = req.body.email
+
+
+	PrivateMsj.find({organizationID: id_organization, email_user1: userId}, (err, msjs)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+		PrivateMsj.find({organizationID: id_organization, email_user2: userId}, (err, msjs2)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+			let allMsj = []
+			msj.forEach(element => {
+				allMsj.push(element.email_user2)
+			});
+			msj2.forEach(element => {
+				allMsj.push(element.email_user1)
+			});
+			return res.status(200).send({msjs: allMsj})
+		})
+
+	})
+	
+}
+
+function is_organizationId_valid (req, res){
+	let organizationID = req.params.organizacion_id
+	
+	Organization.findById(organizationID, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+		if (!organization) return res.status(200).send({message: 'No existe una organizacion con ese ID, valido para crear'})
+		res.status(404).send({message: 'La organizacion no existe'})
+		
+	})
+}
+
+function createOrganization(req,res){
+	const organization = new Organization({
+	id: req.body.id,
+	owner: req.body.email_usuario,
+	psw: req.body.contraseña,
+	name: req.body.nombre
+})
+
+organization.save((err)=>{
+	if(err) {
+		logger.error(`Error al crear la organizacion ${organization.id}: ${err}`)
+		return res.status(500).send({message: `organization - Error al crear la organizacion: ${err}`})
+	}
+	logger.info(`create orgazation - Se creo la organizacion con id ${organization.id}`)
+	res.status(200).send(organization)
+})
+}
+
+
+
+function addUserToOrganization (req, res){
+	let token = req.body.token
+	let organizationID = req.body.id_organizacion
+	let userId = req.body.email_usuario
+
+	Organization.findById(organizationID, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		User.findById(userId, (err, usuario)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+			if (!usuario) return res.status(401).send({message: 'No existe un usuario con ese email'})
+			let organizations = usuario.organizations
+			organizations.forEach(element => {
+				if(element == organizationID){
+					return res.status(400).send({message: 'El usuario ya existe en la organizacion'})
+				}
+			});
+			organizations.push(organizationID)
+			res.status(200).send({organization: organization})
+		})
+		
+	})
+}
+
+function getInfoOrganization (req, res){
+	let token = req.params.token
+	let organizationID = req.params.organizacion_id
+	Organization.findById(organizationID, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		res.status(200).send({organization: organization})
+	})
+}
+
+
+
+function updateNameOrganization (req, res){
+	let token = req.body.token
+	let id_organization = req.body.id_organizacion
+	let update = {name: req.body.nombre_organizacion}
+
+	Organization.findByIdAndUpdate(id_organization, update, (err,orgUpdated)=>{
+		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
+
+		res.status(200).send({usuario: orgUpdated})
+	})
+}
+
+function updatePasswordOrganization (req, res){
+	let token = req.body.token
+	let psw_organization = req.body.psw_organizacion
+	let update = {psw: req.body.psw_organization}
+
+	Organization.findByIdAndUpdate(id_organization, update, (err,orgUpdated)=>{
+		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
+
+		res.status(200).send({usuario: orgUpdated})
+	})
+}
+
 module.exports={
 	getUser,
 	getUsers,
@@ -152,5 +283,13 @@ module.exports={
 	signUp,
 	logIn,
 	getUserProfile,
-	updateUser
+	updateUser,
+	getUserOrganizations,
+	getPrivateMsj,
+	is_organizationId_valid,
+	createOrganization,
+	addUserToOrganization,
+	getInfoOrganization,
+	updateNameOrganization,
+	updatePasswordOrganization
 }

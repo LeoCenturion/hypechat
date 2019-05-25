@@ -3,14 +3,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
-	email:{type:String, unique:true,lowercase:true, required: true},
-	name: String,
-	psw: {type:String, default:''},//false para que cada vez que nos pidan al usuario no se mande la contraseña
-	photo: String, //guardamos la url de la imagen
-	nickname: {type:String, default:''},
-	token: String,
-	organizations: {type: Array, default:[]}
+const privateMsjSchema = new Schema({
+    email_user1: {type:String,lowercase:true, required: true},
+    email_user2: {type:String,lowercase:true, required: true},
+	organizationID: {type:String,lowercase:true, required: true},
 	//signupDate: {type: Date, default: Date.now()},
 	//lastLogin: Date
 });
@@ -28,4 +24,4 @@ UserSchema.methods.gravatar = function (size) {
 	return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`
 }
 */
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('privateMsj', privateMsjSchema)

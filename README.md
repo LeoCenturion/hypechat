@@ -15,4 +15,5 @@ Para transformar la documentacion en .yaml a .md se utiliza swagger-markdown dis
 Instalar del siguiente modo: $ npm install swagger-markdown<br />
 Para ejecutarlo: $ ./node_modules/swagger-markdown/bin/index.js -i swagger.yaml<br />
 
+
 [API](swagger.md)

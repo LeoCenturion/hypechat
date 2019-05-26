@@ -17,7 +17,7 @@ api.post('/signUp', userControllers.signUp )
 api.post('/login', userControllers.logIn )
 api.get('/profile/:email', userControllers.getUserProfile)
 api.put('/profile', userControllers.updateUser )
-api.put('/psw', userControllers.updateUser )
+api.put('/password', userControllers.updateUser )
 
 
 

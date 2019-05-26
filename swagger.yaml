@@ -116,7 +116,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  /psw:
+  /password:
     put:
       summary: updates password of the user identified by the token, provided in the body.
       parameters:

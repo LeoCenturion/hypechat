@@ -79,13 +79,15 @@ describe('USER CONTROLLER', ()=>{
 				}
 			}
 
-			let objectWithSend = { send: function(objJson){
-				objJson.should.have.property('message')
-			}}
-
 			let result = {status: function status(nro){
-				nro.should.be.eql(500)
-				return objectWithSend}};
+				
+				return { status: nro,
+					send: function(objJson){
+						this.status.should.be.eql(500)
+						objJson.should.have.property('message')
+						}
+				}
+			}};
 
 			userControllers.signUp(user, result)
 			done();
@@ -308,7 +310,7 @@ describe('SERVER', () => {
 	    })
     })
     
-    describe('PUT /psw', () =>{
+    describe('PUT /password', () =>{
     	beforeEach((done) => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
@@ -333,11 +335,100 @@ describe('SERVER', () => {
 	    		"psw":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .put('/psw')
+			    .put('/password')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(200);
 			        res.body.should.have.property('message')
+			      	done();
+			    });
+	    })
+    })
+
+    describe('GET /recoveredPassword', () =>{
+    	beforeEach((done) => {
+	        let user = new User({
+			        "email": 'uniqueUser@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      })
+	        user.save()
+
+	    	chai.request(url)
+			    .get('/token')
+			    .send({"email": 'uniqueUser@gmail.com'})
+			    .end((err, res) => {
+			        token = res.body.token
+			      	done();
+			    });
+	    });
+	    
+    	it('it should get a token', (done)=>{
+	    	
+	    	let newUserProfile = {
+	    		"token": token,
+	    		"psw":'newPsw'
+	    	}
+	    	chai.request(url)
+			    .get('/recoveredPassword')
+			    .send({"token": token})
+			    .end((err, res) => {
+			        res.should.have.status(200);
+			        res.body.should.have.property('recoverPasswordToken')
+			      	done();
+			    });
+	    })
+    })
+
+    describe('PUT /recoveredPassword', () =>{
+    	let recoverToken;
+    	beforeEach((done) => {
+	        let user = new User({
+			        "email": 'uniqueUser@gmail.com',
+			        "nickname": 'userNickname',
+			        "psw": 'userPsw'
+			      })
+	        user.save()
+
+	    	chai.request(url)
+			    .get('/token')
+			    .send({"email": 'uniqueUser@gmail.com'})
+			    .end((err, res) => {
+			        token = res.body.token
+			      	done();
+			    });
+
+			recoverToken = userControllers.getTokenRecoverPasswordUser({body:{token: token}}, {status: function(nro){return{send:function(obj){return obj}}}})
+	    });
+	    
+    	it('it should update password because recoverToken is ok', (done)=>{
+	    	
+	    	let newUserProfile = {
+	    		"token": token,
+	    		"recoverPasswordToken":recoverToken,
+	    		"newPassword":'newPsw'
+	    	}
+	    	chai.request(url)
+			    .put('/recoveredPassword')
+			    .send(newUserProfile)
+			    .end((err, res) => {
+			        res.should.have.status(200);
+			      	done();
+			    });
+	    })
+
+	    it('it should not update password because recoverToken is false', (done)=>{
+	    	
+	    	let newUserProfile = {
+	    		"token": token,
+	    		"recoverPasswordToken":'falseToken',
+	    		"newPassword":'newPsw'
+	    	}
+	    	chai.request(url)
+			    .put('/recoveredPassword')
+			    .send(newUserProfile)
+			    .end((err, res) => {
+			        res.should.have.status(400);
 			      	done();
 			    });
 	    })

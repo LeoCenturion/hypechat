@@ -65,7 +65,6 @@ sends user's facebook token for login.
 | 400 | Bad login information | [Error](#error) |
 | 500 | Server error | [Error](#error) |
 
-
 ### /profile/{userEmail}
 
 #### GET
@@ -87,7 +86,6 @@ Se muestran los datos (sin pws y token) del usuario al cual le corresponde el em
 | 400 | email del path no existe. | [Error](#error) |
 | 500 | Fallo el servidor | [Error](#error) |
 
-
 ### /profile
 
 #### PUT
@@ -108,7 +106,7 @@ updates information fields (with exception of the token), of the user identified
 | 200 | Successful request | string |
 | 500 | Fallo el servidor | [Error](#error) |
 
-### /psw
+### /password
 
 #### PUT
 ##### Summary:
@@ -127,6 +125,27 @@ updates password of the user identified by the token, provided in the body.
 | ---- | ----------- | ------ |
 | 200 | Successful request | string |
 | 500 | Fallo el servidor | [Error](#error) |
+
+### /recoveredPassword
+
+#### GET
+##### Summary:
+
+returns a token with which the password can be recovered
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userToken | body |  | Yes | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | user dose not exist | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
 
 ### Models
 

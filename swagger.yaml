@@ -136,6 +136,39 @@ paths:
           schema:
             $ref: '#/definitions/Error' 
 
+  /recoveredPassword:
+    get:
+      summary: returns a token with which the password can be recovered
+      parameters:
+      - in: body
+        name: userToken
+        required: true
+        schema:
+          type: object
+          required: 
+            - token
+          properties:
+              token:
+                type: string
+                description: el token del usuario
+                example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
+      responses:
+        200:
+          description: Successful request
+          name: recoverPasswordToken
+          schema:
+            type: object
+            description: token to recover the password
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: user dose not exist
+          schema:
+            $ref: '#/definitions/Error'
+
+
 definitions:
   user:
     type: object
@@ -216,7 +249,7 @@ definitions:
     properties:
       code:
         type: int32
-        example: 400
+        example: 500
       message:
         type: string
         example: server error

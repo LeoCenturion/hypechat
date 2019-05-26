@@ -9,12 +9,89 @@ let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('./server');
 let should = chai.should();
+let expect = require('chai').expect;
 
 const url= 'http://localhost:5000';
 var token;
 
 
 chai.use(chaiHttp);
+
+const userControllers = require('./controllers/user')
+var sinon = require('sinon');
+
+describe('USER CONTROLLER', ()=>{
+	beforeEach((done)=>{
+		User.remove({}, (err) => {
+			done();
+		});
+	})
+
+	describe('function signUp',()=>{
+		beforeEach((done) => {
+	        let user = new User({
+				email: 'existentUser@gmail.com',
+				nickname: 'existentUserNickname',
+				psw: 'existentUserPsw'
+				})
+		    user.save()
+		    done()
+	    });
+		it('signUp OK',(done)=>{
+			let user = {
+				body: {
+					email: "email@gmail.com",
+					name: "name",
+					nickname: "nickname",
+					psw: "password",
+					photo : "photoUrl"
+				}
+			}
+
+			let objectWithSend = { send: function(objJson){
+				objJson.should.have.property('name')
+				objJson.should.have.property('psw')
+				objJson.should.have.property('photo')
+				objJson.should.have.property('nickname')
+				objJson.should.have.property('email')
+
+				objJson.name.should.be.eql('name')
+				objJson.psw.should.be.eql('password')
+				objJson.photo.should.be.eql('photoUrl')
+				objJson.nickname.should.be.eql('nickname')
+				objJson.email.should.be.eql('email@gmail.com')
+			}}
+
+			let result = {status: function status(nro){
+				nro.should.be.eql(200)
+				return objectWithSend}};
+
+			userControllers.signUp(user, result)
+			done();
+		})
+
+
+		it('signUp existent user',(done)=>{
+			let user = {
+				body: { 
+					email: "existentUser@gmail.com",
+					psw: "OtherPsw"
+				}
+			}
+
+			let objectWithSend = { send: function(objJson){
+				objJson.should.have.property('message')
+			}}
+
+			let result = {status: function status(nro){
+				nro.should.be.eql(500)
+				return objectWithSend}};
+
+			userControllers.signUp(user, result)
+			done();
+		})
+	})
+});
 
 describe('SERVER', () => {
     beforeEach((done) => { //Before each test we empty the database

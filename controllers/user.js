@@ -74,12 +74,15 @@ function signUp(req,res){
 			logger.error(`Error al crear el usuario ${user.email}: ${err}`)
 			return res.status(500).send({message: `singUp - Error al crear el usuario: ${err}`})
 		}
-		logger.info(`signUp - Se creo el usuario con mail ${user.email}`)
-		res.status(200).send(user)
+		else{
+			logger.info(`signUp - Se creo el usuario con mail ${user.email}`)
+			res.status(200).send(user)
+		}
 	})
 }
 
 function logIn (req, res) {
+
 	User.findOne({ email: req.body.email, psw: req.body.psw }, (err, user) => {
 		if (err) {
 			logger.error(`logIn - Error (500) al loguearse: ${err}`)
@@ -108,9 +111,27 @@ function logIn (req, res) {
 			name: user.name,
 			nickname: user.nickname,
 			email: user.email })
+		});
+	
+}
+/*
+function getUserByEmailAndPsw(email, password){
+	User.findOne({ email: req.body.email, psw: req.body.psw }, (err, user) => {
+		if (err) {
+			logger.error(`getUserByEmailAndPsw - Server Error (500): ${err}`)
+			return {status: 500,
+					message: `Error al logearse: ${err}`}
+		}
+		if (!user) {
+			logger.error(`getUserByEmailAndPsw - Error (404) al loguearse, email o psw invalidos: ${err}`)
+			return {status: 404,
+					message: `El mail o la contraseña son invalidos`}
+		}
+		return {status: 200,
+				user: user}
 	});
 }
-
+*/
 function getUserProfile(req, res) {
 	User.findOne({email: req.params.email}, (err, user) =>{
 		if(err) {
@@ -121,7 +142,8 @@ function getUserProfile(req, res) {
 			return res.status(400).send({message: 'El usuario solicitado no existe'})}
 
 		logger.info(`getUserProfile - Se devolvió el perfil del usuario ${user.email}`)
-		return res.status(200).send({ name: user.name,
+		return res.status(200).send({ 
+			name: user.name,
 			nickname: user.nickname,
 			email: user.email,
 			photo: user.photo
@@ -134,17 +156,73 @@ function updateUser(req, res){
 	let update = req.body
 	User.update({token: userToken}, update, (err,userUpdated)=>{
 		if(err) {
-			logger.error(`updateUser2 - Error (500) al actualizar el usuario: ${err}`)
+			logger.error(`updateUser - Error (500) al actualizar el usuario: ${err}`)
 			res.status(500).send({message:`Error al actualizar el usuario: ${err}`})}
 
-		logger.info(`updateUser2 - El usuario ${userUpdated.email} se modificó correctamente`)
+		logger.info(`updateUser - El usuario ${userUpdated.email} se modificó correctamente`)
 		res.status(200).send({message: 'El usuario se modificó correctamente'})
 	})
 }
 
+function getToken(req, res){
+	User.findOne({email: req.body.email}, (err, user) =>{
+		if(err) {
+			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})}
+		if(!user) {
+			return res.status(400).send({message: 'El usuario solicitado no existe'})}
 
+		return res.status(200).send({token: user.token})
+	})
+}
 
+function getTokenRecoverPasswordUser(req, res){
+	User.findOne({token: req.body.token}, (err, user)=>{
+		if(err){
+			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})
+		}
+		if(!user){
+			return res.status(400).send({message: 'El usuario solicitado no existe'})
+		}
+		let recoverToken = service.createToken({_id: user.psw})
+		let userUpdated = {body: {
+			token : user.token,
+			recoverPasswordToken: recoverToken
+		}}
+		let result = {status: function (nro){
+			return {statusNro: nro,
+			send: function (objJson){ return res.status(this.statusNro).send({recoverPasswordToken: recoverToken})}}
+			}
+		}
+		
+		updateUser(userUpdated, result)
+	})
+}
 
+function updatePasswordUser(req, res){
+	User.findOne({token: req.body.token, recoverPasswordToken:req.body.recoverPasswordToken}, (err, user)=>{
+		if(err){
+			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})
+		}
+		if(!user){
+			return res.status(400).send({message: 'El usuario solicitado no existe'})
+		}
+
+		let userToUpdate = {body: {
+			token : user.token,
+			recoverPasswordToken: undefined,
+			psw: req.body.newPassword
+		}}
+
+		let result = {status: function (nro){
+			return {statusNro: nro,
+			send: function (objJson){
+				return res.status(this.statusNro).send({message: objJson.message})}}
+			}
+		}
+		
+		updateUser(userToUpdate, result)
+	})
+}
 
 module.exports={
 	getUser,
@@ -155,5 +233,8 @@ module.exports={
 	signUp,
 	logIn,
 	getUserProfile,
-	updateUser
+	updateUser,
+	getToken,
+	getTokenRecoverPasswordUser,
+	updatePasswordUser
 }

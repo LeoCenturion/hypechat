@@ -137,7 +137,7 @@ paths:
             $ref: '#/definitions/Error' 
 
 
-  /organizaciones/{userEmail}:
+  /organizations/{userEmail}:
     get:
       summary: Se muestran todas las organizaciones(sin pws y token) del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
       parameters:
@@ -167,7 +167,7 @@ paths:
           schema:
             $ref: '#/definitions/Error' 
                 
-  /msjPrivados:
+  /privateMsj:
     get:
       description: Trae todas los mensajes privados de la organizacion del usuario
       parameters:
@@ -177,7 +177,7 @@ paths:
             type: object
             required: 
               - token
-              - organizacion_id
+              - organization_id
               - email
             properties:
               token:
@@ -224,7 +224,7 @@ paths:
           schema:
             $ref: '#/definitions/Error' 
                 
-  /organizationID_valid/{organizacionID}:
+  /idOrganizationValid/{organizationID}:
     get:
       description: Responde si existe o no una organizacion con ese ID
       parameters:
@@ -254,7 +254,7 @@ paths:
                 type: string
                 example: Ya existe una organizacion con ese ID!
 
-  /organizacion:
+  /organization:
     post:
       description: Crea una nueva organizacion
       parameters: 
@@ -264,10 +264,10 @@ paths:
             type: object
             required: 
               - token
-              - nombre
+              - name
               - id
-              - email_usuario
-              - contraseña
+              - email
+              - psw
             properties:
               token:
                 type: string
@@ -299,7 +299,7 @@ paths:
               message:
                 type: string
                 example: Se creo la organizacion!
-        400:
+        500:
           description: Request Invalida!
           schema:
             type: object
@@ -308,7 +308,7 @@ paths:
                 type: string
                 example: Hubo un error con el servidor! 
                 
-  /usuarioOrganizacion:
+  /userOrganization:
     post:
       description: Agregar un usuario a la organizacion
       parameters: 
@@ -318,8 +318,8 @@ paths:
             type: object
             required: 
               - token
-              - id_organizacion
-              - email_usuario
+              - id_organization
+              - email
             properties:
               token:
                 type: string
@@ -367,7 +367,7 @@ paths:
                 type: string
                 example: No existe una organizacion con ese id!
 
-  /organizacion/{token}/{organizacion_id}:
+  /organization/{token}/{organizationID}:
     get:
       description: Trae la informacion de la organizacion
       parameters:
@@ -404,8 +404,15 @@ paths:
                   type: string
                   example: "12345678"
                   description: psw de la organizacion consultada
-   
-        400:
+        404:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: No existe una organizacion con ese id!
+        500:
           description: Request Invalida!
           schema:
             type: object
@@ -414,7 +421,7 @@ paths:
                 type: string
                 example: Hubo un error con el servidor!
                 
-  /nombreOrganizacion:
+  /nameOrganization:
     put:
       description: Setea un nuevo nombre a la organizacion
       parameters: 
@@ -424,8 +431,8 @@ paths:
             type: object
             required: 
               - token
-              - id_organizacion
-              - nombre_organizacion
+              - organizationID
+              - name
             properties:
               token:
                 type: string
@@ -449,7 +456,7 @@ paths:
               message:
                 type: string
                 example: Se ha cambiado el nombre a la organizacion!
-        400:
+        404:
           description: Request Invalida!
           schema:
             type: object
@@ -457,8 +464,16 @@ paths:
               message:
                 type: string
                 example: No existe la organizacion!  
+        500:
+          description: Request Invalida!
+          schema:
+            type: object
+            properties:   
+              message:
+                type: string
+                example: Hubo un error con el servidor!
 
-  /passwordOrganizacion:
+  /pswOrganization:
     put:
       description: Setea un nuevo password a la organizacion
       parameters: 
@@ -468,8 +483,8 @@ paths:
             type: object
             required: 
               - token
-              - id_organizacion
-              - psw_organizacion
+              - organizationID
+              - psw
             properties:
               token:
                 type: string

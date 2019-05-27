@@ -109,11 +109,12 @@ User.findOne({email: emailUser}, (err, usuario)=>{
 //401 si no existe un usuario con ese email o 404 si no existe una organizacion con ese id
 function addUserToOrganization (req, res){
 	let token = req.body.token
-	let id_organization = req.body.id_organization
+	let idOrganization = req.body.idOrganization
 	let userEmail = req.body.email
+	let pswOrganization
 
 	//me fijo si la organizacion existe
-	Organization.findOne({id: id_organization}, (err, organization)=>{
+	Organization.findOne({id: idOrganization, psw: pswOrganization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
 		//si existe me fijo en las organizaciones del usuario a ver si ya esta agregado

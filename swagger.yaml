@@ -317,21 +317,26 @@ paths:
             type: object
             required: 
               - token
-              - id_organization
+              - idOrganization
               - email
+              - pswOrganization
             properties:
               token:
                 type: string
                 description: el token del usuario
                 example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
-              id_organizacion:
+              idOrganizacion:
                 type: string
                 description: id de la organizacion
                 example: "orga-2019"
-              email_usuario:
+              email:
                 type: string
                 description: email del usuario que creo la organizacion
                 example: "test@1.com"
+              pswOrganization:
+                type: string
+                description: contraseña de la organizacion
+                example: "it is the password"
       responses:
         200:
           description: Se realizo la request con exito!

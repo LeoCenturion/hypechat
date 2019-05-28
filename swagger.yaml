@@ -553,6 +553,40 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /organization/menssage:
+    get:
+      summary: returns message without restrected organization words
+      parameters:
+        - in: body
+          name: message
+          required: true
+        schema:
+          type: object
+          required: 
+            - message
+            - organizationID
+            - userToken
+          properties:
+              message:
+                type: string
+                description: message that user sends 
+                example: "hello Carlos!"
+        responses:
+          200:
+          description: Successful request
+          name: messageOK
+          schema:
+            type: object
+            description: message without restrected words
+          500:
+            description: Server faild
+            schema:
+              $ref: '#/definitions/Error'
+          400:
+            description: user dose not exist
+            schema:
+              $ref: '#/definitions/Error'
+
 definitions:
   user:
     type: object

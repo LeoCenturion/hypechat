@@ -192,7 +192,7 @@ function getMessageWithoutRestrictedWords(req, res){
 			for(let i=0; i<restrictedWords.length; i++){
 				var message = message.replace(restrictedWords[i], "***");
 			}
-			return message;
+			return res.status(200).send({messagge: message});
 		})
 	})
 }

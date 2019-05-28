@@ -307,6 +307,19 @@ returns a token with which the password can be recovered
 | ---- | ---------- | ----------- | -------- | ---- |
 | userToken | body |  | Yes | object |
 
+### /organization/senderMenssage
+
+#### GET
+##### Summary:
+
+returns message without restrected organization words
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| message | body |  | Yes | object |
+
 ### Models
 
 

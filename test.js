@@ -227,7 +227,7 @@ describe('SERVER', () => {
     	})
     })
     
-    describe('GET /profile/:email', () =>{
+    describe('GET user/profile/:email', () =>{
     	beforeEach((done) => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
@@ -239,9 +239,11 @@ describe('SERVER', () => {
 	    });
 
     	it('it should GET profile of the email user', (done) => {
-			chai.request(url)
-			    .get('/profile/uniqueUser@gmail.com')
+			chai.request('http://localhost:5000')
+			    .get('user/profile/uniqueUser@gmail.com')
 			    .end((err, res) => {
+			    	console.log('HAY ERROR????????????')
+			    	console.log(err)
 			        res.should.have.status(200);
 
 			        res.body.should.have.property('name')
@@ -262,7 +264,7 @@ describe('SERVER', () => {
 
 		it('it should GET profile of inexistent email user', (done) => {
 			chai.request(url)
-			    .get('/profile/inexistentUser@gmail.com')
+			    .get('user/profile/inexistentUser@gmail.com')
 			    .end((err, res) => {
 			        res.should.have.status(400);
 			        res.body.should.have.property('message')
@@ -271,7 +273,7 @@ describe('SERVER', () => {
 		});
     })
     
-    describe('PUT /profile', () =>{
+    describe('PUT user/profile', () =>{
     	beforeEach((done) => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
@@ -300,7 +302,7 @@ describe('SERVER', () => {
 	    		"name": 'newUserName'
 	    	}
 	    	chai.request(url)
-			    .put('/profile')
+			    .put('user/profile')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -310,7 +312,7 @@ describe('SERVER', () => {
 	    })
     })
     
-    describe('PUT /password', () =>{
+    describe('PUT user/password', () =>{
     	beforeEach((done) => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
@@ -335,7 +337,7 @@ describe('SERVER', () => {
 	    		"psw":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .put('/password')
+			    .put('user/password')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -345,7 +347,7 @@ describe('SERVER', () => {
 	    })
     })
 
-    describe('GET /recoveredPassword', () =>{
+    describe('GET user/recoveredPassword', () =>{
     	beforeEach((done) => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
@@ -370,7 +372,7 @@ describe('SERVER', () => {
 	    		"psw":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .get('/recoveredPassword')
+			    .get('user/recoveredPassword')
 			    .send({"token": token})
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -380,7 +382,7 @@ describe('SERVER', () => {
 	    })
     })
 
-    describe('PUT /recoveredPassword', () =>{
+    describe('PUT user/recoveredPassword', () =>{
     	let recoverToken;
     	beforeEach((done) => {
 	        let user = new User({
@@ -409,7 +411,7 @@ describe('SERVER', () => {
 	    		"newPassword":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .put('/recoveredPassword')
+			    .put('user/recoveredPassword')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -425,7 +427,7 @@ describe('SERVER', () => {
 	    		"newPassword":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .put('/recoveredPassword')
+			    .put('user/recoveredPassword')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(400);

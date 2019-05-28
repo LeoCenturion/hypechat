@@ -10,7 +10,7 @@ const OrganizationSchema = new Schema({
 	psw: {type:String, default:''},//false para que cada vez que nos pidan al usuario no se mande la contraseña
 	name: {type:String, default:''},
 	channels: {type: Array, default: ['general','varios']},
-	restrictedWords : {type: Array, default: []]}
+	restrictedWords : {type: Array, default: []}
 	//signupDate: {type: Date, default: Date.now()},
 	//lastLogin: Date
 });

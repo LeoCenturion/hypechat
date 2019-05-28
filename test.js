@@ -239,11 +239,9 @@ describe('SERVER', () => {
 	    });
 
     	it('it should GET profile of the email user', (done) => {
-			chai.request('http://localhost:5000')
-			    .get('user/profile/uniqueUser@gmail.com')
+			chai.request(url)
+			    .get('/user/profile/uniqueUser@gmail.com')
 			    .end((err, res) => {
-			    	console.log('HAY ERROR????????????')
-			    	console.log(err)
 			        res.should.have.status(200);
 
 			        res.body.should.have.property('name')
@@ -264,7 +262,7 @@ describe('SERVER', () => {
 
 		it('it should GET profile of inexistent email user', (done) => {
 			chai.request(url)
-			    .get('user/profile/inexistentUser@gmail.com')
+			    .get('/user/profile/inexistentUser@gmail.com')
 			    .end((err, res) => {
 			        res.should.have.status(400);
 			        res.body.should.have.property('message')
@@ -302,7 +300,7 @@ describe('SERVER', () => {
 	    		"name": 'newUserName'
 	    	}
 	    	chai.request(url)
-			    .put('user/profile')
+			    .put('/user/profile')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -337,7 +335,7 @@ describe('SERVER', () => {
 	    		"psw":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .put('user/password')
+			    .put('/user/password')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -372,7 +370,7 @@ describe('SERVER', () => {
 	    		"psw":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .get('user/recoveredPassword')
+			    .get('/user/recoveredPassword')
 			    .send({"token": token})
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -411,7 +409,7 @@ describe('SERVER', () => {
 	    		"newPassword":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .put('user/recoveredPassword')
+			    .put('/user/recoveredPassword')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(200);
@@ -427,7 +425,7 @@ describe('SERVER', () => {
 	    		"newPassword":'newPsw'
 	    	}
 	    	chai.request(url)
-			    .put('user/recoveredPassword')
+			    .put('/user/recoveredPassword')
 			    .send(newUserProfile)
 			    .end((err, res) => {
 			        res.should.have.status(400);

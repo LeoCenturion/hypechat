@@ -165,17 +165,6 @@ function updateUser(req, res){
 	})
 }
 
-function getToken(req, res){
-	User.findOne({email: req.body.email}, (err, user) =>{
-		if(err) {
-			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})}
-		if(!user) {
-			return res.status(400).send({message: 'El usuario solicitado no existe'})}
-
-		return res.status(200).send({token: user.token})
-	})
-}
-
 function getTokenRecoverPasswordUser(req, res){
 	User.findOne({token: req.body.token}, (err, user)=>{
 		if(err){
@@ -235,7 +224,6 @@ module.exports={
 	logIn,
 	getUserProfile,
 	updateUser,
-	getToken,
 	getTokenRecoverPasswordUser,
 	updatePasswordUser
 }

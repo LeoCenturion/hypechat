@@ -12,7 +12,6 @@ api.get('/user/:userId', userControllers.getUser)
 api.post('/user', userControllers.saveUser)
 api.put('/user/:userId', userControllers.updateUser2 )
 api.delete('/user/:userId', userControllers.deleteUser )
-//api.put('/token', userControllers.setToken)
 
 api.post('/signUp', userControllers.signUp )
 api.post('/login', userControllers.logIn )

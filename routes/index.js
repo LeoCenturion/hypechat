@@ -21,11 +21,11 @@ api.post('/login', userControllers.logIn )
 api.post('/loginFacebook', (req,res) => {res.status(500).send({message: 'not implemented yet'})})
 
 //---------USERS----------
-api.get('user/profile/:email', userControllers.getUserProfile)
-api.put('user/profile', userControllers.updateUser )
-api.put('user/password', userControllers.updateUser )
-api.get('user/recoveredPassword', userControllers.getTokenRecoverPasswordUser)
-api.put('user/recoveredPassword', userControllers.updatePasswordUser)
+api.get('profile/:email', userControllers.getUserProfile)
+api.put('profile', userControllers.updateUser )
+api.put('password', userControllers.updateUser )
+api.get('recoveredPassword', userControllers.getTokenRecoverPasswordUser)
+api.put('recoveredPassword', userControllers.updatePasswordUser)
 
 //---------ORGANITIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)

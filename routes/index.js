@@ -29,7 +29,7 @@ api.put('/recoveredPassword', userControllers.updatePasswordUser)
 
 //---------ORGANITIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)
-api.get('/privateMsj',organizationControllers.getPrivateMsj)
+api.post('/privateMsj',organizationControllers.getPrivateMsj)
 api.get('/idOrganizationValid/:organizationID',organizationControllers.isOrganizationIDValid)
 api.post('/organization',organizationControllers.createOrganization)
 api.post('/organization/user',organizationControllers.addUserToOrganization)
@@ -57,6 +57,6 @@ api.put('/welcomeChannel',channelControllers.setWelcome)
 api.get('/welcomeChannel',channelControllers.getWelcome)
 api.delete('/channel',channelControllers.remove)
 api.get('/channel',channelControllers.channelInfo)
-api.get('/channels/user',channelControllers.userChannels)
+api.post('/channels/user',channelControllers.userChannels)
 
 module.exports = api

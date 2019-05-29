@@ -36,5 +36,6 @@ api.get('/organization/:token/:organizationID',organizationControllers.getInfoOr
 api.put('/organization/name',organizationControllers.updateNameOrganization)
 api.put('/organization/password',organizationControllers.updatePasswordOrganization)
 
+api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords)
 
 module.exports = api

@@ -180,6 +180,22 @@ function updatePasswordOrganization (req, res){
 	})
 }
 
+function getMessageWithoutRestrictedWords(req, res){
+	User.findOne({token: req.body.userToken}, (err, user)=>{
+		if(err) return res.status(500).send({message: `Error al buscar un usuario: ${err}`})
+		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.userToken}`})
+		Organization.findOne({id: req.body.organizationID}, (err, organization)=>{
+			if(err) return res.status(500).send({message: `Error al buscar la organizacion: ${err}`})
+			if(!organization) return res.status(404).send({message: `No existe organizacoin con id ${req.body.organizationID}`})
+			let restrictedWords = organization.restrictedWords;
+			let message = req.body.message;
+			for(let i=0; i<restrictedWords.length; i++){
+				var message = message.replace(restrictedWords[i], "***");
+			}
+			return res.status(200).send({messagge: message});
+		})
+	})
+}
 
 module.exports={
 	getUserOrganizations,
@@ -189,5 +205,6 @@ module.exports={
 	addUserToOrganization,
 	getInfoOrganization,
 	updateNameOrganization,
-	updatePasswordOrganization
+	updatePasswordOrganization,
+	getMessageWithoutRestrictedWords
 }

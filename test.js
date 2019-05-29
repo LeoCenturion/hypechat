@@ -282,6 +282,7 @@ describe('SERVER', () => {
 			      })
 	        user.save()
 	        done()
+
 	    });
 
 	    it('it should update user profile', (done)=>{
@@ -337,8 +338,7 @@ describe('SERVER', () => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
 			        "nickname": 'userNickname',
-			        "psw": 'userPsw',
-			        "token": token
+			        "psw": 'userPsw'
 			      })
 	        user.save()
 	        done()
@@ -346,13 +346,9 @@ describe('SERVER', () => {
 	    
     	it('it should get a token', (done)=>{
 	    	
-	    	let newUserProfile = {
-	    		"token": token,
-	    		"psw":'newPsw'
-	    	}
 	    	chai.request(url)
 			    .get('/recoveredPassword')
-			    .send({"token": token})
+			    .send({"email": 'uniqueUser@gmail.com'})
 			    .end((err, res) => {
 			        res.should.have.status(200);
 			        res.body.should.have.property('recoverPasswordToken')
@@ -362,24 +358,23 @@ describe('SERVER', () => {
     })
 
     describe('PUT /recoveredPassword', () =>{
-    	let recoverToken;
+    	let recoverToken = "this is token to recover the password";
     	beforeEach((done) => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
 			        "nickname": 'userNickname',
 			        "psw": 'userPsw',
-			        "token": token
+			        "recoverPasswordToken": recoverToken
 			      })
 	        user.save()
-	        done()
-
-			recoverToken = userControllers.getTokenRecoverPasswordUser({body:{token: token}}, {status: function(nro){return{send:function(obj){return obj}}}})
+			done()
 	    });
 	    
     	it('it should update password because recoverToken is ok', (done)=>{
-	    	
+	    	/*recoverToken = userControllers.getTokenRecoverPasswordUser({body:{"email": 'uniqueUser@gmail.com'}}, {status: function(nro){return{send:function(obj){console.log(obj)
+				return obj.recoverPasswordToken}}}})*/
 	    	let newUserProfile = {
-	    		"token": token,
+	    		"email": 'uniqueUser@gmail.com',
 	    		"recoverPasswordToken":recoverToken,
 	    		"newPassword":'newPsw'
 	    	}
@@ -395,7 +390,7 @@ describe('SERVER', () => {
 	    it('it should not update password because recoverToken is false', (done)=>{
 	    	
 	    	let newUserProfile = {
-	    		"token": token,
+	    		"email": 'uniqueUser@gmail.com',
 	    		"recoverPasswordToken":'falseToken',
 	    		"newPassword":'newPsw'
 	    	}

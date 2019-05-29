@@ -165,7 +165,8 @@ function updateUser(req, res){
 }
 
 function getTokenRecoverPasswordUser(req, res){
-	User.findOne({token: req.body.token}, (err, user)=>{
+	User.findOne({email: req.body.email}, (err, user)=>{
+		console.log(req.body.email)
 		if(err){
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})
 		}
@@ -188,7 +189,7 @@ function getTokenRecoverPasswordUser(req, res){
 }
 
 function updatePasswordUser(req, res){
-	User.findOne({token: req.body.token, recoverPasswordToken:req.body.recoverPasswordToken}, (err, user)=>{
+	User.findOne({email: req.body.email, recoverPasswordToken:req.body.recoverPasswordToken}, (err, user)=>{
 		if(err){
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})
 		}

@@ -133,22 +133,25 @@ function getUserByEmailAndPsw(email, password){
 }
 */
 function getUserProfile(req, res) {
-	User.findOne({email: req.params.email}, (err, user) =>{
-		if(err) {
+	User.findOne({token: req.body.token}, (err1,user1)=>{
+		User.findOne({email: req.params.email}, (err2, user2) =>{
+		if(err1 || err2) {
 			logger.error(`getUserProfile - Error (500) al buscar informacion del usuario ${req.params.email}: ${err}`)
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})}
-		if(!user) {
-			logger.error(`getUserProfile - Error (400), el usuario ${req.params.email} no existe`)
+		if(!user1 || !user2) {
+			logger.error(`getUserProfile - Error (400), el usuario con mail ${req.params.email} no existe, o el usuario con token ${req.body.token} no existes`)
 			return res.status(400).send({message: 'El usuario solicitado no existe'})}
 
-		logger.info(`getUserProfile - Se devolvió el perfil del usuario ${user.email}`)
+		logger.info(`getUserProfile - Se devolvió el perfil del usuario ${user2.email}`)
 		return res.status(200).send({ 
-			name: user.name,
-			nickname: user.nickname,
-			email: user.email,
-			photo: user.photo
+			name: user2.name,
+			nickname: user2.nickname,
+			email: user2.email,
+			photo: user2.photo
+			})
 		})
 	})
+	
 }
 
 function updateUser(req, res){
@@ -168,12 +171,15 @@ function getTokenRecoverPasswordUser(req, res){
 	User.findOne({email: req.body.email}, (err, user)=>{
 		console.log(req.body.email)
 		if(err){
+			logger.error(`getTokenRecoverPasswordUser - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})
 		}
 		if(!user){
+			logger.error(`getTokenRecoverPasswordUser - Error (400), el usuario con mail ${req.params.email} no existe`)
 			return res.status(400).send({message: 'El usuario solicitado no existe'})
 		}
 		let recoverToken = service.createToken({_id: user.psw})
+		logger.info(`getTokenRecoverPasswordUser - Se creo un token para la recuperacion de contrasena del usuario con mail ${req.params.email}`)
 		let userUpdated = {body: {
 			token : user.token,
 			recoverPasswordToken: recoverToken
@@ -183,7 +189,6 @@ function getTokenRecoverPasswordUser(req, res){
 			send: function (objJson){ return res.status(this.statusNro).send({recoverPasswordToken: recoverToken})}}
 			}
 		}
-		
 		updateUser(userUpdated, result)
 	})
 }
@@ -191,9 +196,11 @@ function getTokenRecoverPasswordUser(req, res){
 function updatePasswordUser(req, res){
 	User.findOne({email: req.body.email, recoverPasswordToken:req.body.recoverPasswordToken}, (err, user)=>{
 		if(err){
+			logger.error(`updatePasswordUser - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})
 		}
 		if(!user){
+			logger.error(`updatePasswordUser - Error (400), el usuario con mail ${req.params.email} y token de recupero ${req.body.recoverPasswordToken} no existe`)
 			return res.status(400).send({message: 'El usuario solicitado no existe'})
 		}
 
@@ -209,7 +216,7 @@ function updatePasswordUser(req, res){
 				return res.status(this.statusNro).send({message: objJson.message})}}
 			}
 		}
-		
+		logger.info(`updatePasswordUser - Se mando a actualizar la contraseña del usuario con mail ${req.body.email}`)
 		updateUser(userToUpdate, result)
 	})
 }

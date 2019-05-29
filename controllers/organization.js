@@ -24,7 +24,7 @@ function getUserOrganizations(req, res){
 //El mail del usuario, el id de la organizacion y el token debe ser pasado en el body
 function getPrivateMsj(req, res){
 	let token = req.body.token
-	let id_organization = req.body.organization_id
+	let id_organization = req.body.id
 	let userEmail = req.body.email
 
   //chequear que exista el email y id

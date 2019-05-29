@@ -341,7 +341,7 @@ function channelInfo(req, res){
 // 500 - Error de server
 function userChannels(req, res){
 	let token = req.body.token
-	let idOrganization = req.body.organizationID
+	let idOrganization = req.body.id
 	let userEmail = req.body.email
 
 

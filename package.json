@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "start": "MONGODB=mongodb+srv://hypechat:hypechat@hypechat-5gtp2.mongodb.net/hypechat?retryWrites=true node server.js",
-    "test": "mocha test.js",
+    "test": "mocha",
     "start_local": "MONGODB=mongodb://127.0.0.1:27017 nodemon server.js"
   },
   "dependencies": {

@@ -12,14 +12,14 @@ let should = chai.should();
 let expect = require('chai').expect;
 
 const url= 'http://localhost:5000';
-var token;
+var token = "thisIsTheToken";
 
 
 chai.use(chaiHttp);
 
 const userControllers = require('./controllers/user')
 var sinon = require('sinon');
-
+/*
 describe('USER CONTROLLER', ()=>{
 	beforeEach((done)=>{
 		User.remove({}, (err) => {
@@ -94,7 +94,7 @@ describe('USER CONTROLLER', ()=>{
 		})
 	})
 });
-
+*/
 describe('SERVER', () => {
     beforeEach((done) => { //Before each test we empty the database
         User.remove({}, (err) => { 
@@ -276,22 +276,14 @@ describe('SERVER', () => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
 			        "nickname": 'userNickname',
-			        "psw": 'userPsw'
+			        "psw": 'userPsw',
+			        "token": token
 			      })
 	        user.save()
-
-	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
-			    .end((err, res) => {
-			        token = res.body.token
-			      	done();
-			    });
-
+	        done()
 	    });
 
 	    it('it should update user profile', (done)=>{
-	    	
 	    	let newUserProfile = {
 	    		"token": token,
 	    		"email": 'newEmmailUser@gmail.com',
@@ -315,17 +307,11 @@ describe('SERVER', () => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
 			        "nickname": 'userNickname',
-			        "psw": 'userPsw'
+			        "psw": 'userPsw',
+			        "token": token
 			      })
 	        user.save()
-
-	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
-			    .end((err, res) => {
-			        token = res.body.token
-			      	done();
-			    });
+	        done()
 	    });
 	    
     	it('it should update user profile', (done)=>{
@@ -350,17 +336,11 @@ describe('SERVER', () => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
 			        "nickname": 'userNickname',
-			        "psw": 'userPsw'
+			        "psw": 'userPsw',
+			        "token": token
 			      })
 	        user.save()
-
-	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
-			    .end((err, res) => {
-			        token = res.body.token
-			      	done();
-			    });
+	        done()
 	    });
 	    
     	it('it should get a token', (done)=>{
@@ -386,17 +366,11 @@ describe('SERVER', () => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
 			        "nickname": 'userNickname',
-			        "psw": 'userPsw'
+			        "psw": 'userPsw',
+			        "token": token
 			      })
 	        user.save()
-
-	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
-			    .end((err, res) => {
-			        token = res.body.token
-			      	done();
-			    });
+	        done()
 
 			recoverToken = userControllers.getTokenRecoverPasswordUser({body:{token: token}}, {status: function(nro){return{send:function(obj){return obj}}}})
 	    });

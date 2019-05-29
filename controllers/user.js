@@ -158,9 +158,9 @@ function updateUser(req, res){
 	User.update({token: userToken}, update, (err,userUpdated)=>{
 		if(err) {
 			logger.error(`updateUser - Error (500) al actualizar el usuario: ${err}`)
-			res.status(500).send({message:`Error al actualizar el usuario: ${err}`})}
-
-		logger.info(`updateUser - El usuario ${userUpdated.email} se modificó correctamente`)
+			res.status(500).send({message:`Error al actualizar el usuario: ${err}`})
+		}
+		logger.info(`updateUser - El usuario ${userToken} se modificó correctamente`)
 		res.status(200).send({message: 'El usuario se modificó correctamente'})
 	})
 }

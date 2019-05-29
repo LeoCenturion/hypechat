@@ -228,7 +228,7 @@ describe('SERVER', () => {
     	})
     })
     
-    describe('GET /user/profile/:email', () =>{
+    describe('GET /profile/:email', () =>{
     	beforeEach((done) => {
 	        let user = new User({
 			        "email": 'uniqueUser@gmail.com',
@@ -241,7 +241,7 @@ describe('SERVER', () => {
 
     	it('it should GET profile of the email user', (done) => {
 			chai.request(url)
-			    .get('/user/profile/uniqueUser@gmail.com')
+			    .get('/profile/uniqueUser@gmail.com')
 			    .end((err, res) => {
 			        res.should.have.status(200);
 
@@ -263,7 +263,7 @@ describe('SERVER', () => {
 
 		it('it should GET profile of inexistent email user', (done) => {
 			chai.request(url)
-			    .get('/user/profile/inexistentUser@gmail.com')
+			    .get('/profile/inexistentUser@gmail.com')
 			    .end((err, res) => {
 			        res.should.have.status(400);
 			        res.body.should.have.property('message')

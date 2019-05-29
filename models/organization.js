@@ -15,8 +15,7 @@ const OrganizationSchema = new Schema({
 	welcome: {type: String, default: 'Bienvenido a la organizacion'},
 	photo: String, //guardamos la url de la imagen 
 	location: {type: String, default: "Facultad de ingenieria"}
-	//signupDate: {type: Date, default: Date.now()},
-	//lastLogin: Date
+
 });
 
 

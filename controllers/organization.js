@@ -319,7 +319,6 @@ function remove(req, res){
 	let token = req.body.token
 	let id_organization = req.body.organizationID
 	let email = req.body.email
-	let name = req.body.name
 
 	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
@@ -381,5 +380,6 @@ module.exports={
 	revokeModerator,
 	removeUser,
 	updateWelcomeOrganization,
-	updatePhotoOrganization
+	updatePhotoOrganization,
+	remove
 }

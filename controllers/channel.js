@@ -5,7 +5,6 @@ const service = require('../services')
 const User = require('../models/user');
 const Organization = require('../models/organization');
 const Channel = require('../models/channel');
-const PrivateMsj = require('../models/privateMsj');
 const logger = require('../utils/logger');
 
 //Crea un canal
@@ -286,5 +285,6 @@ module.exports={
     setWelcome,
     getPrivate,
     getDescription,
+    getWelcome,
     remove
 }

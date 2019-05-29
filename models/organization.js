@@ -14,7 +14,7 @@ const OrganizationSchema = new Schema({
 	members: {type: Array, default: []},
 	welcome: {type: String, default: 'Bienvenido a la organizacion'},
 	photo: String, //guardamos la url de la imagen 
-	location: {type: String, default: "Facultad de ingenieria"}
+	location: {type: String, default: "Facultad de ingenieria"},
 	restrictedWords : {type: Array, default: []}
 });
 

@@ -126,6 +126,174 @@ updates password of the user identified by the token, provided in the body.
 | 200 | Successful request | string |
 | 500 | Fallo el servidor | [Error](#error) |
 
+### /organizations/{userEmail}
+
+#### GET
+##### Summary:
+
+Se muestran todas las organizaciones(sin pws y token) del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| email | path | email del usuario del cual se quiere ver todas las organizaciones | Yes | string |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Request Exitoso! | object |
+| 400 | email del path no existe. | [Error](#error) |
+| 500 | Fallo el servidor | [Error](#error) |
+
+### /privateMsj
+
+#### GET
+##### Description:
+
+Trae todas los mensajes privados de la organizacion del usuario
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| datos | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Se realizo la request con exito! | object |
+| 400 | email no existe. | [Error](#error) |
+| 401 | la orgainzacion id no existe. | [Error](#error) |
+| 500 | Fallo el servidor | [Error](#error) |
+
+### /idOrganizationValid/{organizationID}
+
+#### GET
+##### Description:
+
+Responde si existe o no una organizacion con ese ID
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| id | path | organizacion id del usuario del cual se quiere ver si es valida | Yes | string |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Se realizo la request con exito! | object |
+| 400 | Request Invalida! | object |
+
+### /organization
+
+#### POST
+##### Description:
+
+Crea una nueva organizacion
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| datos | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Se realizo la request con exito! | object |
+| 500 | Request Invalida! | object |
+
+### /userOrganization
+
+#### POST
+##### Description:
+
+Agregar un usuario a la organizacion
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| datos | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Se realizo la request con exito! | object |
+| 400 | Request Invalida! | object |
+| 401 | Request Invalida! | object |
+| 404 | Request Invalida! | object |
+
+### /organization/{token}/{organizationID}
+
+#### GET
+##### Description:
+
+Trae la informacion de la organizacion
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token | path | el token del usuario | Yes | string |
+| id_organizacion | path | id de la organizacion | Yes | string |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Se realizo la request con exito! | object |
+| 404 | Request Invalida! | object |
+| 500 | Request Invalida! | object |
+
+### /nameOrganization
+
+#### PUT
+##### Description:
+
+Setea un nuevo nombre a la organizacion
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| datos | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Se realizo la request con exito! | object |
+| 404 | Request Invalida! | object |
+| 500 | Request Invalida! | object |
+
+### /pswOrganization
+
+#### PUT
+##### Description:
+
+Setea un nuevo password a la organizacion
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| datos | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Se realizo la request con exito! | object |
+| 400 | Request Invalida! | object |
+
 ### /recoveredPassword
 
 #### GET
@@ -138,14 +306,6 @@ returns a token with which the password can be recovered
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | userToken | body |  | Yes | object |
-
-##### Responses
-
-| Code | Description | Schema |
-| ---- | ----------- | ------ |
-| 200 | Successful request | object |
-| 400 | user dose not exist | [Error](#error) |
-| 500 | Server faild | [Error](#error) |
 
 ### Models
 

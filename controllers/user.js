@@ -7,7 +7,6 @@ const logger = require('../utils/logger');
 
 function getUser (req, res){
 	let userId = req.params.userId
-
 	User.findById(userId, (err, usuario)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		if (!usuario) return res.status(404).send({message: 'El usuario no existe'})
@@ -62,7 +61,7 @@ function deleteUser (req, res){
 
 
 function signUp(req,res){
-	const user = new User({
+    const user = new User({
 		email: req.body.email,
 		name: req.body.name,
 		nickname: req.body.nickname,
@@ -76,7 +75,6 @@ function signUp(req,res){
 			return res.status(500).send({message: `singUp - Error al crear el usuario: ${err}`})
 		}
 		else{
-			//res.status(200).send({token: service.createToken(user)})
 			logger.info(`signUp - Se creo el usuario con mail ${user.email}`)
 			res.status(200).send(user)
 		}
@@ -106,8 +104,9 @@ function logIn (req, res) {
 			}
 			logger.info(`logIn - Se actualizo el token del usuario ${user.email}`)
 		})
+
 		logger.info(`logIn - Se logueo el usuario ${user.email}`)
-		return res.status(200).send({ message: 'Te has logueado correctamente', 
+		return res.status(200).send({ message: 'Te has logueado correctamente',
 			token: newToken,
 			name: user.name,
 			nickname: user.nickname,

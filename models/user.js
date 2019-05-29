@@ -10,10 +10,13 @@ const UserSchema = new Schema({
 	photo: {type:String, default:''}, //guardamos la url de la imagen
 	nickname: {type:String, default:''},
 	token: String,
+	organizations: {type: Array, default:[]},
 	recoverPasswordToken: String
 	//signupDate: {type: Date, default: Date.now()},
 	//lastLogin: Date
 });
+
+
 
 /*
 UserSchema.methods.gravatar = function (size) {

@@ -4,6 +4,7 @@ const express = require('express');
 const api = express.Router()
 const userControllers = require('../controllers/user')
 const organizationControllers = require('../controllers/organization')
+const channelControllers = require('../controllers/channel')
 
 api.get('/hello/:name',function(req, res){
 	res.send({message: `Hello, ${req.params.name}!`});
@@ -35,7 +36,27 @@ api.post('/organization/user',organizationControllers.addUserToOrganization)
 api.get('/organization/:token/:organizationID',organizationControllers.getInfoOrganization)
 api.put('/organization/name',organizationControllers.updateNameOrganization)
 api.put('/organization/password',organizationControllers.updatePasswordOrganization)
+api.put('/moderator',organizationControllers.asignModerator)
+api.put('/revokeModerator',organizationControllers.revokeModerator)
+api.delete('/member',organizationControllers.removeUser)
+api.put('/welcomeOrganization',organizationControllers.updateWelcomeOrganization)
+api.put('/photoOrganization',organizationControllers.updatePhotoOrganization)
 
 api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords)
+
+//---------CHANNELS----------
+api.post('/channel',channelControllers.createChannel)
+api.get('/channelValid/:id/:name',channelControllers.isChannelValid)
+api.post('/channel/user',channelControllers.addUserToChannel)
+api.delete('/channel/user',channelControllers.removeUserFromChannel)
+api.put('/privateChannel',channelControllers.setPrivate)
+api.get('/privateChannel',channelControllers.getPrivate)
+api.put('/description',channelControllers.setDescription)
+api.get('/description',channelControllers.getDescription)
+api.put('/welcomeChannel',channelControllers.setWelcome)
+api.get('/welcomeChannel',channelControllers.getWelcome)
+api.delete('/channel',channelControllers.remove)
+api.get('/channel',channelControllers.channelInfo)
+api.get('/channels/user',channelControllers.userChannels)
 
 module.exports = api

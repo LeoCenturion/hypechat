@@ -165,7 +165,7 @@ function updateUser(req, res){
 }
 
 function getToken(req, res){
-	User.findOne({email: req.body.email}, (err, user) =>{
+	User.findOne({email: req.params.email}, (err, user) =>{
 		if(err) {
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})}
 		if(!user) {

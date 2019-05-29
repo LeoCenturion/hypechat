@@ -281,8 +281,7 @@ describe('SERVER', () => {
 	        user.save()
 
 	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
+			    .get('/user/token/uniqueUser@gmail.com')
 			    .end((err, res) => {
 			        token = res.body.token
 			      	done();
@@ -320,8 +319,7 @@ describe('SERVER', () => {
 	        user.save()
 
 	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
+			    .get('/user/token/uniqueUser@gmail.com')
 			    .end((err, res) => {
 			        token = res.body.token
 			      	done();
@@ -355,8 +353,7 @@ describe('SERVER', () => {
 	        user.save()
 
 	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
+			    .get('/user/token/uniqueUser@gmail.com')
 			    .end((err, res) => {
 			        token = res.body.token
 			      	done();
@@ -391,8 +388,7 @@ describe('SERVER', () => {
 	        user.save()
 
 	    	chai.request(url)
-			    .get('/token')
-			    .send({"email": 'uniqueUser@gmail.com'})
+			    .get('/user/token/uniqueUser@gmail.com')
 			    .end((err, res) => {
 			        token = res.body.token
 			      	done();

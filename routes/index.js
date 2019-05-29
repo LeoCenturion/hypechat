@@ -25,6 +25,7 @@ api.put('/user/profile', userControllers.updateUser )
 api.put('/user/password', userControllers.updateUser )
 api.get('/user/recoveredPassword', userControllers.getTokenRecoverPasswordUser)
 api.put('/user/recoveredPassword', userControllers.updatePasswordUser)
+api.get('/user/token/:email', userControllers.getToken)
 
 //---------ORGANITIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)

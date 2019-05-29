@@ -15,7 +15,14 @@ function getUserOrganizations(req, res){
 	User.findOne({email: req.params.userEmail}, (err, usuario)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		if (!usuario) return res.status(404).send({message: `El usuario ${userEmail} no existe`})
-		res.status(200).send({organizations: usuario.organizations})
+		let userOrg =[]
+		Organization.find({id: {$in: usuario.organizations}}, (err, userOrganizations)=>{
+			userOrganizations.forEach(function (element){
+				userOrg.push({id: element.id, name: element.name})
+			})
+			res.status(200).send({organizations: userOrg})
+		})
+		
 	})
 	
 }

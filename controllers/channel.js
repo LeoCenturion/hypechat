@@ -44,7 +44,7 @@ function createChannel(req,res){
 				logger.error(`Error al crear el canal ${name}: ${err}`)
 				return res.status(500).send({message: `canal - Error al crear el canal: ${err}`})
 			}
-			logger.info(`create channel - Se creo el canal ${name} en la organizacion ${organization.id}`)
+			logger.info(`create channel - Se creo el canal ${name} en la organizacion ${id}`)
 		
 			//Agrego el canal a la organizacion 
 			Organization.updateOne({id: id},{ $push: { channels: name } },(err, usuario)=>{
@@ -60,14 +60,18 @@ function createChannel(req,res){
 }
 
 
-//devuelve 200 si el nombre del canal es valido para crearse o 404 en caso ya haya un canal creado con ese nombre
+//devuelve 200 si el nombre del canal es valido para crearse 
+// 403 en caso que la organizacion no exista
+// 404 en caso ya haya un canal creado con ese nombre
 function isChannelValid (req, res){
     let id_organization = req.params.id
     let name = req.params.name
 	
 	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-        if (organization.channels.includes(name)) return res.status(400).send({message: 'El canal ya existe'})
+		if (!organization) return res.status(403).send({message: 'La organizacion no existe'})
+		
+		if (organization.channels.includes(name)) return res.status(400).send({message: 'El canal ya existe'})
         return res.status(200).send({message: 'No existe un canal con ese nombre, valido para crear'})
 		
 		
@@ -180,12 +184,12 @@ function removeUserFromChannel(req, res){
 // 500 - Error de server
 function setPrivate (req, res){
 	let token = req.body.token
-	let id_organization = req.body.organizationID
-	let name = req.body.name
+	let idOrganization = req.body.organizationID
+	let nameChannel = req.body.name
     var priv = false
     if(req.body.private == 1) {priv = true}
 
-	Channel.updateOne({name: nameChannel, id: idOrganization},{ private: priv },(err, udChannel)=>{
+	Channel.findOneAndUpdate({name: nameChannel, id: idOrganization},{ private: priv },(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
         if (!udChannel) return res.status(404).send({message: 'El canal no existe para esa organizacion'})
 		res.status(200).send({message:`Se seteo al canal la privacidad del canal`})
@@ -198,11 +202,11 @@ function setPrivate (req, res){
 // 500 - Error de server
 function setDescription (req, res){
 	let token = req.body.token
-	let id_organization = req.body.organizationID
-	let name = req.body.name
+	let idOrganization = req.body.organizationID
+	let nameChannel = req.body.name
     let desc = req.body.description
 
-	Channel.updateOne({name: nameChannel, id: idOrganization},{ description: desc },(err, udChannel)=>{
+	Channel.findOneAndUpdate({name: nameChannel, id: idOrganization},{ description: desc },(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
         if (!udChannel) return res.status(404).send({message: 'El canal no existe para esa organizacion'})
 		res.status(200).send({message:`Se actualizo la descripcion del canal`})
@@ -214,11 +218,11 @@ function setDescription (req, res){
 // 500 - Error de server
 function setWelcome (req, res){
 	let token = req.body.token
-	let id_organization = req.body.organizationID
-	let name = req.body.name
+	let idOrganization = req.body.organizationID
+	let nameChannel = req.body.name
     let wel = req.body.welcome
 
-	Channel.updateOne({name: nameChannel, id: idOrganization},{ welcome: wel },(err, udChannel)=>{
+	Channel.findOneAndUpdate({name: nameChannel, id: idOrganization},{ welcome: wel },(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
         if (!udChannel) return res.status(404).send({message: 'El canal no existe para esa organizacion'})
 		res.status(200).send({message:`Se actualizo el mensaje de bienvenida del canal`})
@@ -230,11 +234,11 @@ function setWelcome (req, res){
 // 500 - Error de server
 function getDescription (req, res){
 	let token = req.body.token
-	let id_organization = req.body.organizationID
-	let name = req.body.name
+	let idOrganization = req.body.organizationID
+	let nameChannel = req.body.name
 
 
-	Channel.findOne({name: nameChannel, id: idOrganization},{ description: desc },(err, udChannel)=>{
+	Channel.findOne({name: nameChannel, id: idOrganization},(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
         if (!udChannel) return res.status(404).send({message: 'El canal no existe para esa organizacion'})
 		res.status(200).send({description: udChannel.description})
@@ -250,28 +254,129 @@ function getWelcome (req, res){
 	let name = req.body.name
 
 
-	Channel.findOne({name: nameChannel, id: idOrganization},{ description: desc },(err, udChannel)=>{
+	Channel.findOne({name: name, id: id_organization},(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
         if (!udChannel) return res.status(404).send({message: 'El canal no existe para esa organizacion'})
 		res.status(200).send({welcome: udChannel.welcome})
 	})
 }
 
-//Elimina el canal (200)
+//Devuelve la privacidad del canal (200)
 // 404 - si no existe un canal con ese nombre en la organizacion
 // 500 - Error de server
-function remove(req, res){
+function getPrivate (req, res){
 	let token = req.body.token
 	let id_organization = req.body.organizationID
 	let name = req.body.name
 
+    if(req.body.private == 1) {priv = true}
 
-	Channel.findOneAndDelete({name: nameChannel, id: idOrganization},(err, udChannel)=>{
+	Channel.findOne({name: name, id: id_organization},(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
-        if (!udChannel) return res.status(404).send({message: 'El canal no existe en esa organizacion'})
-		res.status(200).send({message: 'El canal se ha eliminado correctamente'})
+        if (!udChannel) return res.status(404).send({message: 'El canal no existe para esa organizacion'})
+		res.status(200).send({private: udChannel.private})
 	})
 }
+
+//Elimina el canal (200)
+//404 - No existe la organizacion
+// 405 - si no existe un canal con ese nombre en la organizacion
+// 500 - Error de server
+function remove(req, res){
+	let token = req.body.token
+	let idOrganization = req.body.organizationID
+	let nameChannel = req.body.name
+
+	//buscamos la organizacion 
+	Organization.findOne({id: idOrganization},(err, organization)=>{
+		if (err) {
+			return res.status(500).send({message: `Error al realizar la peticion de la Organizacion: ${err}`})
+		}
+		if(!organization) return res.status(404).send({message: 'No existe la organizacion'})
+		
+		if(!organization.channels.includes(nameChannel)) return res.status(405).send({message: 'No existe el canal en la organizacion'})
+		//si existe la organizacion y el canal en la organizacion
+		var newChannels = organization.channels
+		var index = newChannels.indexOf(nameChannel);
+		if (index > -1) {
+			newChannels.splice(index, 1);
+		}
+		
+		Organization.updateOne({id: idOrganization},{ channels: newChannels },(err, udOrg)=>{
+			if (err) {
+				return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+			}
+			//borro el canal en la bd de canales
+			Channel.findOneAndDelete({name: nameChannel, id: idOrganization},(err, udChannel)=>{
+				if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
+				if (!udChannel) return res.status(405).send({message: 'El canal no existe en esa organizacion'})
+				res.status(200).send({message: 'El canal se ha eliminado correctamente'})
+			})
+		})
+	})
+
+	
+	
+}
+
+//Devuelve la informacion del canal (200)
+// 404 - si no existe la organizacion o canal
+// 500 - Error de server
+function channelInfo(req, res){
+	let token = req.body.token
+	let idOrganization = req.body.organizationID
+	let nameChannel = req.body.name
+
+	Channel.findOne({name: nameChannel, id: idOrganization},(err, udChannel)=>{
+		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
+        if (!udChannel) return res.status(404).send({message: 'La organizacion no existe o el canal no existe en esa organizacion'})
+		res.status(200).send({channel: udChannel})
+	})
+}
+
+//Devuelve los canales del usuario (200)
+// 400 - si no existe un usuario con ese email
+// 404 - si no existe la organizacion
+// 405 - si no existe un usuario con ese email en la organizacion
+// 500 - Error de server
+function userChannels(req, res){
+	let token = req.body.token
+	let idOrganization = req.body.organizationID
+	let userEmail = req.body.email
+
+
+	//me fijo si la organizacion existe
+	Organization.findOne({id: idOrganization}, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		//si existe me fijo en las organizaciones del usuario a ver si ya esta agregado
+		User.findOne({email: userEmail}, (err, usuario)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+			if (!usuario) return res.status(400).send({message: 'No existe un usuario con ese email'})
+			let organizations = usuario.organizations
+			//recorro todas para a ver si ya esta agregado
+			if(!usuario.organizations.includes(organization.id)){
+					return res.status(405).send({message: 'El usuario no existe en la organizacion'})
+			}
+			var userChannels = []
+			var prueba = []
+			let channels = organization.channels
+			
+			Channel.find({name: {$in: channels}, id: idOrganization},(err, udChannel)=>{
+					if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+					
+					udChannel.forEach(function(element) {
+						if(element.members.includes(userEmail)) userChannels.push(element.name)
+					})
+					return res.status(200).send({channel: userChannels})
+			})
+			
+			
+		})
+	})	
+	
+}
+
 
 
 
@@ -286,5 +391,7 @@ module.exports={
     getPrivate,
     getDescription,
     getWelcome,
-    remove
+	remove,
+	channelInfo,
+	userChannels
 }

@@ -8,7 +8,7 @@ const OrganizationSchema = new Schema({
 	id:{type:String, unique:true,lowercase:true, required: true},
 	psw: {type:String, default:''},//false para que cada vez que nos pidan al usuario no se mande la contraseña
 	name: {type:String, default:''},
-	channels: {type: Array, default: ['general','varios']},
+	channels: {type: Array, default: []},
 	owner: {type:Array, required: true},
 	moderators: {type: Array, default: [] },
 	members: {type: Array, default: []},

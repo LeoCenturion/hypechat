@@ -94,8 +94,13 @@ User.findOne({email: emailUser}, (err, usuario)=>{
 					if (err) {
 						return res.status(500).send({message: `organization - Error al agregar la organizacion al usuario: ${err}`})
 					}
+
+					//crear canales de varios y general
+
 					return res.status(200).send({message: `Se creo la organizacion: ${id}`})
 			})
+
+
 	})
 		
 	})
@@ -112,7 +117,7 @@ function addUserToOrganization (req, res){
 	let token = req.body.token
 	let idOrganization = req.body.idOrganization
 	let userEmail = req.body.email
-	let pswOrganization
+	let pswOrganization = req.body.psw
 
 	//me fijo si la organizacion existe
 	Organization.findOne({id: idOrganization, psw: pswOrganization}, (err, organization)=>{
@@ -193,15 +198,15 @@ function asignModerator (req, res){
 	let id_organization = req.body.organizationID
 	let userEmail = req.body.userEmail
 //me fijo si la organizacion existe
-	Organization.findOne({id: organizationID}, (err, organization)=>{
+	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
 		let moderators = organization.moderators
-		
+		let members = organization.members
 		//me fijo si el usuario ya es moderador
 		if(moderators.includes(userEmail)) return res.status(405).send({message: 'El usuario ya es moderador'})
 		//me fijo si es usuario esta agregado a la organizacion
-		if(!newMembers.includes(userEmail)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
+		if(!members.includes(userEmail)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
 	
 		//lo saco de la lista de miembros y lo agrego a la lista de moderadores
 		Organization.findOneAndUpdate({id: id_organization}, {$push: { moderators: userEmail }}, (err,orgUpdated)=>{
@@ -218,7 +223,7 @@ function revokeModerator (req, res){
 	let id_organization = req.body.organizationID
 	let userEmail = req.body.userEmail
 //me fijo si la organizacion existe
-	Organization.findOne({id: organizationID}, (err, organization)=>{
+	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
 		let newModerators = organization.moderators
@@ -244,7 +249,7 @@ function removeUser (req, res){
 	let id_organization = req.body.organizationID
 	let userEmail = req.body.userEmail
 //me fijo si la organizacion existe
-	Organization.findOne({id: organizationID}, (err, organization)=>{
+	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
 		let newModerators = organization.moderators
@@ -283,31 +288,40 @@ function removeUser (req, res){
 
 //Actualiza el mensaje de bienvendia de la organizacion
 //Recibe por body el token, el id de la organizacion y el nuevo mensaje
+// 200 - Ok /  400 - No entro un mensaje de bienvenida / 404 - Organizacion no existe
 function updateWelcomeOrganization (req, res){
 	let token = req.body.token
 	let id_organization = req.body.organizationID
 	let welcome = req.body.welcome
 	let update = {welcome: req.body.welcome}
 
+	if(welcome == null) return res.status(400).send({message:'No hay mensaje en welcome'})
+
+
 	Organization.findOneAndUpdate({id: id_organization}, update, (err,orgUpdated)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
-
+		if (!orgUpdated) return res.status(404).send({message: 'La organizacion no existe'})
+		
 		res.status(200).send({message:`Se actualizo el mensaje de bienvenida de la organizacion`})
 	})
 }
 
 //Actualiza el mensaje de bienvendia de la organizacion
 //Recibe por body el token, el id de la organizacion y el nuevo mensaje
+// 200 - Ok /  400 - No entro una photo / 404 - Organizacion no existe
 function updatePhotoOrganization (req, res){
 	let token = req.body.token
 	let id_organization = req.body.organizationID
 	let photo = req.body.photo
 	let update = {photo: req.body.photo}
 
+	if(photo == null) return res.status(400).send({message:'No se envio una foto para actualizar'})
+
 	Organization.findOneAndUpdate({id: id_organization}, update, (err,orgUpdated)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
-
-		res.status(200).send({message:`Se actualizo la fotode la organizacion`})
+		if (!orgUpdated) return res.status(404).send({message: 'La organizacion no existe'})
+		
+		res.status(200).send({message:`Se actualizo la foto de la organizacion`})
 	})
 }
 
@@ -315,6 +329,7 @@ function updatePhotoOrganization (req, res){
 // 401 - El usuario no es owner
 // 404 - si no existe la organizacion
 // 500 - Error de server
+/*
 function remove(req, res){
 	let token = req.body.token
 	let id_organization = req.body.organizationID
@@ -330,6 +345,27 @@ function remove(req, res){
 		//me fijo que el usuario sea owner
 		if(!owners.includes(email)) return res.status(401).send({message: 'El usuario no es owner'})
 		//recorro todos los usuarios y le elimino la organizacion
+
+
+		User.find({name: {$in: members}},(err, usuarios)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuarios: ${err}`})
+			
+			usuarios.forEach(function(element) {
+				let userOrg = usuario.organizations
+				let index2 = userOrg.indexOf(id_organization);
+				if (index2 > -1) {
+					userOrg.splice(index2, 1);
+				}
+				User.findOneAndUpdate({email: element}, {organizations: userOrg}, (err,userUpdate)=>{
+					if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+				})
+			})
+
+			udChannel.forEach(function(element) {
+				if(element.members.includes(userEmail)) userChannels.push(element.name)
+			})
+			return res.status(200).send({channel: userChannels})
+	})
 
 		members.forEach(function(element) {
 			User.findOne({email: element}, (err, usuario)=>{
@@ -364,7 +400,7 @@ function remove(req, res){
 
 	
 }
-
+*/
 
 
 module.exports={
@@ -380,6 +416,5 @@ module.exports={
 	revokeModerator,
 	removeUser,
 	updateWelcomeOrganization,
-	updatePhotoOrganization,
-	remove
+	updatePhotoOrganization
 }

@@ -37,15 +37,15 @@ api.get('/organization/:token/:organizationID',organizationControllers.getInfoOr
 api.put('/organization/name',organizationControllers.updateNameOrganization)
 api.put('/organization/password',organizationControllers.updatePasswordOrganization)
 api.put('/moderator',organizationControllers.asignModerator)
-api.put('/revokeModerator',organizationControllers.removeUser)
+api.put('/revokeModerator',organizationControllers.revokeModerator)
 api.delete('/member',organizationControllers.removeUser)
 api.put('/welcomeOrganization',organizationControllers.updateWelcomeOrganization)
 api.put('/photoOrganization',organizationControllers.updatePhotoOrganization)
-api.delete('/organization',organizationControllers.remove)
+
 
 //---------CHANNELS----------
 api.post('/channel',channelControllers.createChannel)
-api.get('/channelValid',channelControllers.isChannelValid)
+api.get('/channelValid/:id/:name',channelControllers.isChannelValid)
 api.post('/channel/user',channelControllers.addUserToChannel)
 api.delete('/channel/user',channelControllers.removeUserFromChannel)
 api.put('/privateChannel',channelControllers.setPrivate)
@@ -55,5 +55,7 @@ api.get('/description',channelControllers.getDescription)
 api.put('/welcomeChannel',channelControllers.setWelcome)
 api.get('/welcomeChannel',channelControllers.getWelcome)
 api.delete('/channel',channelControllers.remove)
+api.get('/channel',channelControllers.channelInfo)
+api.get('/channels/user',channelControllers.userChannels)
 
 module.exports = api

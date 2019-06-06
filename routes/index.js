@@ -15,6 +15,7 @@ api.post('/user', userControllers.saveUser)
 api.put('/user/:userId', userControllers.updateUser2 )
 api.delete('/user/:userId', userControllers.deleteUser )
 
+
 //---------REGISTER----------
 api.post('/signUp', userControllers.signUp )
 api.post('/login', userControllers.logIn )
@@ -26,8 +27,12 @@ api.put('/profile', userControllers.updateUser )
 api.put('/password', userControllers.updateUser )
 api.get('/recoveredPassword', userControllers.getTokenRecoverPasswordUser)
 api.put('/recoveredPassword', userControllers.updatePasswordUser)
+api.get('/answerQuestions/:token/:asw1/:asw2',userControllers.answersSecretQuestionsCorrect)
+api.get('/secretQuestions/:token',userControllers.getSecretQuestions)
+api.get('/answersQuestions/:token',userControllers.getAnswersSecretQuestions)
+api.put('/secretQuestios',userControllers.updateSecretQuestions)
 
-//---------ORGANITIONS----------
+//---------ORGANIZATIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)
 api.post('/privateMsj',organizationControllers.getPrivateMsj)
 api.get('/idOrganizationValid/:organizationID',organizationControllers.isOrganizationIDValid)

@@ -11,6 +11,10 @@ const UserSchema = new Schema({
 	nickname: {type:String, default:''},
 	token: String,
 	organizations: {type: Array, default:[]},
+	question1: {type:String, required: true},
+	question2: {type:String, required: true},
+	answer1: {type:String, required: true},
+	answer2: {type:String, required: true},
 	recoverPasswordToken: String
 	//signupDate: {type: Date, default: Date.now()},
 	//lastLogin: Date

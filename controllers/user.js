@@ -66,7 +66,11 @@ function signUp(req,res){
 		name: req.body.name,
 		nickname: req.body.nickname,
 		psw: req.body.psw,
-		photo : req.body.photo
+		photo : req.body.photo,
+		question1: req.body.question1,
+		question2: req.body.question2,
+		answer1: req.body.asw1,
+		answer2: req.body.asw2,
 	})
 
 	user.save((err)=>{
@@ -221,6 +225,101 @@ function updatePasswordUser(req, res){
 	})
 }
 
+
+
+
+
+//api.get('/answerQuestions/:token/:asw1/:asw2',userControllers.answersSecretQuestionsCorrect)
+//500 - Server error
+//400 - Token invalido
+//401 - Respuestas incorrectas
+//200 - Respuestas correctas
+function answersSecretQuestionsCorrect(req,res){
+	let asw1 = req.params.asw1
+	let asw2 = req.params.asw2
+	User.findOne({token: req.params.token},(err,user)=>{
+		if(err){
+			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+		if( (asw1 == user.answer1) && (asw2 == user.answer2)){
+			return res.status(200).send({message: 'Respuestas correctas'})
+		}else{
+			return res.status(401).send({message: 'Respuestas incorrectas'})
+		}
+	})
+}
+
+//api.get('/secretQuestions/:token',userControllers.getSecretQuestions)
+//500 - Server error
+//400 - Token invalido
+//200 - Preguntas secretas
+function getSecretQuestions(req,res){
+	User.findOne({token: req.params.token},(err,user)=>{
+		if(err){
+			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+		let questions = []
+		questions.push({question1: user.question1, question2: user.question2})
+		return res.status(200).send({questions: questions})
+			
+	})
+}
+
+//api.get('/answersQuestions/:token',userControllers.getAnswersSecretQuestions)
+//500 - Server error
+//400 - Token invalido
+//200 - Respuestas secretas
+function getAnswersSecretQuestions(req,res){
+	User.findOne({token: req.params.token},(err,user)=>{
+		if(err){
+			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+		let answers = []
+		answers.push({answer1: user.answer1, answer2: user.answer2})
+		return res.status(200).send({answers: answers})
+			
+	})
+}
+
+//api.put('/secretQuestios',userControllers.updateSecretQuestions)
+//500 - Server error
+//400 - Token invalido
+//200 - Respuestas secretas
+function updateSecretQuestions(req,res){
+	let token = req.body.token
+	let update = {question1: req.body.question1, question2: req.body.question2, answer1: req.body.answer1, answer2: req.body.answer2 }
+
+
+	User.findOneAndUpdate({token: req.params.token},update ,(err,user)=>{
+		if(err){
+			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+
+		return res.status(200).send({message: 'Las preguntas y respuestas secretas se han actualizado correctamente'})
+			
+	})
+}
+
 module.exports={
 	getUser,
 	getUsers,
@@ -232,5 +331,9 @@ module.exports={
 	getUserProfile,
 	updateUser,
 	getTokenRecoverPasswordUser,
-	updatePasswordUser
+	updatePasswordUser,
+	answersSecretQuestionsCorrect,
+	getSecretQuestions,
+	getAnswersSecretQuestions,
+	updateSecretQuestions
 }

@@ -15,6 +15,8 @@ const UserSchema = new Schema({
 	question2: {type:String, required: true},
 	answer1: {type:String, required: true},
 	answer2: {type:String, required: true},
+	latitud: {type: Number, default: 0},
+	longitud: {type: Number, default: 0},
 	recoverPasswordToken: String
 	//signupDate: {type: Date, default: Date.now()},
 	//lastLogin: Date

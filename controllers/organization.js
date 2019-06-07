@@ -417,6 +417,35 @@ function getMessageWithoutRestrictedWords(req, res){
 	})
 }
 
+//api.get('/locations/:token/:idOrg',organizationControllers.getLocationsOrganization)
+//500 - server error
+//400 - token invalido
+//404 - no existe una organizacion con ese id
+//200 - lista de usuarios con nickname,email,longitud y latitud
+function getLocationsOrganization(req, res){
+	User.findOne({token: req.params.token}, (err, user)=>{
+		if(err) return res.status(500).send({message: `Error al buscar un usuario: ${err}`})
+		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.params.token}`})
+		Organization.findOne({id: req.params.id}, (err, organization)=>{
+			if(err) return res.status(500).send({message: `Error al buscar la organizacion: ${err}`})
+			if(!organization) return res.status(404).send({message: `No existe organizacoin con id ${req.params.id}`})
+			let usersLocation = [];
+
+			User.find({email: {$in: organization.members}}, (err, userOrg)=>{
+				userOrg.forEach(function (element){
+					usersLocation.push({nickname: element.nickname, email: element.email, longitud: element.longitud, latitud: element.latitud})
+		
+				})
+				return res.status(200).send({users: usersLocation});
+			})
+				
+			
+			
+		})
+	})
+}
+
+
 module.exports={
 	getUserOrganizations,
 	getPrivateMsj,
@@ -431,5 +460,6 @@ module.exports={
 	removeUser,
 	updateWelcomeOrganization,
 	updatePhotoOrganization,
-	getMessageWithoutRestrictedWords
+	getMessageWithoutRestrictedWords,
+	getLocationsOrganization
 }

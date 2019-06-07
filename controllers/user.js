@@ -243,7 +243,7 @@ function answersSecretQuestionsCorrect(req,res){
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
 		if( (asw1 == user.answer1) && (asw2 == user.answer2)){
@@ -265,7 +265,7 @@ function getSecretQuestions(req,res){
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
 		let questions = []
@@ -286,7 +286,7 @@ function getAnswersSecretQuestions(req,res){
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
 		let answers = []
@@ -305,7 +305,7 @@ function updateSecretQuestions(req,res){
 	let update = {question1: req.body.question1, question2: req.body.question2, answer1: req.body.answer1, answer2: req.body.answer2 }
 
 
-	User.findOneAndUpdate({token: req.params.token},update ,(err,user)=>{
+	User.findOneAndUpdate({token: req.body.token},update ,(err,user)=>{
 		if(err){
 			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
@@ -319,6 +319,52 @@ function updateSecretQuestions(req,res){
 			
 	})
 }
+
+
+//api.get('/location/:token',userControllers.getLocation)
+//500 - Server error
+//400 - Token invalido
+//200 - longitud y latitud
+function getLocation(req,res){
+	User.findOne({token: req.params.token},(err,user)=>{
+		if(err){
+			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+	
+		return res.status(200).send({longitud: user.longitud, latitud: user.latitud})
+			
+	})
+}
+//api.put('/location',userControllers.setLocation)
+//500 - Server error
+//400 - Token invalido
+//401 - Longitud y latitud invalidos
+//200 - Seteo de locacion correcto
+function setLocation(req,res){
+	let token = req.body.token;
+
+	let update = {latitud: req.body.latitud, longitud: req.body.longitud}
+
+	User.findOneAndUpdate({token: req.body.token},update ,(err,user)=>{
+		if(err){
+			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+
+		return res.status(200).send({message: `La locacion se ha actualizado correctamente en el usuario: ${user.email}`})
+			
+	})
+}
+
 
 module.exports={
 	getUser,
@@ -335,5 +381,7 @@ module.exports={
 	answersSecretQuestionsCorrect,
 	getSecretQuestions,
 	getAnswersSecretQuestions,
-	updateSecretQuestions
+	updateSecretQuestions,
+	getLocation,
+	setLocation
 }

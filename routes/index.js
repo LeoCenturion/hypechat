@@ -31,6 +31,8 @@ api.get('/answerQuestions/:token/:asw1/:asw2',userControllers.answersSecretQuest
 api.get('/secretQuestions/:token',userControllers.getSecretQuestions)
 api.get('/answersQuestions/:token',userControllers.getAnswersSecretQuestions)
 api.put('/secretQuestios',userControllers.updateSecretQuestions)
+api.get('/location/:token/:email',userControllers.getLocation)
+api.put('/location',userControllers.setLocation)
 
 //---------ORGANIZATIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)
@@ -46,6 +48,7 @@ api.put('/revokeModerator',organizationControllers.revokeModerator)
 api.delete('/member',organizationControllers.removeUser)
 api.put('/welcomeOrganization',organizationControllers.updateWelcomeOrganization)
 api.put('/photoOrganization',organizationControllers.updatePhotoOrganization)
+api.get('/locations/:token/:id',organizationControllers.getLocationsOrganization)
 
 api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords)
 

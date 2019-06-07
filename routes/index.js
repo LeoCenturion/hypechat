@@ -34,6 +34,7 @@ api.put('/secretQuestios',userControllers.updateSecretQuestions)
 api.get('/location/:token/:email',userControllers.getLocation)
 api.put('/location',userControllers.setLocation)
 
+
 //---------ORGANIZATIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)
 api.post('/privateMsj',organizationControllers.getPrivateMsj)

@@ -18,7 +18,7 @@ var token = "thisIsTheToken";
 chai.use(chaiHttp);
 
 const userControllers = require('../controllers/user')
-var sinon = require('sinon');
+//var sinon = require('sinon');
 /*
 describe('USER CONTROLLER', ()=>{
 	beforeEach((done)=>{
@@ -110,7 +110,7 @@ describe('SERVER', () => {
 			          res.should.have.status(200);
 			          res.body.should.be.eql({user: []})
 			      done();
-			    });
+			    }).catch(done);
 		});
 	})
 
@@ -121,8 +121,8 @@ describe('SERVER', () => {
 			        "nickname": 'userNickname',
 			        "psw": 'userPsw'
 			      })
-	        user.save()
-	        done()
+	        user.save();
+	        done();
 	    });
     	it('sign up user OK', (done)=>{
     		let user = {
@@ -143,7 +143,7 @@ describe('SERVER', () => {
 			      	res.body.should.have.property('nickname')
 			      	res.body.nickname.should.be.eql('userNickname')
     				done();
-    			})
+    			}).catch(done);
     	})
 
     	it('sign up user OK, without nickname', (done)=>{
@@ -166,7 +166,7 @@ describe('SERVER', () => {
 			      	res.body.should.have.property('nickname')
 			      	res.body.nickname.should.be.eql("")
     				done();
-    			})
+    			}).catch(done);
     	})
 
     	it('sign up user with an existent email', (done)=>{
@@ -181,7 +181,7 @@ describe('SERVER', () => {
     				res.should.have.status(500);
     				res.body.should.have.property('message')
     				done();
-    			})
+    			}).catch(done);
     	})
     })
 
@@ -210,7 +210,7 @@ describe('SERVER', () => {
     				res.body.should.have.property('token')
     				res.body.should.have.property('email')*/
     				done();
-    			})
+    			}).catch(done);
     	})
 
     	it('inexistent user login', (done)=>{
@@ -224,7 +224,7 @@ describe('SERVER', () => {
     			.end((err, res) => {
     				res.should.have.status(404);
     				done();
-    			})
+    			}).catch(done);
     	})
     })
     
@@ -258,7 +258,7 @@ describe('SERVER', () => {
 			      	res.body.photo.should.be.eql('')
 
 			      done();
-			    });
+			    }).catch(done);
 		});
 
 		it('it should GET profile of inexistent email user', (done) => {
@@ -300,7 +300,7 @@ describe('SERVER', () => {
 			        res.should.have.status(200);
 			        res.body.should.have.property('message')
 			      	done();
-			    });
+			    }).catch(done);
 	    })
     })
     
@@ -329,7 +329,7 @@ describe('SERVER', () => {
 			        res.should.have.status(200);
 			        res.body.should.have.property('message')
 			      	done();
-			    });
+			    }).catch(done);
 	    })
     })
 
@@ -353,7 +353,7 @@ describe('SERVER', () => {
 			        res.should.have.status(200);
 			        res.body.should.have.property('recoverPasswordToken')
 			      	done();
-			    });
+			    }).catch(done);
 	    })
     })
 
@@ -367,7 +367,7 @@ describe('SERVER', () => {
 			        "recoverPasswordToken": recoverToken
 			      })
 	        user.save()
-			done()
+					done()
 	    });
 	    
     	it('it should update password because recoverToken is ok', (done)=>{
@@ -384,7 +384,7 @@ describe('SERVER', () => {
 			    .end((err, res) => {
 			        res.should.have.status(200);
 			      	done();
-			    });
+			    }).catch(done);
 	    })
 
 	    it('it should not update password because recoverToken is false', (done)=>{
@@ -400,8 +400,8 @@ describe('SERVER', () => {
 			    .end((err, res) => {
 			        res.should.have.status(400);
 			      	done();
-			    });
-	    })
+			    }).catch(done);
+	    	})
     })
 
 });

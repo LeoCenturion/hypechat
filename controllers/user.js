@@ -229,22 +229,22 @@ function updatePasswordUser(req, res){
 
 
 
-//api.get('/answerQuestions/:token/:asw1/:asw2',userControllers.answersSecretQuestionsCorrect)
+//api.get('/answerQuestions/:email/:asw1/:asw2',userControllers.answersSecretQuestionsCorrect)
 //500 - Server error
-//400 - Token invalido
+//400 - Email invalido
 //401 - Respuestas incorrectas
 //200 - Respuestas correctas
 function answersSecretQuestionsCorrect(req,res){
 	let asw1 = req.params.asw1
 	let asw2 = req.params.asw2
-	User.findOne({token: req.params.token},(err,user)=>{
+	User.findOne({email: req.params.email},(err,user)=>{
 		if(err){
 			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
-			return res.status(400).send({message: 'El token es invalido'})
+			logger.error(`answersSecretQuestionsCorrect - Error (400), email invalido: ${req.params.email}`)
+			return res.status(400).send({message: 'El email es invalido'})
 		}
 		if( (asw1 == user.answer1) && (asw2 == user.answer2)){
 			return res.status(200).send({message: 'Respuestas correctas'})
@@ -254,19 +254,19 @@ function answersSecretQuestionsCorrect(req,res){
 	})
 }
 
-//api.get('/secretQuestions/:token',userControllers.getSecretQuestions)
+//api.get('/secretQuestions/:email',userControllers.getSecretQuestions)
 //500 - Server error
-//400 - Token invalido
+//400 - Email invalido
 //200 - Preguntas secretas
 function getSecretQuestions(req,res){
-	User.findOne({token: req.params.token},(err,user)=>{
+	User.findOne({email: req.params.email},(err,user)=>{
 		if(err){
 			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
-			return res.status(400).send({message: 'El token es invalido'})
+			logger.error(`answersSecretQuestionsCorrect - Error (400), email invalido: ${req.params.email}`)
+			return res.status(400).send({message: 'El email es invalido'})
 		}
 		let questions = []
 		questions.push({question1: user.question1, question2: user.question2})

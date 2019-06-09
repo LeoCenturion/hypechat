@@ -237,17 +237,32 @@ function updatePasswordUser(req, res){
 function answersSecretQuestionsCorrect(req,res){
 	let asw1 = req.params.asw1
 	let asw2 = req.params.asw2
-	User.findOne({email: req.params.email},(err,user)=>{
+	let userEmail = req.params.userEmail
+	logger.info(`email: ${req.params.userEmail}`)
+	logger.info(`asw1: ${req.params.asw1}`)
+	logger.info(`asw2: ${req.params.asw2}`)
+	User.findOne({email: req.params.userEmail},(err,user)=>{
 		if(err){
 			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), email invalido: ${req.params.email}`)
+			logger.error(`answersSecretQuestionsCorrect - Error (400), email invalido: ${req.params.userEmail}`)
 			return res.status(400).send({message: 'El email es invalido'})
 		}
 		if( (asw1 == user.answer1) && (asw2 == user.answer2)){
-			return res.status(200).send({message: 'Respuestas correctas'})
+			//return res.status(200).send({message: 'Respuestas correctas'})
+			let recoverToken = service.createToken({_id: user.psw})
+			logger.info(`getTokenRecoverPasswordUser - Se creo un token para la recuperacion de contrasena del usuario con mail ${req.params.email}`)
+			let userUpdated = {body: {
+				recoverPasswordToken: recoverToken
+			}}
+			let result = {status: function (nro){
+			return {statusNro: nro,
+			send: function (objJson){ return res.status(this.statusNro).send({recoverPasswordToken: recoverToken})}}
+			}
+			}
+			updateUser(userUpdated, result)
 		}else{
 			return res.status(401).send({message: 'Respuestas incorrectas'})
 		}
@@ -259,18 +274,17 @@ function answersSecretQuestionsCorrect(req,res){
 //400 - Email invalido
 //200 - Preguntas secretas
 function getSecretQuestions(req,res){
-	User.findOne({email: req.params.email},(err,user)=>{
+	User.findOne({email: req.params.userEmail},(err,user)=>{
 		if(err){
-			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			logger.error(`getSecretQuestions - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), email invalido: ${req.params.email}`)
+			logger.error(`getSecretQuestions - Error (400), email invalido: ${req.params.userEmail}`)
 			return res.status(400).send({message: 'El email es invalido'})
 		}
-		let questions = []
-		questions.push({question1: user.question1, question2: user.question2})
-		return res.status(200).send({questions: questions})
+	
+		return res.status(200).send( {question1: user.question1, question2: user.question2})
 			
 	})
 }

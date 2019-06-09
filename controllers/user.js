@@ -204,7 +204,7 @@ function updatePasswordUser(req, res){
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`updatePasswordUser - Error (400), el usuario con mail ${req.params.email} y token de recupero ${req.body.recoverPasswordToken} no existe`)
+			logger.error(`updatePasswordUser - Error (400), el usuario con mail ${req.body.email} y token de recupero ${req.body.recoverPasswordToken} no existe`)
 			return res.status(400).send({message: 'El usuario solicitado no existe'})
 		}
 
@@ -253,16 +253,19 @@ function answersSecretQuestionsCorrect(req,res){
 		if( (asw1 == user.answer1) && (asw2 == user.answer2)){
 			//return res.status(200).send({message: 'Respuestas correctas'})
 			let recoverToken = service.createToken({_id: user.psw})
-			logger.info(`getTokenRecoverPasswordUser - Se creo un token para la recuperacion de contrasena del usuario con mail ${req.params.email}`)
-			let userUpdated = {body: {
-				recoverPasswordToken: recoverToken
-			}}
-			let result = {status: function (nro){
-			return {statusNro: nro,
-			send: function (objJson){ return res.status(this.statusNro).send({recoverPasswordToken: recoverToken})}}
-			}
-			}
-			updateUser(userUpdated, result)
+			logger.info(`getTokenRecoverPasswordUser - Se creo un token para la recuperacion de contrasena del usuario con mail ${req.params.userEmail}`)
+			User.findOneAndUpdate({email: req.params.userEmail},{recoverPasswordToken: recoverToken},(err,user2)=>{
+				if(err){
+					logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+					return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+				}
+				if(!user2){
+					logger.error(`answersSecretQuestionsCorrect - Error (400), email invalido: ${req.params.userEmail}`)
+					return res.status(400).send({message: 'El email es invalido'})
+				}
+				return res.status(200).send({recoverPasswordToken: recoverToken});
+			});
+		
 		}else{
 			return res.status(401).send({message: 'Respuestas incorrectas'})
 		}

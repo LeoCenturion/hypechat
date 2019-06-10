@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const OrganizationSchema = new Schema({
 	id:{type:String, unique:true,lowercase:true, required: true},
 	psw: {type:String, default:''},//false para que cada vez que nos pidan al usuario no se mande la contraseña
-	name: {type:String, unique:true, required: true},
+	name: {type:String, required: true},
 	channels: {type: Array, default: []},
 	owner: {type:Array, required: true},
 	moderators: {type: Array, default: [] },

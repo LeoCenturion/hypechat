@@ -7,6 +7,19 @@ const Organization = require('../models/organization');
 const Channel = require('../models/channel');
 const logger = require('../utils/logger');
 
+
+function all(req,res){
+	Channel.find({},(err, canales)=>{
+		if (err) {
+			return res.status(500).send({message: `Error al realizar la peticion del Canal: ${err}`})
+		}
+		
+		return res.status(200).send({canales: canales})
+	
+	})
+}
+
+
 //Crea un canal
 //devuelve 200 si se creo correctamente
 // 404 - La organizacion no existe
@@ -393,5 +406,6 @@ module.exports={
     getWelcome,
 	remove,
 	channelInfo,
-	userChannels
+	userChannels,
+	all
 }

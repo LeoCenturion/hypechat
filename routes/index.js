@@ -55,6 +55,8 @@ api.get('/locations/:token/:id',organizationControllers.getLocationsOrganization
 
 api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords)
 
+api.get('/allOrg',organizationControllers.all)
+
 //---------CHANNELS----------
 api.post('/channel',channelControllers.createChannel)
 api.get('/channelValid/:id/:name',channelControllers.isChannelValid)
@@ -69,5 +71,7 @@ api.get('/welcomeChannel',channelControllers.getWelcome)
 api.delete('/channel',channelControllers.remove)
 api.get('/channel',channelControllers.channelInfo)
 api.post('/channels/user',channelControllers.userChannels)
+
+api.get('/allChannel',channelControllers.all)
 
 module.exports = api

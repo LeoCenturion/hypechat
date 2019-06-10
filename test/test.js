@@ -3,6 +3,9 @@ process.env.NODE_ENV = 'test';
 
 let mongoose = require("mongoose");
 let User = require('../models/user');
+let Organization = require('../models/organization');
+let Channels = require('../models/channel');
+let MsjPriv = require('../models/privateMsj')
 
 //Require the dev-dependencies
 let chai = require('chai');
@@ -18,6 +21,82 @@ var token = "thisIsTheToken";
 chai.use(chaiHttp);
 
 const userControllers = require('../controllers/user')
+
+
+/*
+describe('SERVER', () => {
+	beforeEach((done) => { //Before each test we empty the database
+			Organization.remove({}, (err) => { 
+				 done();           
+			});        
+	});
+	describe('GET /user', () => {
+		it('it should GET all users', (done) => {
+			chai.request(url)
+			    .get('/user')
+			    .end((err, res) => {
+			          res.should.have.status(200);
+			          res.body.should.be.eql({user: []})
+			      done();
+			    }).catch(done);
+		});
+})
+})
+describe('BORRO CHANNELS', () => {
+	beforeEach((done) => { //Before each test we empty the database
+		Channels.remove({}, (err) => { 
+			 done();           
+		});        
+});
+describe('GET /user', () => {
+	it('it should GET all users', (done) => {
+		chai.request(url)
+				.get('/user')
+				.end((err, res) => {
+							res.should.have.status(200);
+							res.body.should.be.eql({user: []})
+					done();
+				}).catch(done);
+	});
+})
+})
+describe('BORRO MSJ', () => {
+	beforeEach((done) => { //Before each test we empty the database
+		MsjPriv.remove({}, (err) => { 
+		 	done();           
+		});        
+	});
+	describe('GET /user', () => {
+		it('it should GET all users', (done) => {
+			chai.request(url)
+			    .get('/user')
+			    .end((err, res) => {
+			          res.should.have.status(200);
+			          res.body.should.be.eql({user: []})
+			      done();
+			    }).catch(done);
+		});
+})
+}) 
+describe('BORRO USUARIOS', () => {
+	beforeEach((done) => { //Before each test we empty the database
+		User.remove({}, (err) => { 
+		 	done();           
+		});        
+	});
+	describe('GET /user', () => {
+		it('it should GET all users', (done) => {
+			chai.request(url)
+			    .get('/user')
+			    .end((err, res) => {
+			          res.should.have.status(200);
+			          res.body.should.be.eql({user: []})
+			      done();
+			    }).catch(done);
+		});
+})
+}) 
+*/
 //var sinon = require('sinon');
 /*
 describe('USER CONTROLLER', ()=>{
@@ -95,7 +174,9 @@ describe('USER CONTROLLER', ()=>{
 	})
 });
 */
+// ---------------------
 
+/*
 describe('SERVER', () => {
     beforeEach((done) => { //Before each test we empty the database
         User.remove({}, (err) => { 
@@ -206,9 +287,9 @@ describe('SERVER', () => {
     			.send(user)
     			.end((err, res) => {
     				res.should.have.status(200);
-    				/*res.body.should.have.property('message')
-    				res.body.should.have.property('token')
-    				res.body.should.have.property('email')*/
+    				//res.body.should.have.property('message')
+    				//res.body.should.have.property('token')
+    				//res.body.should.have.property('email')
     				done();
     			}).catch(done);
     	})
@@ -371,8 +452,8 @@ describe('SERVER', () => {
 	    });
 	    
     	it('it should update password because recoverToken is ok', (done)=>{
-	    	/*recoverToken = userControllers.getTokenRecoverPasswordUser({body:{"email": 'uniqueUser@gmail.com'}}, {status: function(nro){return{send:function(obj){console.log(obj)
-				return obj.recoverPasswordToken}}}})*/
+	    	//recoverToken = userControllers.getTokenRecoverPasswordUser({body:{"email": 'uniqueUser@gmail.com'}}, {status: function(nro){return{send:function(obj){console.log(obj)
+				//return obj.recoverPasswordToken}}}})
 	    	let newUserProfile = {
 	    		"email": 'uniqueUser@gmail.com',
 	    		"recoverPasswordToken":recoverToken,
@@ -405,3 +486,4 @@ describe('SERVER', () => {
     })
 
 });
+ */

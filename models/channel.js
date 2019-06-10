@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 
 
 const ChannelSchema = new Schema({
-	private: {type: Boolean, required: true, default: false},//siempre es publico si no se indica lo contrario
+	private: {type: Boolean, required: true, default: false},//siempre ess publico si no se indica lo contrario
 	id: {type:String, required: true},
-	name: {type:String, required: true, unique:true},
+	name: {type:String, required: true},
 	owner: {type:String, required: true},
 	members: {type: Array, default: []},
 	description: {type: String, default: ''},

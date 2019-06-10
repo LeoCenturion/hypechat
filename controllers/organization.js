@@ -4,8 +4,23 @@ const mongoose = require('mongoose');
 const service = require('../services')
 const User = require('../models/user');
 const Organization = require('../models/organization');
+const channelController = require('../controllers/channel')
 const PrivateMsj = require('../models/privateMsj');
 const logger = require('../utils/logger');
+
+
+function all(req, res){
+
+
+	Organization.find({}, (err, org)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+		
+			return res.status(200).send({organizations: org})
+		
+		
+	})
+	
+}
 
 //devuelve las organizaciones que tiene un usuario.
 //El mail del usuario debe ser pasado en la URL sin comillas
@@ -103,8 +118,39 @@ User.findOne({email: emailUser}, (err, usuario)=>{
 					}
 
 					//crear canales de varios y general
-
-					return res.status(200).send({message: `Se creo la organizacion: ${id}`})
+					let canalGeneral = {body: {
+						name : "general",
+						id: id,
+						description: "Canal general",
+						owner: emailUser,
+						private: 0
+					}}
+					let result = {status: function (nro){
+						return {statusNro: nro,
+						send: function (objJson){ 
+							if(this.statusNro == 200){
+								//creo varios
+								let canalVarios = {body: {
+									name : "varios",
+									id: id,
+									description: "Canal varios",
+									owner: emailUser,
+									private: 0
+								}}
+								let resultVarios = {status: function (nro){
+									return {statusNro: nro,
+									send: function (objJson){ return res.status(this.statusNro).send({message: `Se creo la organizacion: ${id}`})}}
+									}
+								}
+								channelController.createChannel(canalVarios, resultVarios)
+							}else{
+								return res.status(this.statusNro).send({message: `Se creo la organizacion: ${id}`})}}
+							}
+							
+						}
+					}
+					channelController.createChannel(canalGeneral, result)
+					//return res.status(200).send({message: `Se creo la organizacion: ${id}`})
 			})
 
 
@@ -461,5 +507,6 @@ module.exports={
 	updateWelcomeOrganization,
 	updatePhotoOrganization,
 	getMessageWithoutRestrictedWords,
-	getLocationsOrganization
+	getLocationsOrganization,
+	all
 }

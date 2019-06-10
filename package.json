@@ -17,7 +17,6 @@
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
-    "cors": "^2.8.5",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
     "jwt-simple": "^0.5.6",
@@ -29,7 +28,8 @@
     "should": "^13.1.0",
     "sinon": "^7.3.2",
     "swagger-markdown": "^1.1.6",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "nodemon": "^1.18.10",
@@ -39,8 +39,7 @@
   "keywords": [
     "node",
     "heroku",
-    "express",
-    "cors"
+    "express"
   ],
   "license": "MIT"
 }

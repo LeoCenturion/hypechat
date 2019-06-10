@@ -6,6 +6,8 @@ const userControllers = require('../controllers/user')
 const organizationControllers = require('../controllers/organization')
 const channelControllers = require('../controllers/channel')
 
+
+
 api.get('/hello/:name',function(req, res){
 	res.send({message: `Hello, ${req.params.name}!`});
 });

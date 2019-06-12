@@ -17,7 +17,6 @@ let expect = require('chai').expect;
 const url= 'http://localhost:5000';
 var token = "thisIsTheToken";
 
-
 chai.use(chaiHttp);
 
 const userControllers = require('../controllers/user')

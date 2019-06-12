@@ -144,7 +144,7 @@ function getUserProfile(req, res) {
 			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})}
 		if(!user1 || !user2) {
 			logger.error(`getUserProfile - Error (400), el usuario con mail ${req.params.email} no existe, o el usuario con token ${req.body.token} no existes`)
-			return res.status(400).send({message: 'El usuario solicitado no existe'})}
+			return res.status(400).send({message: `El usuario con mail ${req.params.email} no existe, o el usuario con token ${req.body.token} no existe`})}
 
 		logger.info(`getUserProfile - Se devolvió el perfil del usuario ${user2.email}`)
 		return res.status(200).send({ 

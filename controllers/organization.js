@@ -298,9 +298,9 @@ function revokeModerator (req, res){
 
 //Elimino un usuario de la organizacion
 function removeUser (req, res){
-	let token = req.body.token
-	let id_organization = req.body.organizationID
-	let userEmail = req.body.userEmail
+	let token = req.params.token
+	let id_organization = req.params.id
+	let userEmail = req.params.email
 //me fijo si la organizacion existe
 	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})

@@ -144,10 +144,10 @@ function addUserToChannel(req, res){
 //401 si no esta el usuario en el organizacion , 402 si no existe el canal en la organizacion
 //403 si no esta usuario en el canal ,404 si no existe una organizacion con ese id
 function removeUserFromChannel(req, res){
-	let token = req.body.token
-    let idOrganization = req.body.id
-    let nameChannel = req.body.name
-	let userEmail = req.body.email
+	let token = req.params.token
+    let idOrganization = req.params.id
+    let nameChannel = req.params.name
+	let userEmail = req.params.email
 
 
 	//me fijo si la organizacion existe
@@ -296,9 +296,9 @@ function getPrivate (req, res){
 // 405 - si no existe un canal con ese nombre en la organizacion
 // 500 - Error de server
 function remove(req, res){
-	let token = req.body.token
-	let idOrganization = req.body.organizationID
-	let nameChannel = req.body.name
+	let token = req.params.token
+	let idOrganization = req.params.id
+	let nameChannel = req.params.name
 
 	//buscamos la organizacion 
 	Organization.findOne({id: idOrganization},(err, organization)=>{

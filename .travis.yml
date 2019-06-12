@@ -4,4 +4,6 @@ node_js:
 #services:
 #	- docker
 
+install: npm install
+
 script: npm test

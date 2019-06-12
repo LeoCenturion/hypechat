@@ -24,7 +24,7 @@ api.post('/login', userControllers.logIn )
 api.post('/loginFacebook', (req,res) => {res.status(500).send({message: 'not implemented yet'})})
 
 //---------USERS----------
-api.get('/profile/:email', userControllers.getUserProfile)
+api.post('/profile/:email', userControllers.getUserProfile)
 api.put('/profile', userControllers.updateUser )
 api.put('/password', userControllers.updateUser )
 api.get('/recoveredPassword', userControllers.getTokenRecoverPasswordUser)

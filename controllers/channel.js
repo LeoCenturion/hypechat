@@ -246,9 +246,9 @@ function setWelcome (req, res){
 // 404 - si no existe un canal con ese nombre en la organizacion
 // 500 - Error de server
 function getDescription (req, res){
-	let token = req.body.token
-	let idOrganization = req.body.organizationID
-	let nameChannel = req.body.name
+	let token = req.params.token
+	let idOrganization = req.params.id
+	let nameChannel = req.params.name
 
 
 	Channel.findOne({name: nameChannel, id: idOrganization},(err, udChannel)=>{
@@ -262,9 +262,9 @@ function getDescription (req, res){
 // 404 - si no existe un canal con ese nombre en la organizacion
 // 500 - Error de server
 function getWelcome (req, res){
-	let token = req.body.token
-	let id_organization = req.body.organizationID
-	let name = req.body.name
+	let token = req.params.token
+	let id_organization = req.params.id
+	let name = req.params.name
 
 
 	Channel.findOne({name: name, id: id_organization},(err, udChannel)=>{
@@ -278,9 +278,9 @@ function getWelcome (req, res){
 // 404 - si no existe un canal con ese nombre en la organizacion
 // 500 - Error de server
 function getPrivate (req, res){
-	let token = req.body.token
-	let id_organization = req.body.organizationID
-	let name = req.body.name
+	let token = req.params.token
+	let id_organization = req.params.id
+	let name = req.params.name
 
     if(req.body.private == 1) {priv = true}
 
@@ -336,9 +336,9 @@ function remove(req, res){
 // 404 - si no existe la organizacion o canal
 // 500 - Error de server
 function channelInfo(req, res){
-	let token = req.body.token
-	let idOrganization = req.body.organizationID
-	let nameChannel = req.body.name
+	let token = req.params.token
+	let idOrganization = req.params.id
+	let nameChannel = req.params.name
 
 	Channel.findOne({name: nameChannel, id: idOrganization},(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})

@@ -96,10 +96,12 @@ function isChannelValid (req, res){
 //Devuelve 200 si lo agrego correctamente, 400 si no existe un usuario con ese email, 
 //401 si no esta el usuario en la organizacion , 402 si no existe el canal en la organizacion
 //403 si el usuario ya esta agregado en el canal ,404 si no existe una organizacion con ese id
+//405 no tiene permiso para agregar a el canal
 function addUserToChannel(req, res){
 	let token = req.body.token
     let idOrganization = req.body.id
-    let nameChannel = req.body.name
+	let nameChannel = req.body.name
+	let moderator = req.body.mo_email
 	let userEmail = req.body.email
 
 
@@ -116,6 +118,7 @@ function addUserToChannel(req, res){
 			if(!usuario.organizations.includes(organization.id)){
 					return res.status(401).send({message: 'El usuario no existe en la organizacion'})
 			}
+			
             //si esta agregado, me fijo que exista el canal
             if(!organization.channels.includes(nameChannel)) return res.status(402).send({message: 'No existe el canal en la organizacion'})
             //si existe el canal me fijo si el usuario ya esta agregado
@@ -123,13 +126,30 @@ function addUserToChannel(req, res){
 				if (err) {
 					return res.status(500).send({message: `Error al realizar la peticion del Canal: ${err}`})
                 }
-                if(canal.members.includes(userEmail)) return res.status(403).send({message: 'Ya existe el usuario en el canal'})
-				Channel.updateOne({name: nameChannel, id: idOrganization},{ $push: { members: userEmail } },(err, udChannel)=>{
-					if (err) {
-						return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+				if(canal.members.includes(userEmail)) return res.status(403).send({message: 'Ya existe el usuario en el canal'})
+				
+				if(canal.private){
+					//si es privado el que agrega debe ser moderador o owner
+					if(organization.owner.includes(moderator) || organization.moderators.includes(moderator)){
+						Channel.updateOne({name: nameChannel, id: idOrganization},{ $push: { members: userEmail } },(err, udChannel)=>{
+							if (err) {
+								return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+							}
+							return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
+						})
+						
+					}else{
+						return res.status(405).send({message: 'No tiene permisos para agregar usuarios a este canal'})
 					}
-					return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
-				})
+				}else{
+
+					Channel.updateOne({name: nameChannel, id: idOrganization},{ $push: { members: userEmail } },(err, udChannel)=>{
+						if (err) {
+							return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+						}
+						return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
+					})
+				}
 			})
 			
 		

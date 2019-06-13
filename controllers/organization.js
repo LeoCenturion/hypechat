@@ -96,7 +96,7 @@ function createOrganization(req,res){
 //me fijo si el usuario existe
 User.findOne({email: emailUser}, (err, usuario)=>{
 	if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-	if (!usuario) return res.status(404).send({message: `El usuario ${userEmail} no existe`})
+	if (!usuario) return res.status(404).send({message: `El usuario ${emailUser} no existe`})
 
 	//me fijo si la organizacion existe
 	Organization.findOne({id: id}, (err, dbOrganization)=>{
@@ -194,7 +194,41 @@ function addUserToOrganization (req, res){
 					if (err) {
 						return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 					}
-					return res.status(200).send({message: 'El usuario se ha agregado correctamente en la organizacion'})
+					//lo agrego a los canales de general y varios
+					//canal general
+					let canalGeneral = {body: {
+						name : "general",
+						token: token,
+						id: idOrganization,
+						email: userEmail,
+						mo_email: userEmail
+					}}
+					let result = {status: function (nro){
+						return {statusNro: nro,
+						send: function (objJson){ 
+							if(this.statusNro == 200){
+								//canal varios
+								let canalVarios = {body: {
+									token: token,
+									name : "varios",
+									id: idOrganization,
+									email: userEmail,
+									mo_email: userEmail
+								}}
+								let resultVarios = {status: function (nro){
+									return {statusNro: nro,
+									send: function (objJson){ return res.status(this.statusNro).send({message: 'El usuario se ha agregado correctamente en la organizacion'})}}
+									}
+								}
+								channelController.addUserToChannel(canalVarios, resultVarios)
+							}else{
+								return res.status(this.statusNro).send({message: 'El usuario se ha agregado correctamente en la organizacion'})}}
+							}
+							
+						}
+					}
+					channelController.addUserToChannel(canalGeneral, result)
+
 				})
 			})
 			

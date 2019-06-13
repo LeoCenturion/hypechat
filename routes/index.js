@@ -52,6 +52,7 @@ api.delete('/member/:token/:id/:email',organizationControllers.removeUser)
 api.put('/welcomeOrganization',organizationControllers.updateWelcomeOrganization)
 api.put('/photoOrganization',organizationControllers.updatePhotoOrganization)
 api.get('/locations/:token/:id',organizationControllers.getLocationsOrganization)
+api.get('/moderator/:token/:id/:email',organizationControllers.hasEditPermission)
 
 api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords)
 

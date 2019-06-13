@@ -331,6 +331,28 @@ function revokeModerator (req, res){
 	})
 }
 
+//Devuelvo 200 si es owner o moderador de la organizacion
+//404 - no existe la organizacion con ese id
+//500 - server error
+//400 - no es moderador
+function hasEditPermission (req, res){
+	let token = req.params.token
+	let id_organization = req.params.id
+	let userEmail = req.params.email
+//me fijo si la organizacion existe
+	Organization.findOne({id: id_organization}, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		
+		if(organization.owner.includes(userEmail) || organization.moderators.includes(userEmail)){
+			return res.status(200).send({message:`El usuario ${userEmail} es owner o moderador`})
+		} else{
+			return res.status(400).send({message: 'El usuario no es moderador ni owner'})
+		}
+		
+	})
+}
+
 //Elimino un usuario de la organizacion
 function removeUser (req, res){
 	let token = req.params.token
@@ -559,6 +581,7 @@ module.exports={
 	updatePasswordOrganization,
 	asignModerator,
 	revokeModerator,
+	hasEditPermission,
 	removeUser,
 	updateWelcomeOrganization,
 	updatePhotoOrganization,

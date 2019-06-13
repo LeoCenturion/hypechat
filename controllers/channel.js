@@ -29,15 +29,17 @@ function createChannel(req,res){
 	let name = req.body.name
     let id = req.body.id
     let desc = req.body.description
-    let owner = req.body.owner
+	let owner = req.body.owner
+	let welcome = req.body.welcome
     var priv = false
     if(req.body.private == 1) {priv = true}
 	const channel = new Channel({
         name: req.body.name,
         id: req.body.id,
-        private: priv,
+		private: priv,
         description: desc,
-        members: [owner],
+		members: [owner],
+		welcome: welcome,
         owner: owner
     })
 

@@ -71,6 +71,7 @@ api.get('/welcomeChannel/:token/:id/:name',channelControllers.getWelcome)
 api.delete('/channel/:token/:id/:name',channelControllers.remove)
 api.get('/channel/:token/:id/:name',channelControllers.channelInfo)
 api.post('/channels/user',channelControllers.userChannels)
+api.post('/channelsAvailable/user',channelControllers.userAllChannels)
 
 api.get('/allChannel',channelControllers.all)
 

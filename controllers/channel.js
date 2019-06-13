@@ -367,7 +367,7 @@ function channelInfo(req, res){
 	})
 }
 
-//Devuelve los canales del usuario (200)
+//Devuelve los canales del usuario que tiene agregados en la app(200)
 // 400 - si no existe un usuario con ese email
 // 404 - si no existe la organizacion
 // 405 - si no existe un usuario con ese email en la organizacion
@@ -412,6 +412,54 @@ function userChannels(req, res){
 
 
 
+//Devuelve los canales del usuario que tiene agregados en la app(200)
+// 400 - si no existe un usuario con ese email
+// 404 - si no existe la organizacion
+// 405 - si no existe un usuario con ese email en la organizacion
+// 500 - Error de server
+function userAllChannels(req, res){
+	let token = req.body.token
+	let idOrganization = req.body.id
+	let userEmail = req.body.email
+
+
+	//me fijo si la organizacion existe
+	Organization.findOne({id: idOrganization}, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		//si existe me fijo en las organizaciones del usuario a ver si ya esta agregado
+		User.findOne({email: userEmail}, (err, usuario)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+			if (!usuario) return res.status(400).send({message: 'No existe un usuario con ese email'})
+			let organizations = usuario.organizations
+			//recorro todas para a ver si ya esta agregado
+			if(!usuario.organizations.includes(organization.id)){
+					return res.status(405).send({message: 'El usuario no existe en la organizacion'})
+			}
+			var userChannels = []
+			var prueba = []
+			let channels = organization.channels
+			
+			Channel.find({name: {$in: channels}, id: idOrganization},(err, udChannel)=>{
+					if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+					
+					udChannel.forEach(function(element) {
+						if(!element.private) userChannels.push(element.name)
+						else{
+							if(element.members.includes(userEmail)) userChannels.push(element.name)
+						}
+					})
+					return res.status(200).send({channel: userChannels})
+			})
+			
+			
+		})
+	})	
+	
+}
+
+
+
 
 module.exports={
     createChannel,
@@ -427,5 +475,6 @@ module.exports={
 	remove,
 	channelInfo,
 	userChannels,
+	userAllChannels,
 	all
 }

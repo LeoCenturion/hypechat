@@ -161,6 +161,61 @@ function addUserToChannel(req, res){
 }
 
 
+//Agrega el usuario al canal
+//Devuelve 200 si lo agrego correctamente, 400 si no existe un usuario con ese email, 
+// 402 si no es privado o no existe el canal en la organizacion
+//404 si no existe una organizacion con ese id
+//405 no tiene permiso para agregar a el canal
+function addUsersToChannel(req, res){
+	let token = req.body.token
+    let idOrganization = req.body.id
+	let nameChannel = req.body.name
+	let moderator = req.body.mo_email
+	let usersEmail = req.body.emails
+
+
+	//me fijo si la organizacion existe
+	Organization.findOne({id: idOrganization}, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		//si existe me fijo en las organizaciones del usuario a ver si ya esta agregado
+		User.findOne({email: moderator}, (err, moder)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+			if (!moder) return res.status(400).send({message: `No existe un usuario moderador con ese email ${moderator}`})
+			let members = usersEmail;
+			//recorro todas para a ver si ya esta agregado
+			if(organization.owner.includes(moderator) || organization.moderators.includes(moderator)){
+				
+
+				var filterowners = organization.owner.filter( function( el ) {return members.indexOf( el ) < 0;});
+				var filtermoderadores = organization.moderators.filter( function( el ) {return members.indexOf( el ) < 0;});
+
+				var nuevo_members = members.concat(filterowners).concat(filtermoderadores);
+		
+				
+			
+				Channel.findOneAndUpdate({id: idOrganization, name: nameChannel, private: true}, {members: nuevo_members},(err, udChannel)=>{
+					if (err) return res.status(500).send({message: `Error al realizar la peticion de Canal: ${err}`})
+					if (!udChannel) return res.status(402).send({message: 'El canal no es privado o no existe'})
+	
+					return res.status(200).send({message: 'Los usuarios se han actualizado correctamente en el canal'})
+				})
+			
+			
+				
+			}else{
+				return res.status(405).send({message: 'El usuario no tiene permisos para agregar'})
+			}
+			
+			
+		
+		})
+		
+	})
+}
+
+
+
 //Elimina un usuario del canal
 //Devuelve 200 si lo elimino correctamente, 400 si no existe un usuario con ese email, 
 //401 si no esta el usuario en el organizacion , 402 si no existe el canal en la organizacion
@@ -466,7 +521,8 @@ function userAllChannels(req, res){
 module.exports={
     createChannel,
     isChannelValid,
-    addUserToChannel,
+	addUserToChannel,
+	addUsersToChannel,
     removeUserFromChannel,
     setPrivate,
     setDescription,

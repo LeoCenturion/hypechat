@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const service = require('../services')
 const User = require('../models/user');
 const Organization = require('../models/organization');
+const Channel = require('../models/channel');
 const channelController = require('../controllers/channel')
 const PrivateMsj = require('../models/privateMsj');
 const logger = require('../utils/logger');
@@ -344,7 +345,7 @@ function removeUser (req, res){
 		let owner = organization.owner
 		if(owner.includes(userEmail)) return res.status(405).send({message: 'No se puede eliminar al creador de la organizacion'})
 		//me fijo si el usuario es moderador
-		if(!newModerators.includes(userEmail) && !newMembers.includes(userEmail)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
+		if(!newMembers.includes(userEmail)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
 		var index = newModerators.indexOf(userEmail);
 		if (index > -1) {
 			newModerators.splice(index, 1);
@@ -366,7 +367,28 @@ function removeUser (req, res){
 				}
 				User.findOneAndUpdate({email: userEmail}, {organizations: userOrg}, (err,userUpdate)=>{
 					if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-					res.status(200).send({message:`Se elimino al usuario de la organizacion`})
+					let channels = orgUpdated.channels
+					Channel.find({name: {$in: channels}, id: id_organization},(err, udChannel)=>{
+						if (err) return res.status(500).send({message: `Error al realizar la peticion de Canales: ${err}`})
+						
+						const deleteMembersFromChannels = udChannel.map(function(element) {
+							let newMembers = element.members;
+							var index = element.members.indexOf(userEmail);
+							if (index > -1) {
+								newMembers.splice(index, 1);
+							}
+							let update = { members: newMembers}
+							return Channel.findOneAndUpdate({id: id_organization, name: element.name}, update);
+						});
+						
+						Promise.all(deleteMembersFromChannels).then((deletedChannels) => {
+							return res.status(200).send({message:`Se elimino al usuario de la organizacion`})
+						}).catch((err) =>{ 
+							return res.status(500).send({message: `Error al editar los miembros de Canal: ${err}`});
+						})
+						
+					})
+					
 				})
 			})
 		})

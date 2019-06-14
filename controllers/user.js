@@ -288,7 +288,7 @@ function getSecretQuestions(req,res){
 			logger.error(`getSecretQuestions - Error (400), email invalido: ${req.params.userEmail}`)
 			return res.status(400).send({message: 'El email es invalido'})
 		}
-	
+		logger.info(`getSecretQuestions - ${req.params.userEmail} obtiene las preguntas secretas (preguntas de seguridad)`)
 		return res.status(200).send( {question1: user.question1, question2: user.question2})
 			
 	})

@@ -141,5 +141,20 @@ describe('USER', () => {
 		userControllers.answersSecretQuestionsCorrect(req,res)
 		done();
    	});
-    
+   
+   	it('getSecretQuestions succesfull', (done) => {
+
+        req = {params:{userEmail: userMock.email}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('question1');
+				obj.question1.should.be.equal(userMock.question1);
+				obj.should.have.property('question2');
+				obj.question2.should.be.equal(userMock.question2);
+				return obj}}}}
+		
+		userControllers.getSecretQuestions(req,res)
+		done();
+   	});
+
 });

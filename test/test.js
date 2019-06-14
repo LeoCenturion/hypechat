@@ -157,4 +157,18 @@ describe('USER', () => {
 		done();
    	});
 
+   	it('getAnswersSecretQuestions succesfull', (done) => {
+
+        req = {params:{token: 'userMockToken'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('answers');
+				assert.equal(obj.answers[0].answer1, userMock.answer1);
+				assert.equal(obj.answers[0].answer2, userMock.answer2);
+				return obj}}}}
+
+		userControllers.getAnswersSecretQuestions(req,res)
+		done();
+   	});
+
 });

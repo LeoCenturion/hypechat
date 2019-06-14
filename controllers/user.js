@@ -301,17 +301,17 @@ function getSecretQuestions(req,res){
 function getAnswersSecretQuestions(req,res){
 	User.findOne({token: req.params.token},(err,user)=>{
 		if(err){
-			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			logger.error(`getAnswersSecretQuestions - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
+			logger.error(`getAnswersSecretQuestions - Error (400), token invalido: ${req.params.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
 		let answers = []
 		answers.push({answer1: user.answer1, answer2: user.answer2})
+		logger.info(`getAnswersSecretQuestions - ${req.params.token} obtiene las respuestas secretas (respuestas de seguridad)`)
 		return res.status(200).send({answers: answers})
-			
 	})
 }
 

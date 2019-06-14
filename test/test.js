@@ -202,4 +202,18 @@ describe('USER', () => {
 		done();
    	});
 
+   	it('setLocation succesfull', (done) => {
+
+        req = {body:{token: 'userMockToken',
+    				longitud: userMock.longitud,
+    				latitud: userMock.latitud}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('message');
+				return obj}}}}
+
+		userControllers.setLocation(req,res)
+		done();
+   	});
+
 });

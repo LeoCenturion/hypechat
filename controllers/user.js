@@ -369,14 +369,14 @@ function setLocation(req,res){
 
 	User.findOneAndUpdate({token: req.body.token},update ,(err,user)=>{
 		if(err){
-			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			logger.error(`setLocation - Error (400), token invalido: ${req.body.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
-
+		logger.info(`setLocation - Se seteo la longitud y latitud del usuario con token ${req.body.token}`)
 		return res.status(200).send({message: `La locacion se ha actualizado correctamente en el usuario: ${user.email}`})
 			
 	})

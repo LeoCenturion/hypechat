@@ -171,4 +171,20 @@ describe('USER', () => {
 		done();
    	});
 
+   	it('updateSecretQuestions succesfull', (done) => {
+
+        req = {body:{token: 'userMockToken',
+    				question1: userMock.question1,
+    				question2: userMock.question2,
+    				answer1: userMock.answer1,
+    				answer2: userMock.answer2}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('message');
+				return obj}}}}
+
+		userControllers.updateSecretQuestions(req,res)
+		done();
+   	});
+
 });

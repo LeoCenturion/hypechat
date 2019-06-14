@@ -323,19 +323,17 @@ function updateSecretQuestions(req,res){
 	let token = req.body.token
 	let update = {question1: req.body.question1, question2: req.body.question2, answer1: req.body.answer1, answer2: req.body.answer2 }
 
-
 	User.findOneAndUpdate({token: req.body.token},update ,(err,user)=>{
 		if(err){
-			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			logger.error(`updateSecretQuestions - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.body.token}`)
+			logger.error(`updateSecretQuestions - Error (400), token invalido: ${req.body.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
-
+		logger.info(`updateSecretQuestions - Se actualizaron correctamente las preguntas y respuestas secretas de ${req.body.token}`)
 		return res.status(200).send({message: 'Las preguntas y respuestas secretas se han actualizado correctamente'})
-			
 	})
 }
 

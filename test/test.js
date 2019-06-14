@@ -1,26 +1,59 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 
-let mongoose = require("mongoose");
-let User = require('../models/user');
-let Organization = require('../models/organization');
-let Channels = require('../models/channel');
-let MsjPriv = require('../models/privateMsj')
-
-//Require the dev-dependencies
+const sinon = require('sinon');
+const mongoose = require('mongoose');
+const assert = require('assert');
 let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../server');
 let should = chai.should();
-let expect = require('chai').expect;
 
-const url= 'http://localhost:5000';
-var token = "thisIsTheToken";
+const userControllers = require('../controllers/user');
+const User = require('../models/user');
 
-chai.use(chaiHttp);
+userMock = {
+			_id: '1234qwer',
+			email:"email@gmail.com",
+			name: "name",
+			psw: "password",
+			photo: "photoUrl",
+			nickname: "nickname",
+			organizations: [],
+			question1: 'question1',
+			question2: 'question2',
+			answer1: 'answer1',
+			answer2: 'answer2',
+			latitud: 0,
+			longitud: 0
+		};
 
-const userControllers = require('../controllers/user')
+describe('USER Login', () => {
+    let mongoStub = null;
+    let findOneStub = null;
+    let updateUserStub = null;
 
+    beforeEach(() => {
+        mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
+        findOneStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
+        updateUserStub = sinon.stub(User, 'findByIdAndUpdate').callsFake((a,b, cb)=> cb(null, userMock));
+    });
+
+    afterEach(() => {
+        mongoStub.restore();
+        findOneStub.restore();
+        updateUserStub.restore();
+    });
+
+    it('Login user succesfull', (done) => {
+
+        req = {body:{email:"email@gmail.com", psw: "password"}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('token')
+									return obj}}}}
+		
+		userControllers.logIn(req,res)
+		done();
+   });
+});
 
 /*
 describe('SERVER', () => {

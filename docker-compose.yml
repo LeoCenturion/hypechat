@@ -14,10 +14,8 @@ services:
     - "27018:27017"
   test:
     build: .
-    depends_on:
-    - mongo
     volumes:
-      - ./test:/data
+      - ./test:/test
     ports:
       - 5000:5000
     command:

@@ -187,4 +187,19 @@ describe('USER', () => {
 		done();
    	});
 
+   	it('getLocation succesfull', (done) => {
+
+        req = {params:{token: 'userMockToken'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('longitud');
+				obj.longitud.should.be.equal(userMock.longitud);
+				obj.should.have.property('latitud');
+				obj.latitud.should.be.equal(userMock.latitud);
+				return obj}}}}
+
+		userControllers.getLocation(req,res)
+		done();
+   	});
+
 });

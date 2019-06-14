@@ -332,7 +332,7 @@ function updateSecretQuestions(req,res){
 			logger.error(`updateSecretQuestions - Error (400), token invalido: ${req.body.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
-		logger.info(`updateSecretQuestions - Se actualizaron correctamente las preguntas y respuestas secretas de ${req.body.token}`)
+		logger.info(`updateSecretQuestions - Se actualizaron correctamente las preguntas y respuestas secretas del usuario con token ${req.body.token}`)
 		return res.status(200).send({message: 'Las preguntas y respuestas secretas se han actualizado correctamente'})
 	})
 }
@@ -345,14 +345,14 @@ function updateSecretQuestions(req,res){
 function getLocation(req,res){
 	User.findOne({token: req.params.token},(err,user)=>{
 		if(err){
-			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
+			logger.error(`getLocation - Error (500) al buscar el usuario: ${err}`)
 			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 		}
 		if(!user){
-			logger.error(`answersSecretQuestionsCorrect - Error (400), token invalido: ${req.params.token}`)
+			logger.error(`getLocation - Error (400), token invalido: ${req.params.token}`)
 			return res.status(400).send({message: 'El token es invalido'})
 		}
-	
+		logger.info(`getLocation - Se devolvió la longitud y latitud del usuario con token ${req.params.token}`)
 		return res.status(200).send({longitud: user.longitud, latitud: user.latitud})
 			
 	})

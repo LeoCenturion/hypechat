@@ -30,7 +30,7 @@ userMock = {
 			recoverPasswordToken: 'itsToken'
 		};
 
-
+decribe('TODO',()=>{
 describe('USER', () => {
     let mongoStub = null;
     let findOneStub = null;
@@ -284,5 +284,5 @@ describe('ORGANIZATION', () => {
    	});
    	
 
-   	
+});   	
 });

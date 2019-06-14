@@ -26,7 +26,7 @@ userMock = {
 			longitud: 0
 		};
 
-describe('USER Login', () => {
+describe('USER', () => {
     let mongoStub = null;
     let findOneStub = null;
     let updateUserStub = null;
@@ -52,8 +52,24 @@ describe('USER Login', () => {
 		
 		userControllers.logIn(req,res)
 		done();
+   	});
+
+    it('get user profile succesfull', (done) => {
+
+        req = {body:{token:"1234qwer"}, params:{email:"email@gmail.com"}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('name');
+				obj.should.have.property('nickname');
+				obj.should.have.property('email');
+				obj.should.have.property('photo');
+				return obj}}}}
+		
+		userControllers.getUserProfile(req,res)
+		done();
    });
 });
+
 
 /*
 describe('SERVER', () => {

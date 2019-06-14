@@ -84,5 +84,16 @@ describe('USER', () => {
 		done();
    	});
 
+    it('getTokenRecoverPasswordUser succesfull', (done) => {
+
+        req = {body:{email:"email@gmail.com"}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('recoverPasswordToken');
+				return obj}}}}
+		
+		userControllers.getTokenRecoverPasswordUser(req,res)
+		done();
+   	});
     
 });

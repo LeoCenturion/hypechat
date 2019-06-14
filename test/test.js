@@ -29,18 +29,21 @@ userMock = {
 describe('USER', () => {
     let mongoStub = null;
     let findOneStub = null;
-    let updateUserStub = null;
+    let findByIdAndUpdateStub = null;
+    let updateStub = null;
 
     beforeEach(() => {
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
         findOneStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
-        updateUserStub = sinon.stub(User, 'findByIdAndUpdate').callsFake((a,b, cb)=> cb(null, userMock));
+        findByIdAndUpdateStub = sinon.stub(User, 'findByIdAndUpdate').callsFake((a,b, cb)=> cb(null, userMock));
+    	updateStub = sinon.stub(User, 'update').callsFake((a,b, cb)=> cb(null, userMock));
     });
 
     afterEach(() => {
         mongoStub.restore();
         findOneStub.restore();
-        updateUserStub.restore();
+        findByIdAndUpdateStub.restore();
+        updateStub.restore();
     });
 
     it('Login user succesfull', (done) => {
@@ -54,7 +57,7 @@ describe('USER', () => {
 		done();
    	});
 
-    it('get user profile succesfull', (done) => {
+    it('Get user profile succesfull', (done) => {
 
         req = {body:{token:"1234qwer"}, params:{email:"email@gmail.com"}}
 		res = {status: function(nro){assert.equal(nro,200)
@@ -67,7 +70,21 @@ describe('USER', () => {
 		
 		userControllers.getUserProfile(req,res)
 		done();
-   });
+   	});
+
+    it('Update user succesfull', (done) => {
+
+        req = {body:{token:"1234qwer"}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('message');
+				return obj}}}}
+		
+		userControllers.updateUser(req,res)
+		done();
+   	});
+
+    
 });
 
 

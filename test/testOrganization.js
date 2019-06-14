@@ -33,12 +33,14 @@ describe('ORGANIZATION', () => {
     let findOneUserStub = null; 
     let findOrganizationStub = null;
     let findPrivateMsjStub = null;
+    let findOneOrganizationStub = null;
 
     beforeEach(() => {
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
         findOneUserStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
         findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
     	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
+    	findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, null));
     });
 
     afterEach(() => {
@@ -46,6 +48,7 @@ describe('ORGANIZATION', () => {
         findOneUserStub.restore();
         findOrganizationStub.restore();
         findPrivateMsjStub.restore();
+        findOneOrganizationStub.restore();
     });
 
     it('getUserOrganizations succesfull', (done) => {
@@ -74,6 +77,18 @@ describe('ORGANIZATION', () => {
 		organizationControllers.getPrivateMsj(req,res)
 		done();
    	});
+
+   	it('isOrganizationIDValid succesfull', (done) => {
+        req = {params:{organizationID: 'idOrganization'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+							obj.should.have.property('message');
+							return obj}}}}
+		
+		organizationControllers.isOrganizationIDValid(req,res)
+		done();
+   	});
+   	
 
    	
 });

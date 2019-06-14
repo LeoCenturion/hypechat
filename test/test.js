@@ -23,20 +23,24 @@ userMock = {
 			answer1: 'answer1',
 			answer2: 'answer2',
 			latitud: 0,
-			longitud: 0
+			longitud: 0,
+			recoverPasswordToken: 'itsToken'
 		};
+
 
 describe('USER', () => {
     let mongoStub = null;
     let findOneStub = null;
     let findByIdAndUpdateStub = null;
     let updateStub = null;
+    let findOneAndUpdateStub = null;
 
     beforeEach(() => {
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
         findOneStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
         findByIdAndUpdateStub = sinon.stub(User, 'findByIdAndUpdate').callsFake((a,b, cb)=> cb(null, userMock));
     	updateStub = sinon.stub(User, 'update').callsFake((a,b, cb)=> cb(null, userMock));
+    	findOneAndUpdateStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
     });
 
     afterEach(() => {
@@ -44,6 +48,7 @@ describe('USER', () => {
         findOneStub.restore();
         findByIdAndUpdateStub.restore();
         updateStub.restore();
+        findOneAndUpdateStub.restore();
     });
 
     it('Login user succesfull', (done) => {
@@ -105,6 +110,35 @@ describe('USER', () => {
 				return obj}}}}
 		
 		userControllers.updatePasswordUser(req,res)
+		done();
+   	});
+
+	it('answersSecretQuestionsCorrect succesfull', (done) => {
+
+        req = {params:{userEmail: userMock.email,
+        				asw1: userMock.answer1,
+        				asw2: userMock.answer2}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('recoverPasswordToken');
+				assert(obj.recoverPasswordToken != userMock.recoverPasswordToken);
+				return obj}}}}
+		
+		userControllers.answersSecretQuestionsCorrect(req,res)
+		done();
+   	});
+
+   	it('answersSecretQuestionsCorrect not succesfull', (done) => {
+
+        req = {params:{userEmail: userMock.email,
+        				asw1: 'otherAsw1',
+        				asw2: 'otherAsw2'}}
+		res = {status: function(nro){assert.equal(nro,401)
+			return {send:function(obj){
+				obj.should.have.property('message');
+				return obj}}}}
+		
+		userControllers.answersSecretQuestionsCorrect(req,res)
 		done();
    	});
     

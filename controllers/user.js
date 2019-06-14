@@ -238,9 +238,9 @@ function answersSecretQuestionsCorrect(req,res){
 	let asw1 = req.params.asw1
 	let asw2 = req.params.asw2
 	let userEmail = req.params.userEmail
-	logger.info(`email: ${req.params.userEmail}`)
-	logger.info(`asw1: ${req.params.asw1}`)
-	logger.info(`asw2: ${req.params.asw2}`)
+	logger.info(`answersSecretQuestionsCorrect - email: ${req.params.userEmail}`)
+	logger.info(`answersSecretQuestionsCorrect - asw1: ${req.params.asw1}`)
+	logger.info(`answersSecretQuestionsCorrect - asw2: ${req.params.asw2}`)
 	User.findOne({email: req.params.userEmail},(err,user)=>{
 		if(err){
 			logger.error(`answersSecretQuestionsCorrect - Error (500) al buscar el usuario: ${err}`)
@@ -263,10 +263,12 @@ function answersSecretQuestionsCorrect(req,res){
 					logger.error(`answersSecretQuestionsCorrect - Error (400), email invalido: ${req.params.userEmail}`)
 					return res.status(400).send({message: 'El email es invalido'})
 				}
+				logger.info(`answersSecretQuestionsCorrect - ${req.params.userEmail} obtiene token de recuperacion de contraseña`)
 				return res.status(200).send({recoverPasswordToken: recoverToken});
 			});
 		
 		}else{
+			logger.error(`answersSecretQuestionsCorrect - Error (401), Respuestas incorrectas`)
 			return res.status(401).send({message: 'Respuestas incorrectas'})
 		}
 	})

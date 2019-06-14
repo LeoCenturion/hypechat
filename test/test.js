@@ -95,5 +95,17 @@ describe('USER', () => {
 		userControllers.getTokenRecoverPasswordUser(req,res)
 		done();
    	});
+
+   	it('updatePasswordUser succesfull', (done) => {
+
+        req = {body:{email:"email@gmail.com", psw:"newPsw", token:"token"}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('message');
+				return obj}}}}
+		
+		userControllers.updatePasswordUser(req,res)
+		done();
+   	});
     
 });

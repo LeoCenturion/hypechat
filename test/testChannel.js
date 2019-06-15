@@ -333,4 +333,16 @@ describe('CHANNEL', () => {
 		done();
    	});
    	
+   	it("channelInfo succesfull", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,405)
+			return {send:function(obj){obj.should.have.property('channel')
+									obj.channel.should.be.equal(channelMock)
+									return obj}}}}
+		channelControllers.channelInfo(req,res)
+		done();
+   	});
+   	
 });

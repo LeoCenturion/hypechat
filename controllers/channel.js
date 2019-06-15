@@ -1,7 +1,6 @@
 'use strict'
 
 const mongoose = require('mongoose');
-const service = require('../services')
 const User = require('../models/user');
 const Organization = require('../models/organization');
 const Channel = require('../models/channel');

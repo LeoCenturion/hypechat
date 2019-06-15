@@ -10,7 +10,17 @@ let should = chai.should();
 const userControllers = require('../controllers/user');
 const User = require('../models/user');
 
-userMock = {
+
+
+describe('USER', () => {
+    let mongoStub = null;
+    let findOneStub = null;
+    let findByIdAndUpdateStub = null;
+    let updateStub = null;
+    let findOneAndUpdateStub = null;
+
+    beforeEach(() => {
+    	userMock = {
 			_id: '1234qwer',
 			email:"email@gmail.com",
 			name: "name",
@@ -27,15 +37,6 @@ userMock = {
 			recoverPasswordToken: 'itsToken'
 		};
 
-
-describe('USER', () => {
-    let mongoStub = null;
-    let findOneStub = null;
-    let findByIdAndUpdateStub = null;
-    let updateStub = null;
-    let findOneAndUpdateStub = null;
-
-    beforeEach(() => {
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
         findOneStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
         findByIdAndUpdateStub = sinon.stub(User, 'findByIdAndUpdate').callsFake((a,b, cb)=> cb(null, userMock));

@@ -14,7 +14,7 @@ function createToken(user){
 
 	return jwt.encode(payload, config.SECRET_TOKEN)
 }
-
+/*
 function decodeToken(token){
 	const decoded = new Promise((resolve,reject)=>{
 		try{
@@ -27,7 +27,7 @@ function decodeToken(token){
 				})
 			}*/
 
-			resolve(payload.sub)
+	/*		resolve(payload.sub)
 		} catch(err){
 			reject({
 				status: 500,
@@ -37,9 +37,8 @@ function decodeToken(token){
 	})
 
 	return decoded
-}
+}*/
 
 module.exports = {
-	createToken,
-	decodeToken
+	createToken
 }

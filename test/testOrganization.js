@@ -131,6 +131,7 @@ describe('ORGANIZATION', () => {
 
    		let updateOneOrganization = null;
    		let addUserToChannelStub = null;
+   		let findOneAndUpdateOrganizationStub = null;
 
    		let mongoStub = null;
 	    let findOneUserStub = null; 
@@ -145,7 +146,8 @@ describe('ORGANIZATION', () => {
 	    	findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, organizationMock));
 	    	updateOneOrganization = sinon.stub(Organization, 'updateOne').callsFake((a,b, cb)=> cb(null, organizationMock));
 	    	addUserToChannelStub = sinon.stub(channelController, 'addUserToChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
-	    
+	    	findOneAndUpdateOrganizationStub = sinon.stub(Organization, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, organizationMock));
+
 	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
 	        findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
 	    	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
@@ -158,6 +160,7 @@ describe('ORGANIZATION', () => {
 	        findOneOrganizationStub.restore();
 	        updateOneOrganization.restore();
 	        addUserToChannelStub.restore();
+	        findOneAndUpdateOrganizationStub.restore();
 
 	        findOneUserStub.restore();
 	        findOrganizationStub.restore();
@@ -189,6 +192,19 @@ describe('ORGANIZATION', () => {
 								return obj}}}}
 			
 			organizationControllers.getInfoOrganization(req,res)
+			done();
+   		});
+
+   		it('updateNameOrganization succesfull', (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			name: 'nameOrganization'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('usuario');
+								return obj}}}}
+			
+			organizationControllers.updateNameOrganization(req,res)
 			done();
    		});
 

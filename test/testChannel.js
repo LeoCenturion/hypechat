@@ -82,4 +82,27 @@ describe('CHANNEL', () => {
 		channelControllers.createChannel(req,res)
 		done();
    	});
+
+   	it("isChannelValid succesfull", (done) => {
+        req = {params:{id:'idOrganization',
+        		name: 'newNamechannel'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.isChannelValid(req,res)
+		done();
+   	});
+
+   	it("isChannelValid not succesfull - channel's name alredy exist", (done) => {
+        req = {params:{id:'idOrganization',
+        		name: 'channel'}}
+		res = {status: function(nro){assert.equal(nro,400)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.isChannelValid(req,res)
+		done();
+   	});
+   	
 });

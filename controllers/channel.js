@@ -88,8 +88,6 @@ function isChannelValid (req, res){
 		
 		if (organization.channels.includes(name)) return res.status(400).send({message: 'El canal ya existe'})
         return res.status(200).send({message: 'No existe un canal con ese nombre, valido para crear'})
-		
-		
 	})
 }
 

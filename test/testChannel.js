@@ -263,5 +263,45 @@ describe('CHANNEL', () => {
 		channelControllers.setWelcome(req,res)
 		done();
    	});
+
+   	it("getDescription succesfull", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('description')
+									obj.description.should.be.equal(channelMock.description)
+									return obj}}}}
+		
+		channelControllers.getDescription(req,res)
+		done();
+   	});
+   	
+   	it("getWelcome succesfull", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('welcome')
+									obj.welcome.should.be.equal(channelMock.welcome)
+									return obj}}}}
+		
+		channelControllers.getWelcome(req,res)
+		done();
+   	});
+
+   	it("getPrivate succesfull", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('private')
+									obj.welcome.should.be.equal(channelMock.private)
+									return obj}}}}
+		
+		channelControllers.getPrivate(req,res)
+		done();
+   	});
+   	
    	
 });

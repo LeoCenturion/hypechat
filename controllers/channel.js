@@ -325,7 +325,6 @@ function getDescription (req, res){
 	let idOrganization = req.params.id
 	let nameChannel = req.params.name
 
-
 	Channel.findOne({name: nameChannel, id: idOrganization},(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
         if (!udChannel) return res.status(404).send({message: 'El canal no existe para esa organizacion'})
@@ -356,8 +355,6 @@ function getPrivate (req, res){
 	let token = req.params.token
 	let id_organization = req.params.id
 	let name = req.params.name
-
-    if(req.body.private == 1) {priv = true}
 
 	Channel.findOne({name: name, id: id_organization},(err, udChannel)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})

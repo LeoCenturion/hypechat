@@ -75,6 +75,7 @@ describe('CHANNEL', () => {
     let findOneOrganizationStub = null;
     let findOneUserStub = null;
     let updateOneChannelStub = null;
+    let findOneAndUpdateChannelStub = null;
 
     beforeEach(() => {
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
@@ -83,6 +84,7 @@ describe('CHANNEL', () => {
 	        																		return cb(null,userMock2)}
 																		        cb(null, userMock)});
         updateOneChannelStub = sinon.stub(Channel, 'updateOne').callsFake((a, b, cb)=> cb(null, channelMock));
+        findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, channelMock));
     });
 
     afterEach(() => {
@@ -90,6 +92,7 @@ describe('CHANNEL', () => {
         findOneOrganizationStub.restore();
         findOneUserStub.restore();
         updateOneChannelStub.restore();
+        findOneAndUpdateChannelStub.restore();
     });
 
     it('createChannel succesfull', (done) => {
@@ -223,5 +226,16 @@ describe('CHANNEL', () => {
 		done();
    	});
 
+   	it("setPrivate succesfull", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			organizationID:organizationMock.id,
+        			name: channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.setPrivate(req,res)
+		done();
+   	});
    	
 });

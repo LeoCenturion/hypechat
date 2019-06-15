@@ -180,6 +180,20 @@ describe('ORGANIZATION', () => {
 			done();
    		});
 
+   		it('getInfoOrganization succesfull', (done) => {
+	        req = {params:{token: 'userMockToken',
+	        			organizationID: 'idOrganization'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('organization');
+								return obj}}}}
+			
+			organizationControllers.getInfoOrganization(req,res)
+			done();
+   		});
+
+   		
+
    	});
    	   	
 });

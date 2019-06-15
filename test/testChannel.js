@@ -11,9 +11,19 @@ const Channel = require('../models/channel');
 const Organization = require('../models/organization');
 const User = require('../models/user');
 
-
-
-let userMock = {
+describe('CHANNEL', () => {
+    let mongoStub = null;
+    let findOneOrganizationStub = null;
+    let findOneUserStub = null;
+    let updateOneChannelStub = null;
+    let findOneAndUpdateChannelStub = null;
+    let updateOneOrganizationStub = null;
+    let findOneAndDeleteChannelStub = null;
+    let findChannelStub = null;
+    let findOneChannelStub = null;
+    
+    beforeEach(() => {
+    	userMock = {
 			_id: '1234qwer',
 			email:"email@gmail.com",
 			name: "name",
@@ -30,56 +40,47 @@ let userMock = {
 			recoverPasswordToken: 'itsToken'
 		};
 
-let channelMock = {
-	private: true,
-	id: 'idChannel',
-	name: 'channel',
-	owner: userMock.email,
-	members: [userMock.email],
-	description: 'this is a channel',
-	welcome: 'welcome'
-}
-let userMock2 = {
-	_id: '12345qwert',
-	email:"member@gmail.com",
-	name: "name",
-	psw: "password",
-	photo: "photoUrl",
-	nickname: "nickname",
-	organizations: ['idOrganization'],
-	question1: 'question1',
-	question2: 'question2',
-	answer1: 'answer1',
-	answer2: 'answer2',
-	latitud: 0,
-	longitud: 0,
-	recoverPasswordToken: 'itsToken'
-}
+		channelMock = {
+			private: true,
+			id: 'idChannel',
+			name: 'channel',
+			owner: userMock.email,
+			members: [userMock.email],
+			description: 'this is a channel',
+			welcome: 'welcome'
+		}
+		userMock2 = {
+			_id: '12345qwert',
+			email:"member@gmail.com",
+			name: "name",
+			psw: "password",
+			photo: "photoUrl",
+			nickname: "nickname",
+			organizations: ['idOrganization'],
+			question1: 'question1',
+			question2: 'question2',
+			answer1: 'answer1',
+			answer2: 'answer2',
+			latitud: 0,
+			longitud: 0,
+			recoverPasswordToken: 'itsToken'
+		}
 
-let organizationMock = {
-	id:'idOrganization',
-	psw: 'pswOrganization',
-	name: 'nameOrganization',
-	channels: [channelMock.name],
-	owner: userMock.email,
-	moderators: ['moderator@gmail.com'],
-	members: [userMock.email, userMock2.email],
-	welcome: 'Bienvenido a la organizacion',
-	photo: 'url',
-	location: "Facultad de ingenieria",
-	restrictedWords : ['cat', 'dog']
-}
-
-describe('CHANNEL', () => {
-    let mongoStub = null;
-    let findOneOrganizationStub = null;
-    let findOneUserStub = null;
-    let updateOneChannelStub = null;
-    let findOneAndUpdateChannelStub = null;
-    let updateOneOrganizationStub = null;
-    let findOneAndDeleteChannelStub = null;
-
-    beforeEach(() => {
+		organizationMock = {
+			id:'idOrganization',
+			psw: 'pswOrganization',
+			name: 'nameOrganization',
+			channels: [channelMock.name],
+			owner: userMock.email,
+			moderators: ['moderator@gmail.com'],
+			members: [userMock.email, userMock2.email],
+			welcome: 'Bienvenido a la organizacion',
+			photo: 'url',
+			location: "Facultad de ingenieria",
+			restrictedWords : ['cat', 'dog']
+		}
+		
+    	userMock.organizations=[organizationMock.id]
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
         findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, organizationMock));
         findOneUserStub = sinon.stub(User, 'findOne').callsFake((user, cb)=> {if(user.email == userMock2.email){
@@ -89,6 +90,8 @@ describe('CHANNEL', () => {
         findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, channelMock));
         updateOneOrganizationStub = sinon.stub(Organization, 'updateOne').callsFake((a, b, cb)=> cb(null, organizationMock));
         findOneAndDeleteChannelStub = sinon.stub(Channel, 'findOneAndDelete').callsFake((_, cb)=> cb(null, channelMock));
+        findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((_, cb)=> cb(null, channelMock));
+        findChannelStub = sinon.stub(Channel, 'find').callsFake((_, cb)=> cb(null, [channelMock]));
     });
 
     afterEach(() => {
@@ -99,6 +102,9 @@ describe('CHANNEL', () => {
         findOneAndUpdateChannelStub.restore();
         updateOneOrganizationStub.restore();
         findOneAndDeleteChannelStub.restore();
+        findChannelStub.restore();
+        findOneChannelStub.restore();
+        
     });
 
     it('createChannel succesfull', (done) => {
@@ -110,7 +116,6 @@ describe('CHANNEL', () => {
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('message')
 									return obj}}}}
-		
 		channelControllers.createChannel(req,res)
 		done();
    	});
@@ -174,7 +179,6 @@ describe('CHANNEL', () => {
 		res = {status: function(nro){assert.equal(nro,402)
 			return {send:function(obj){obj.should.have.property('message')
 									return obj}}}}
-		
 		channelControllers.addUserToChannel(req,res)
 		done();
    	});
@@ -302,7 +306,7 @@ describe('CHANNEL', () => {
         			name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('private')
-									obj.welcome.should.be.equal(channelMock.private)
+									obj.private.should.be.equal(channelMock.private)
 									return obj}}}}
 		
 		channelControllers.getPrivate(req,res)
@@ -342,6 +346,17 @@ describe('CHANNEL', () => {
 									obj.channel.should.be.equal(channelMock)
 									return obj}}}}
 		channelControllers.channelInfo(req,res)
+		done();
+   	});
+   	
+   	it("userChannels succesfull", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			email: userMock.email}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('channel')
+									return obj}}}}
+		channelControllers.userChannels(req,res)
 		done();
    	});
    	

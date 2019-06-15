@@ -58,6 +58,40 @@ describe('ORGANIZATION', () => {
     let createChannelStub = null;
 
     beforeEach(() => {
+    	userMock = {
+				_id: '1234qwer',
+				email:"email@gmail.com",
+				name: "name",
+				psw: "password",
+				photo: "photoUrl",
+				nickname: "nickname",
+				organizations: [],
+				question1: 'question1',
+				question2: 'question2',
+				answer1: 'answer1',
+				answer2: 'answer2',
+				latitud: 0,
+				longitud: 0,
+				recoverPasswordToken: 'itsToken'
+			};
+
+			userMock2 = {
+				_id: '12345qwert',
+				email:"member@gmail.com",
+				name: "name",
+				psw: "password",
+				photo: "photoUrl",
+				nickname: "nickname",
+				organizations: ['idOrganization'],
+				question1: 'question1',
+				question2: 'question2',
+				answer1: 'answer1',
+				answer2: 'answer2',
+				latitud: 0,
+				longitud: 0,
+				recoverPasswordToken: 'itsToken'
+			}
+
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
         findOneUserStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
         findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
@@ -133,20 +167,6 @@ describe('ORGANIZATION', () => {
 
 
    	describe("When do 'find organization', organization exist",()=>{
-   		let organizationMock = {
-   			id:'idOrganization',
-			psw: 'pswOrganization',
-			name: 'nameOrganization',
-			channels: [],
-			owner: userMock.email,
-			moderators: ['moderator@gmail.com'],
-			members: [userMock.email, userMock2.email],
-			welcome: 'Bienvenido a la organizacion',
-			photo: 'url',
-			location: "Facultad de ingenieria",
-			restrictedWords : ['cat', 'dog']
-   		}
-
    		let updateOneOrganization = null;
    		let addUserToChannelStub = null;
    		let findOneAndUpdateOrganizationStub = null;
@@ -163,6 +183,54 @@ describe('ORGANIZATION', () => {
 
 
    		beforeEach(() => {
+   			userMock = {
+				_id: '1234qwer',
+				email:"email@gmail.com",
+				name: "name",
+				psw: "password",
+				photo: "photoUrl",
+				nickname: "nickname",
+				organizations: [],
+				question1: 'question1',
+				question2: 'question2',
+				answer1: 'answer1',
+				answer2: 'answer2',
+				latitud: 0,
+				longitud: 0,
+				recoverPasswordToken: 'itsToken'
+			};
+
+			userMock2 = {
+				_id: '12345qwert',
+				email:"member@gmail.com",
+				name: "name",
+				psw: "password",
+				photo: "photoUrl",
+				nickname: "nickname",
+				organizations: ['idOrganization'],
+				question1: 'question1',
+				question2: 'question2',
+				answer1: 'answer1',
+				answer2: 'answer2',
+				latitud: 0,
+				longitud: 0,
+				recoverPasswordToken: 'itsToken'
+			}
+
+			organizationMock = {
+	   			id:'idOrganization',
+				psw: 'pswOrganization',
+				name: 'nameOrganization',
+				channels: [],
+				owner: userMock.email,
+				moderators: ['moderator@gmail.com'],
+				members: [userMock.email, userMock2.email],
+				welcome: 'Bienvenido a la organizacion',
+				photo: 'url',
+				location: "Facultad de ingenieria",
+				restrictedWords : ['cat', 'dog']
+   			}
+
 	        mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
 	    	findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, organizationMock));
 	    	updateOneOrganization = sinon.stub(Organization, 'updateOne').callsFake((a,b, cb)=> cb(null, organizationMock));

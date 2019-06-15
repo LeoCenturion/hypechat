@@ -440,9 +440,8 @@ function userChannels(req, res){
 			if (!usuario) return res.status(400).send({message: 'No existe un usuario con ese email'})
 			let organizations = usuario.organizations
 			//recorro todas para a ver si ya esta agregado
-			if(!usuario.organizations.includes(organization.id)){
-					return res.status(405).send({message: 'El usuario no existe en la organizacion'})
-			}
+			if(!usuario.organizations.includes(organization.id)) return res.status(405).send({message: 'El usuario no existe en la organizacion'})
+
 			var userChannels = []
 			var prueba = []
 			let channels = organization.channels
@@ -451,7 +450,8 @@ function userChannels(req, res){
 					if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 					
 					udChannel.forEach(function(element) {
-						if(element.members.includes(userEmail)) userChannels.push(element.name)
+						if(element.members.includes(userEmail)) {
+							userChannels.push(element.name)}
 					})
 					return res.status(200).send({channel: userChannels})
 			})

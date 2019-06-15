@@ -79,7 +79,7 @@ describe('CHANNEL', () => {
 			location: "Facultad de ingenieria",
 			restrictedWords : ['cat', 'dog']
 		}
-		
+
     	userMock.organizations=[organizationMock.id]
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
         findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, organizationMock));
@@ -355,8 +355,21 @@ describe('CHANNEL', () => {
         			email: userMock.email}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('channel')
+									//obj.channel.should.be.equal([channelMock.name])
 									return obj}}}}
 		channelControllers.userChannels(req,res)
+		done();
+   	});
+   	
+   	it("userAllChannels succesfull", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			email: userMock.email}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('channel')
+									//obj.channel.should.be.equal([channelMock.name])
+									return obj}}}}
+		channelControllers.userAllChannels(req,res)
 		done();
    	});
    	

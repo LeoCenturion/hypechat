@@ -31,6 +31,8 @@ userMock = {
 		};
 
 describe('ORGANIZATION', () => {
+	describe("When do 'find organization', organization does not exist",()=>{
+
     let mongoStub = null;
     let findOneUserStub = null; 
     let findOrganizationStub = null;
@@ -111,5 +113,73 @@ describe('ORGANIZATION', () => {
 		organizationControllers.createOrganization(req,res)
 		done();
    	});
-   	
+   	})
+   	describe("When do 'find organization', organization exist",()=>{
+   		let organizationMock = {
+   			id:'idOrganization',
+			psw: 'pswOrganization',
+			name: 'nameOrganization',
+			channels: [],
+			owner: userMock.email,
+			moderators: [],
+			members: [],
+			welcome: 'Bienvenido a la organizacion',
+			photo: 'url',
+			location: "Facultad de ingenieria",
+			restrictedWords : []
+   		}
+
+   		let updateOneOrganization = null;
+   		let addUserToChannelStub = null;
+
+   		let mongoStub = null;
+	    let findOneUserStub = null; 
+	    let findOrganizationStub = null;
+	    let findPrivateMsjStub = null;
+	    let findOneOrganizationStub = null;
+	    let updateOneUserStub = null;
+	    let createChannelStub = null;
+
+   		beforeEach(() => {
+	        mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
+	    	findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, organizationMock));
+	    	updateOneOrganization = sinon.stub(Organization, 'updateOne').callsFake((a,b, cb)=> cb(null, organizationMock));
+	    	addUserToChannelStub = sinon.stub(channelController, 'addUserToChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
+	    
+	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
+	        findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
+	    	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
+	    	updateOneUserStub = sinon.stub(User, 'updateOne').callsFake((a, b, cb)=> cb(null, userMock));
+	    	createChannelStub = sinon.stub(channelController, 'createChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
+	    });
+
+	    afterEach(() => {
+	        mongoStub.restore();
+	        findOneOrganizationStub.restore();
+	        updateOneOrganization.restore();
+	        addUserToChannelStub.restore();
+
+	        findOneUserStub.restore();
+	        findOrganizationStub.restore();
+	        findPrivateMsjStub.restore();	        
+	        updateOneUserStub.restore();
+	        createChannelStub.restore();
+	    });
+
+   		it('addUserToOrganization succesfull', (done) => {
+	        req = {body:{email: userMock.email,
+	        			token: 'userMockToken',
+	        			idOrganization: 'idOrganization',
+	        			psw:'pswOrganization'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.addUserToOrganization(req,res)
+			done();
+   		});
+
+   	});
+   	   	
 });

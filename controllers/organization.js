@@ -188,7 +188,7 @@ function addUserToOrganization (req, res){
 					return res.status(400).send({message: 'El usuario ya existe en la organizacion'})
 			}
 			//si no esta agregado, agrego la organizacion al usuario y el usuario a la organizacion
-			Organization.updateOne({id: idOrganization},{ $push: { members: userEmail } },(err, usuario)=>{
+			Organization.updateOne({id: idOrganization},{ $push: { members: userEmail } },(err, org)=>{
 				if (err) {
 					return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 				}

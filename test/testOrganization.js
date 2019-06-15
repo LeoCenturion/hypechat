@@ -30,6 +30,22 @@ userMock = {
 			recoverPasswordToken: 'itsToken'
 		};
 
+userMock2 = {
+	_id: '12345qwert',
+	email:"member@gmail.com",
+	name: "name",
+	psw: "password",
+	photo: "photoUrl",
+	nickname: "nickname",
+	organizations: ['idOrganization'],
+	question1: 'question1',
+	question2: 'question2',
+	answer1: 'answer1',
+	answer2: 'answer2',
+	latitud: 0,
+	longitud: 0,
+	recoverPasswordToken: 'itsToken'
+}
 describe('ORGANIZATION', () => {
 	describe("When do 'find organization', organization does not exist",()=>{
 
@@ -114,6 +130,8 @@ describe('ORGANIZATION', () => {
 		done();
    	});
    	})
+
+
    	describe("When do 'find organization', organization exist",()=>{
    		let organizationMock = {
    			id:'idOrganization',
@@ -122,7 +140,7 @@ describe('ORGANIZATION', () => {
 			channels: [],
 			owner: userMock.email,
 			moderators: ['moderator@gmail.com'],
-			members: [userMock.email],
+			members: [userMock.email, userMock2.email],
 			welcome: 'Bienvenido a la organizacion',
 			photo: 'url',
 			location: "Facultad de ingenieria",
@@ -132,14 +150,16 @@ describe('ORGANIZATION', () => {
    		let updateOneOrganization = null;
    		let addUserToChannelStub = null;
    		let findOneAndUpdateOrganizationStub = null;
-
+   		let findOneAndUpdateUserStub = null;
    		let mongoStub = null;
 	    let findOneUserStub = null; 
+
 	    let findOrganizationStub = null;
 	    let findPrivateMsjStub = null;
 	    let findOneOrganizationStub = null;
 	    let updateOneUserStub = null;
 	    let createChannelStub = null;
+
 
    		beforeEach(() => {
 	        mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
@@ -147,8 +167,12 @@ describe('ORGANIZATION', () => {
 	    	updateOneOrganization = sinon.stub(Organization, 'updateOne').callsFake((a,b, cb)=> cb(null, organizationMock));
 	    	addUserToChannelStub = sinon.stub(channelController, 'addUserToChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
 	    	findOneAndUpdateOrganizationStub = sinon.stub(Organization, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, organizationMock));
+	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((user, cb)=> {if(user.email == userMock2.email){
+	        																		return cb(null,userMock2)}
+																		        cb(null, userMock)});
+	        findOneAndUpdateUserStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
+	        
 
-	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((_, cb)=> cb(null, userMock));
 	        findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
 	    	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
 	    	updateOneUserStub = sinon.stub(User, 'updateOne').callsFake((a, b, cb)=> cb(null, userMock));
@@ -161,8 +185,9 @@ describe('ORGANIZATION', () => {
 	        updateOneOrganization.restore();
 	        addUserToChannelStub.restore();
 	        findOneAndUpdateOrganizationStub.restore();
-
 	        findOneUserStub.restore();
+	        findOneAndUpdateUserStub.restore();
+
 	        findOrganizationStub.restore();
 	        findPrivateMsjStub.restore();	        
 	        updateOneUserStub.restore();
@@ -299,7 +324,44 @@ describe('ORGANIZATION', () => {
 			done();
    		});
    		
+   		it('removeUser succesfull', (done) => {
+	        req = {params:{token: 'userMockToken',
+	        			id: 'idOrganization',
+	        			email: userMock2.email}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.removeUser(req,res)
+			done();
+   		});
 
+   		it('removeUser not succesfull - can not remove owner', (done) => {
+	        req = {params:{token: 'userMockToken',
+	        			id: 'idOrganization',
+	        			email: userMock.email}}
+			res = {status: function(nro){assert.equal(nro,405)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.removeUser(req,res)
+			done();
+   		});
+
+   		it("removeUser not succesfull - user is not organization's member", (done) => {
+	        req = {params:{token: 'userMockToken',
+	        			id: 'idOrganization',
+	        			email: 'noMember@gmail.com'}}
+			res = {status: function(nro){assert.equal(nro,406)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.removeUser(req,res)
+			done();
+   		});
    		
 
    	});

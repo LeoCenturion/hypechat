@@ -30,7 +30,8 @@ function saveUser (req, res){
 	usuario.photo = req.body.photo
 
 	usuario.save((err,usuarioStored) =>{
-		if(err) return res.status(500).send({message: `Error al salvar en la base de datos: ${err}`});
+		if(err) {console.log(err)
+			return res.status(500).send({message: `Error al salvar en la base de datos: ${err}`})};
 		res.status(200).send({usuario: usuarioStored});
 	})
 }

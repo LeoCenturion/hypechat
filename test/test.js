@@ -218,3 +218,76 @@ describe('USER', () => {
    	});
 
 });
+
+describe('USER - Endpoints personales', () => {
+    let mongoStub = null;
+    let findByIdStub = null;
+    let findStub = null;
+    let findByIdAndUpdateStub = null;
+
+    beforeEach(() => {
+    	userMock = {
+			_id: '1234qwer',
+			email:"email@gmail.com",
+			name: "name",
+			psw: "password",
+			photo: "photoUrl",
+			nickname: "nickname",
+			organizations: [],
+			question1: 'question1',
+			question2: 'question2',
+			answer1: 'answer1',
+			answer2: 'answer2',
+			latitud: 0,
+			longitud: 0,
+			recoverPasswordToken: 'itsToken'
+		};
+
+        mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
+        findByIdStub = sinon.stub(User, 'findById').callsFake((_, cb)=> cb(null, userMock));
+        findStub = sinon.stub(User, 'find').callsFake((_, cb)=> cb(null, userMock));
+        findByIdAndUpdateStub = sinon.stub(User, 'findByIdAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
+    });
+
+    afterEach(() => {
+        mongoStub.restore();
+        findByIdStub.restore();
+        findStub.restore();
+        findByIdAndUpdateStub.restore();
+    });
+
+    it('getUser succesfull', (done) => {
+
+        req = {params:{userId: userMock._id}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('usuario')
+									return obj}}}}
+		
+		userControllers.getUser(req,res)
+		done();
+   	});
+
+   	it('getUsers succesfull', (done) => {
+
+        req = {params:{userId: userMock._id}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('user')
+									return obj}}}}
+		
+		userControllers.getUsers(req,res)
+		done();
+   	});
+
+   	it('updateUser2 succesfull', (done) => {
+        req = {params:{userId:userMock._id},
+        	body: userMock}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('usuario')
+									return obj}}}}
+		
+		userControllers.updateUser2(req,res)
+		done();
+   	});
+   	
+   	
+});

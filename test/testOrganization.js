@@ -208,6 +208,19 @@ describe('ORGANIZATION', () => {
 			done();
    		});
 
+   		it('updatePasswordOrganization succesfull', (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			psw: 'pswOrganization'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('usuario');
+								return obj}}}}
+			
+			organizationControllers.updatePasswordOrganization(req,res)
+			done();
+   		});
+
    		
 
    	});

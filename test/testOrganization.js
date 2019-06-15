@@ -273,6 +273,31 @@ describe('ORGANIZATION', () => {
 			done();
    		});
 
+   		it('hasEditPermission succesfull', (done) => {
+	        req = {params:{token: 'userMockToken',
+	        			id: 'idOrganization',
+	        			email: userMock.email}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.hasEditPermission(req,res)
+			done();
+   		});
+
+   		it('hasEditPermission not succesfull - user is not owner or moderator', (done) => {
+	        req = {params:{token: 'userMockToken',
+	        			id: 'idOrganization',
+	        			email: 'noPermissionUser@gmail.com'}}
+			res = {status: function(nro){assert.equal(nro,400)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.hasEditPermission(req,res)
+			done();
+   		});
    		
 
    		

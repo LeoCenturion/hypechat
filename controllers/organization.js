@@ -88,12 +88,12 @@ function createOrganization(req,res){
 	let emailUser = req.body.email
 	let id = req.body.id
 	const organization = new Organization({
-	id: req.body.id,
-	owner: [req.body.email],
-	members: [req.body.email],
-	psw: req.body.psw,
-	name: req.body.name
-})
+		id: req.body.id,
+		owner: [req.body.email],
+		members: [req.body.email],
+		psw: req.body.psw,
+		name: req.body.name
+	})
 
 //me fijo si el usuario existe
 User.findOne({email: emailUser}, (err, usuario)=>{

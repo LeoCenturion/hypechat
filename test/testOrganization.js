@@ -10,6 +10,8 @@ const organizationControllers = require('../controllers/organization');
 const User = require('../models/user');
 const Organization = require('../models/organization');
 const PrivateMsj = require('../models/privateMsj');
+const channelController = require('../controllers/channel');
+const Channel = require('../models/channel');
 
 userMock = {
 			_id: '1234qwer',
@@ -34,6 +36,8 @@ describe('ORGANIZATION', () => {
     let findOrganizationStub = null;
     let findPrivateMsjStub = null;
     let findOneOrganizationStub = null;
+    let updateOneUserStub = null;
+    let createChannelStub = null;
 
     beforeEach(() => {
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
@@ -41,6 +45,9 @@ describe('ORGANIZATION', () => {
         findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
     	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
     	findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, null));
+    	updateOneUserStub = sinon.stub(User, 'updateOne').callsFake((a, b, cb)=> cb(null, userMock));
+    	createChannelStub = sinon.stub(channelController, 'createChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
+
     });
 
     afterEach(() => {
@@ -49,6 +56,8 @@ describe('ORGANIZATION', () => {
         findOrganizationStub.restore();
         findPrivateMsjStub.restore();
         findOneOrganizationStub.restore();
+        updateOneUserStub.restore();
+        createChannelStub.restore();
     });
 
     it('getUserOrganizations succesfull', (done) => {
@@ -88,7 +97,19 @@ describe('ORGANIZATION', () => {
 		organizationControllers.isOrganizationIDValid(req,res)
 		done();
    	});
-   	
 
+   	it('createOrganization succesfull', (done) => {
+        req = {body:{email: userMock.email,
+        			id: 'idOrganization',
+        			psw:'pswOrganization',
+        			name: 'nameOrganization'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+							obj.should.have.property('message');
+							return obj}}}}
+		
+		organizationControllers.createOrganization(req,res)
+		done();
+   	});
    	
 });

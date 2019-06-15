@@ -122,7 +122,7 @@ describe('ORGANIZATION', () => {
 			channels: [],
 			owner: userMock.email,
 			moderators: [],
-			members: [],
+			members: [userMock.email],
 			welcome: 'Bienvenido a la organizacion',
 			photo: 'url',
 			location: "Facultad de ingenieria",
@@ -218,6 +218,32 @@ describe('ORGANIZATION', () => {
 								return obj}}}}
 			
 			organizationControllers.updatePasswordOrganization(req,res)
+			done();
+   		});
+
+   		it('asignModerator not succesfull - should not asign moderator because user is not member', (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			userEmail: 'otherMail@gmail.com'}}
+			res = {status: function(nro){assert.equal(nro,406)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.asignModerator(req,res)
+			done();
+   		});
+
+   		it('asignModerator succesfull', (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			userEmail: userMock.email}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.asignModerator(req,res)
 			done();
    		});
 

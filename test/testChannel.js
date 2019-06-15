@@ -76,6 +76,8 @@ describe('CHANNEL', () => {
     let findOneUserStub = null;
     let updateOneChannelStub = null;
     let findOneAndUpdateChannelStub = null;
+    let updateOneOrganizationStub = null;
+    let findOneAndDeleteChannelStub = null;
 
     beforeEach(() => {
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
@@ -85,6 +87,8 @@ describe('CHANNEL', () => {
 																		        cb(null, userMock)});
         updateOneChannelStub = sinon.stub(Channel, 'updateOne').callsFake((a, b, cb)=> cb(null, channelMock));
         findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, channelMock));
+        updateOneOrganizationStub = sinon.stub(Organization, 'updateOne').callsFake((a, b, cb)=> cb(null, organizationMock));
+        findOneAndDeleteChannelStub = sinon.stub(Channel, 'findOneAndDelete').callsFake((_, cb)=> cb(null, channelMock));
     });
 
     afterEach(() => {
@@ -93,6 +97,8 @@ describe('CHANNEL', () => {
         findOneUserStub.restore();
         updateOneChannelStub.restore();
         findOneAndUpdateChannelStub.restore();
+        updateOneOrganizationStub.restore();
+        findOneAndDeleteChannelStub.restore();
     });
 
     it('createChannel succesfull', (done) => {
@@ -303,5 +309,28 @@ describe('CHANNEL', () => {
 		done();
    	});
    	
+
+   	it("remove succesfull", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.remove(req,res)
+		done();
+   	});
+
+   	it("remove not succesfull - channel does not exist", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: 'channelAnexistent'}}
+		res = {status: function(nro){assert.equal(nro,405)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		channelControllers.remove(req,res)
+		done();
+   	});
    	
 });

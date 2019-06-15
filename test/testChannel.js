@@ -93,8 +93,8 @@ describe('CHANNEL', () => {
     });
 
     it('createChannel succesfull', (done) => {
-        req = {body:{id:'idOrganization',
-        		owner:"email@gmail.com",
+        req = {body:{id:organizationMock.id,
+        		owner:userMock.email,
         		description:'this is a channel',
         		welcome: 'WELCOME!!',
         		name: 'nameNewChannel'}}
@@ -107,8 +107,8 @@ describe('CHANNEL', () => {
    	});
 
    	it("createChannel not succesfull - new channel's name yet exist", (done) => {
-        req = {body:{id:'idOrganization',
-        		owner:"email@gmail.com",
+        req = {body:{id:organizationMock.id,
+        		owner:userMock.email,
         		description:'this is a channel',
         		welcome: 'WELCOME!!',
         		name: channelMock.name}}
@@ -121,7 +121,7 @@ describe('CHANNEL', () => {
    	});
 
    	it("isChannelValid succesfull", (done) => {
-        req = {params:{id:'idOrganization',
+        req = {params:{id:organizationMock.id,
         		name: 'newNamechannel'}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('message')
@@ -132,7 +132,7 @@ describe('CHANNEL', () => {
    	});
 
    	it("isChannelValid not succesfull - channel's name alredy exist", (done) => {
-        req = {params:{id:'idOrganization',
+        req = {params:{id:organizationMock.id,
         		name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,400)
 			return {send:function(obj){obj.should.have.property('message')
@@ -144,8 +144,8 @@ describe('CHANNEL', () => {
 
    	it("addUserToChannel succesfull", (done) => {
         req = {body:{token:'tokenUserMock',
-        			id:'idOrganization',
-        			name: 'channel',
+        			id:organizationMock.id,
+        			name: channelMock.name,
         			mo_email: userMock.email,
         			email: userMock2.email}}
 		res = {status: function(nro){assert.equal(nro,200)
@@ -158,7 +158,7 @@ describe('CHANNEL', () => {
 
    	it("addUserToChannel not succesfull - channel does not exist", (done) => {
         req = {body:{token:'tokenUserMock',
-        			id:'idOrganization',
+        			id:organizationMock.id,
         			name: 'channelAnexistent',
         			mo_email: userMock.email,
         			email: userMock2.email}}
@@ -169,6 +169,59 @@ describe('CHANNEL', () => {
 		channelControllers.addUserToChannel(req,res)
 		done();
    	});
+
+   	it("addUserToChannel not succesfull - user is channel's member", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name,
+        			mo_email: userMock.email,
+        			email: userMock.email}}
+		res = {status: function(nro){assert.equal(nro,403)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.addUserToChannel(req,res)
+		done();
+   	});
    	
+   	it("removeUserFromChannel succesfull", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name,
+        			email: userMock.email}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.removeUserFromChannel(req,res)
+		done();
+   	});
+
+	it("removeUserFromChannel not succesfull - user not in channel", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name,
+        			email: userMock2.email}}
+		res = {status: function(nro){assert.equal(nro,403)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.removeUserFromChannel(req,res)
+		done();
+   	});
+
+   	it("removeUserFromChannel not succesfull - channel does not exist", (done) => {
+        req = {params:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: 'channelAnexistent',
+        			email: userMock.email}}
+		res = {status: function(nro){assert.equal(nro,402)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.removeUserFromChannel(req,res)
+		done();
+   	});
+
    	
 });

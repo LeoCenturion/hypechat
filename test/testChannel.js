@@ -237,5 +237,31 @@ describe('CHANNEL', () => {
 		channelControllers.setPrivate(req,res)
 		done();
    	});
+
+   	it("setDescription succesfull", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			organizationID:organizationMock.id,
+        			name: channelMock.name,
+        			description: 'description'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.setDescription(req,res)
+		done();
+   	});
+   	
+   	it("setWelcome succesfull", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			organizationID:organizationMock.id,
+        			name: channelMock.name,
+        			welcome: 'welcome'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.setWelcome(req,res)
+		done();
+   	});
    	
 });

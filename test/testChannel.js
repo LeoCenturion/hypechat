@@ -71,7 +71,7 @@ describe('CHANNEL', () => {
 			psw: 'pswOrganization',
 			name: 'nameOrganization',
 			channels: [channelMock.name],
-			owner: userMock.email,
+			owner: [userMock.email],
 			moderators: ['moderator@gmail.com'],
 			members: [userMock.email, userMock2.email],
 			welcome: 'Bienvenido a la organizacion',
@@ -196,6 +196,25 @@ describe('CHANNEL', () => {
 		channelControllers.addUserToChannel(req,res)
 		done();
    	});
+
+
+
+
+   	it("addUsersToChannel succesfull", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock.name,
+        			mo_email: userMock.email,
+        			emails: [userMock.email]}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.addUsersToChannel(req,res)
+		done();
+   	});
+
+
    	
    	it("removeUserFromChannel succesfull", (done) => {
         req = {params:{token:'tokenUserMock',

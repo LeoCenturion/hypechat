@@ -535,9 +535,9 @@ function getMessageWithoutRestrictedWords(req, res){
 			let restrictedWords = organization.restrictedWords;
 			let message = req.body.message;
 			for(let i=0; i<restrictedWords.length; i++){
-				var message = message.replace(restrictedWords[i], "***");
+				message = message.split(restrictedWords[i]).join('***')
 			}
-			return res.status(200).send({messagge: message});
+			return res.status(200).send({message: message});
 		})
 	})
 }

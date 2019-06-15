@@ -144,7 +144,7 @@ describe('ORGANIZATION', () => {
 			welcome: 'Bienvenido a la organizacion',
 			photo: 'url',
 			location: "Facultad de ingenieria",
-			restrictedWords : []
+			restrictedWords : ['cat', 'dog']
    		}
 
    		let updateOneOrganization = null;
@@ -414,6 +414,21 @@ describe('ORGANIZATION', () => {
 			organizationControllers.updatePhotoOrganization(req,res)
 			done();
    		});
+
+   		it("getMessageWithoutRestrictedWords succesfull", (done) => {
+	        req = {body:{userToken: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			message: 'dog Hello cat cat'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message')
+								obj.message.should.be.equal('*** Hello *** ***');
+								return obj}}}}
+			
+			organizationControllers.getMessageWithoutRestrictedWords(req,res)
+			done();
+   		});
+
 
    	});
    	   	

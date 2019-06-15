@@ -363,6 +363,32 @@ describe('ORGANIZATION', () => {
 			done();
    		});
    		
+   		it("updateWelcomeOrganization succesfull", (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			welcome: 'Hi! How are you?'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.updateWelcomeOrganization(req,res)
+			done();
+   		});
+
+   		it("updateWelcomeOrganization not succesfull - welcome message is null", (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			welcome: null}}
+			res = {status: function(nro){assert.equal(nro,400)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.updateWelcomeOrganization(req,res)
+			done();
+   		});
+   		
 
    	});
    	   	

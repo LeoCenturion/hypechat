@@ -121,7 +121,7 @@ describe('ORGANIZATION', () => {
 			name: 'nameOrganization',
 			channels: [],
 			owner: userMock.email,
-			moderators: [],
+			moderators: ['moderator@gmail.com'],
 			members: [userMock.email],
 			welcome: 'Bienvenido a la organizacion',
 			photo: 'url',
@@ -224,7 +224,7 @@ describe('ORGANIZATION', () => {
    		it('asignModerator not succesfull - should not asign moderator because user is not member', (done) => {
 	        req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
-	        			userEmail: 'otherMail@gmail.com'}}
+	        			userEmail: 'anexistMail@gmail.com'}}
 			res = {status: function(nro){assert.equal(nro,406)
 				return {send:function(obj){
 								obj.should.have.property('message');
@@ -246,6 +246,34 @@ describe('ORGANIZATION', () => {
 			organizationControllers.asignModerator(req,res)
 			done();
    		});
+
+   		it('revokeModerator succesfull', (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			userEmail: 'moderator@gmail.com'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.revokeModerator(req,res)
+			done();
+   		});
+
+   		it('revokeModerator not succesfull - user is not moderator', (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			userEmail: userMock.email}}
+			res = {status: function(nro){assert.equal(nro,405)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.revokeModerator(req,res)
+			done();
+   		});
+
+   		
 
    		
 

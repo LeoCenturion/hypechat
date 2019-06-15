@@ -555,7 +555,6 @@ function getLocationsOrganization(req, res){
 			if(err) return res.status(500).send({message: `Error al buscar la organizacion: ${err}`})
 			if(!organization) return res.status(404).send({message: `No existe organizacoin con id ${req.params.id}`})
 			let usersLocation = [];
-
 			User.find({email: {$in: organization.members}}, (err, userOrg)=>{
 				userOrg.forEach(function (element){
 					usersLocation.push({nickname: element.nickname, email: element.email, longitud: element.longitud, latitud: element.latitud})
@@ -563,9 +562,6 @@ function getLocationsOrganization(req, res){
 				})
 				return res.status(200).send({users: usersLocation});
 			})
-				
-			
-			
 		})
 	})
 }

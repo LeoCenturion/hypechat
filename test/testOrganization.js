@@ -153,6 +153,7 @@ describe('ORGANIZATION', () => {
    		let findOneAndUpdateUserStub = null;
    		let mongoStub = null;
 	    let findOneUserStub = null; 
+	    let findUserStub = null;
 
 	    let findOrganizationStub = null;
 	    let findPrivateMsjStub = null;
@@ -171,7 +172,7 @@ describe('ORGANIZATION', () => {
 	        																		return cb(null,userMock2)}
 																		        cb(null, userMock)});
 	        findOneAndUpdateUserStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
-	        
+	        findUserStub = sinon.stub(User, 'find').callsFake((user, cb)=> { cb(null, [userMock,userMock2])});
 
 	        findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
 	    	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
@@ -187,6 +188,7 @@ describe('ORGANIZATION', () => {
 	        findOneAndUpdateOrganizationStub.restore();
 	        findOneUserStub.restore();
 	        findOneAndUpdateUserStub.restore();
+	        findUserStub.restore();
 
 	        findOrganizationStub.restore();
 	        findPrivateMsjStub.restore();	        
@@ -195,11 +197,11 @@ describe('ORGANIZATION', () => {
 	    });
 
    		it('addUserToOrganization succesfull', (done) => {
-	        req = {body:{email: userMock.email,
+	        let req = {body:{email: userMock.email,
 	        			token: 'userMockToken',
 	        			idOrganization: 'idOrganization',
 	        			psw:'pswOrganization'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -209,9 +211,9 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('getInfoOrganization succesfull', (done) => {
-	        req = {params:{token: 'userMockToken',
+	        let req = {params:{token: 'userMockToken',
 	        			organizationID: 'idOrganization'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('organization');
 								return obj}}}}
@@ -221,10 +223,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('updateNameOrganization succesfull', (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			name: 'nameOrganization'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('usuario');
 								return obj}}}}
@@ -234,10 +236,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('updatePasswordOrganization succesfull', (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			psw: 'pswOrganization'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('usuario');
 								return obj}}}}
@@ -247,10 +249,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('asignModerator not succesfull - should not asign moderator because user is not member', (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			userEmail: 'anexistMail@gmail.com'}}
-			res = {status: function(nro){assert.equal(nro,406)
+			let res = {status: function(nro){assert.equal(nro,406)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -260,10 +262,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('asignModerator succesfull', (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			userEmail: userMock.email}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -273,10 +275,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('revokeModerator succesfull', (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			userEmail: 'moderator@gmail.com'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -286,10 +288,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('revokeModerator not succesfull - user is not moderator', (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			userEmail: userMock.email}}
-			res = {status: function(nro){assert.equal(nro,405)
+			let res = {status: function(nro){assert.equal(nro,405)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -299,10 +301,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('hasEditPermission succesfull', (done) => {
-	        req = {params:{token: 'userMockToken',
+	        let req = {params:{token: 'userMockToken',
 	        			id: 'idOrganization',
 	        			email: userMock.email}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -312,10 +314,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('hasEditPermission not succesfull - user is not owner or moderator', (done) => {
-	        req = {params:{token: 'userMockToken',
+	        let req = {params:{token: 'userMockToken',
 	        			id: 'idOrganization',
 	        			email: 'noPermissionUser@gmail.com'}}
-			res = {status: function(nro){assert.equal(nro,400)
+			let res = {status: function(nro){assert.equal(nro,400)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -325,10 +327,10 @@ describe('ORGANIZATION', () => {
    		});
    		
    		it('removeUser succesfull', (done) => {
-	        req = {params:{token: 'userMockToken',
+	        let req = {params:{token: 'userMockToken',
 	        			id: 'idOrganization',
 	        			email: userMock2.email}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -338,10 +340,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it('removeUser not succesfull - can not remove owner', (done) => {
-	        req = {params:{token: 'userMockToken',
+	        let req = {params:{token: 'userMockToken',
 	        			id: 'idOrganization',
 	        			email: userMock.email}}
-			res = {status: function(nro){assert.equal(nro,405)
+			let res = {status: function(nro){assert.equal(nro,405)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -351,10 +353,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it("removeUser not succesfull - user is not organization's member", (done) => {
-	        req = {params:{token: 'userMockToken',
+	        let req = {params:{token: 'userMockToken',
 	        			id: 'idOrganization',
 	        			email: 'noMember@gmail.com'}}
-			res = {status: function(nro){assert.equal(nro,406)
+			let res = {status: function(nro){assert.equal(nro,406)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -364,10 +366,10 @@ describe('ORGANIZATION', () => {
    		});
    		
    		it("updateWelcomeOrganization succesfull", (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			welcome: 'Hi! How are you?'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -377,10 +379,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it("updateWelcomeOrganization not succesfull - welcome message is null", (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			welcome: null}}
-			res = {status: function(nro){assert.equal(nro,400)
+			let res = {status: function(nro){assert.equal(nro,400)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -390,10 +392,10 @@ describe('ORGANIZATION', () => {
    		});
    		
    		it("updatePhotoOrganization succesfull", (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			photo: 'newPhoto'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -403,10 +405,10 @@ describe('ORGANIZATION', () => {
    		});
 
    		it("updatePhotoOrganization not succesfull - url photo is null", (done) => {
-	        req = {body:{token: 'userMockToken',
+	        let req = {body:{token: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			photo: null}}
-			res = {status: function(nro){assert.equal(nro,400)
+			let res = {status: function(nro){assert.equal(nro,400)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -416,19 +418,38 @@ describe('ORGANIZATION', () => {
    		});
 
    		it("getMessageWithoutRestrictedWords succesfull", (done) => {
-	        req = {body:{userToken: 'userMockToken',
+	        let req = {body:{userToken: 'userMockToken',
 	        			organizationID: 'idOrganization',
 	        			message: 'dog Hello cat cat'}}
-			res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
-								obj.should.have.property('message')
+								obj.should.have.property('message');
 								obj.message.should.be.equal('*** Hello *** ***');
 								return obj}}}}
 			
-			organizationControllers.getMessageWithoutRestrictedWords(req,res)
+			organizationControllers.getMessageWithoutRestrictedWords(req,res);
 			done();
    		});
 
+   		it("getLocationsOrganization succesfull", (done) => {
+	        let req = {params:{token: 'userMockToken'}}
+			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('users')
+								/*obj.users.should.be.equal( [ { nickname: 'nickname',
+								email: 'email@gmail.com',
+								longitud: 0,
+								latitud: 0 },
+								{ nickname: 'nickname',
+								email: 'member@gmail.com',
+								longitud: 0,
+								latitud: 0 } ])*/
+								return obj}}}}
+			
+			organizationMock.members = [userMock.email, userMock2.email]
+			organizationControllers.getLocationsOrganization(req,res);
+			done();
+   		});
 
    	});
    	   	

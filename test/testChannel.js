@@ -337,7 +337,7 @@ describe('CHANNEL', () => {
         req = {params:{token:'tokenUserMock',
         			id:organizationMock.id,
         			name: channelMock.name}}
-		res = {status: function(nro){assert.equal(nro,405)
+		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('channel')
 									obj.channel.should.be.equal(channelMock)
 									return obj}}}}

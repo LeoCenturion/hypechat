@@ -389,6 +389,31 @@ describe('ORGANIZATION', () => {
 			done();
    		});
    		
+   		it("updatePhotoOrganization succesfull", (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			photo: 'newPhoto'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.updatePhotoOrganization(req,res)
+			done();
+   		});
+
+   		it("updatePhotoOrganization not succesfull - url photo is null", (done) => {
+	        req = {body:{token: 'userMockToken',
+	        			organizationID: 'idOrganization',
+	        			photo: null}}
+			res = {status: function(nro){assert.equal(nro,400)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.updatePhotoOrganization(req,res)
+			done();
+   		});
 
    	});
    	   	

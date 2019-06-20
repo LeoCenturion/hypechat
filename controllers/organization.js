@@ -43,31 +43,6 @@ function getUserOrganizations(req, res){
 	
 }
 
-//devuelve los mensajes privados que tiene un usuario en una organizacion.
-//El mail del usuario, el id de la organizacion y el token debe ser pasado en el body
-function getPrivateMsj(req, res){
-	let token = req.body.token
-	let id_organization = req.body.id
-	let userEmail = req.body.email
-
-  //chequear que exista el email y id
-	PrivateMsj.find({organizationID: id_organization, email_user1: userEmail}, (err, msjs)=>{
-		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-		PrivateMsj.find({organizationID: id_organization, email_user2: userEmail}, (err, msjs2)=>{
-			if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-			let allMsj = []
-			msjs.forEach(element => {
-				allMsj.push(element.email_user2)
-			});
-			msjs2.forEach(element => {
-				allMsj.push(element.email_user1)
-			});
-			return res.status(200).send({msjs: allMsj})
-		})
-
-	})
-	
-}
 
 //devuelve 200 si el ID de la organizacion es valido para crearse o 404 en caso ya hay una organizacion creada con ese ID
 //El id de la organizacion debe ser pasado en la URL sin comillas.
@@ -568,7 +543,6 @@ function getLocationsOrganization(req, res){
 
 module.exports={
 	getUserOrganizations,
-	getPrivateMsj,
 	isOrganizationIDValid,
 	createOrganization,
 	addUserToOrganization,

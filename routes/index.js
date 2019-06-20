@@ -5,6 +5,7 @@ const api = express.Router()
 const userControllers = require('../controllers/user')
 const organizationControllers = require('../controllers/organization')
 const channelControllers = require('../controllers/channel')
+const privateControllers = require('../controllers/privateMsj')
 
 
 
@@ -39,7 +40,6 @@ api.put('/location',userControllers.setLocation)
 
 //---------ORGANIZATIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)
-api.post('/privateMsj',organizationControllers.getPrivateMsj)
 api.get('/idOrganizationValid/:organizationID',organizationControllers.isOrganizationIDValid)
 api.post('/organization',organizationControllers.createOrganization)
 api.post('/organization/user',organizationControllers.addUserToOrganization)
@@ -76,5 +76,14 @@ api.post('/channels/user',channelControllers.userChannels)
 api.post('/channelsAvailable/user',channelControllers.userAllChannels)
 
 api.get('/allChannel',channelControllers.all)
+
+//------- PRIVATE CHATS ----------
+api.get('/privateChats/:token/:id',privateControllers.getPrivateMsjInOrganization)
+api.get('/privateChats/:token',privateControllers.getPrivateMsj)
+api.get('/privateChat/:token/:email/:id',privateControllers.privateMsjInfoOrganization)
+api.get('/privateChat/:token/:email',privateControllers.privateMsjInfo)
+api.post('/privateChat',privateControllers.createPrivateMsj)
+
+api.get('/allPrivates',privateControllers.all)
 
 module.exports = api

@@ -125,20 +125,6 @@ describe('ORGANIZATION', () => {
 		done();
    	});
 
-   	it('getPrivateMsj succesfull', (done) => {
-        req = {body:{token:'userMockToken',
-    				id: 'idOrganization',
-    				email: userMock.email}}
-		res = {status: function(nro){assert.equal(nro,200)
-			return {send:function(obj){
-							obj.should.have.property('msjs');
-							//obj.msjs.should.be.equal( [ 'msj_usr2', 'msj_usr1' ]);
-							return obj}}}}
-		
-		organizationControllers.getPrivateMsj(req,res)
-		done();
-   	});
-
    	it('isOrganizationIDValid succesfull', (done) => {
         req = {params:{organizationID: 'idOrganization'}}
 		res = {status: function(nro){assert.equal(nro,200)

@@ -540,6 +540,21 @@ function getLocationsOrganization(req, res){
 	})
 }
 
+function getRestrictedWords(req, res){
+	User.findOne({token: req.body.token}, (err, user)=>{
+		if(err) return res.status(500).send({message: `Error del servidor al buscar un usuario: ${err}`})
+		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.token}`})
+		Organization.findOne({id: req.params.id}, (err, organization)=>{
+			if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
+			if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+			
+			let members = organization.members
+			if(!members.includes(user.email)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
+			
+			res.status(200).send({restrictedWords:organization.restrictedWords})
+		})
+	})
+}
 
 module.exports={
 	getUserOrganizations,
@@ -557,5 +572,6 @@ module.exports={
 	updatePhotoOrganization,
 	getMessageWithoutRestrictedWords,
 	getLocationsOrganization,
-	all
+	all,
+	getRestrictedWords
 }

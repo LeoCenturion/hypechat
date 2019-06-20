@@ -628,6 +628,48 @@ paths:
               schema:
                 $ref: '#/definitions/Error'
 
+  organization/:id/restrictedWords:
+    get:
+      summary: returns orcanization's restricted words
+      parameters:
+        - in: body
+          name: userToken
+          required: true
+          schema:
+            type: object
+            required: 
+              - token
+            properties:
+                token:
+                  type: string
+                  description: user's token
+        - in: path
+          name: organizationID
+          required: true
+          schema:
+            type: object
+            required: 
+              - id
+      responses:
+        200:
+          description: Successful request
+          name: restrictedWords
+          schema:
+            type: object
+            description: restricted words array
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: user or organization dose not exist
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: user is not organization's member
+          schema:
+            $ref: '#/definitions/Error'
+
 definitions:
   user:
     type: object

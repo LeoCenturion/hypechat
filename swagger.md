@@ -305,7 +305,18 @@ returns a token with which the password can be recovered
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| userToken | body |  | Yes | object |
+| userEmail | body |  | Yes | object |
+
+#### PUT
+##### Summary:
+
+updates user's password with the recovered token
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userData | body |  | Yes | object |
 
 ### /organization/senderMenssage
 
@@ -319,6 +330,29 @@ returns message without restrected organization words
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | message | body |  | Yes | object |
+
+### organization/:id/restrictedWords
+
+#### GET
+##### Summary:
+
+returns orcanization's restricted words
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userToken | body |  | Yes | object |
+| organizationID | path |  | Yes | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 404 | user or organization dose not exist | [Error](#error) |
+| 406 | user is not organization's member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
 
 ### Models
 

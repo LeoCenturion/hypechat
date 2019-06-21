@@ -539,12 +539,15 @@ function getLocationsOrganization(req, res){
 }
 
 function getRestrictedWords(req, res){
+	console.log(req)
+	console.log(req.params.id)
 	let id_organization = req.params.id
 	Organization.findOne({id: id_organization}, (err, organization)=>{
-		if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
-		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		console.log(organization);
+		if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`});
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'});
 		
-		res.status(200).send({restrictedWords:organization.restrictedWords})
+		return res.status(200).send({restrictedWords:organization.restrictedWords})
 	})
 }
 

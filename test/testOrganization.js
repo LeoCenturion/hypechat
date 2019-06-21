@@ -541,6 +541,17 @@ describe('ORGANIZATION', () => {
    			done();
    		})
 /*
+   		it("addRestrictedWords succesfull", (done)=>{
+   			let req = {params:{id:organizationMock.id, token:userMock3.token}, body:{restrictedWords:'newRestrictedWord'}}
+   			let res = {status: function(nro){assert.equal(nro,406)
+				return {send:function(obj){
+								obj.should.have.property('message')
+								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords.concat('newRestrictedWord'))
+								return obj}}}}
+			organizationControllers.addRestrictedWords(req,res);
+   			done();
+   		})
+
    		it("deleteRestrictedWords succesfull", (done)=>{
    			let req = {params:{id:organizationMock.id}, body:{token:userMock.token, restrictedWords:'cat'}}
    			let res = {status: function(nro){assert.equal(nro,200)

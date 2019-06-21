@@ -56,7 +56,7 @@ api.get('/moderator/:token/:id/:email',organizationControllers.hasEditPermission
 
 api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords)
 api.get('/organization/restrictedWords/:id/:token', organizationControllers.getRestrictedWords)
-api.post('/organization/restrictedWords/:id/:token', organizationControllers.addRestrictedWords)
+api.put('/organization/restrictedWords/:id/:token', organizationControllers.addRestrictedWords)
 api.delete('/organization/restrictedWords/:id/:token', organizationControllers.deleteRestrictedWords)
 
 

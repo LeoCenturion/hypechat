@@ -14,9 +14,9 @@ api.get('/hello/:name',function(req, res){
 });
 api.get('/user', userControllers.getUsers)
 api.get('/user/:userId', userControllers.getUser)
-api.post('/user', userControllers.saveUser)
+//api.post('/user', userControllers.saveUser)
 api.put('/user/:userId', userControllers.updateUser2 )
-api.delete('/user/:userId', userControllers.deleteUser )
+//api.delete('/user/:userId', userControllers.deleteUser )
 
 
 //---------REGISTER----------

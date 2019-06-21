@@ -21,7 +21,7 @@ function getUsers (req,res){
 		return res.status(200).send({user: users})
 	})
 }
-
+/*
 function saveUser (req, res){	
 	let usuario = new User()
 	usuario.name = req.body.name
@@ -34,7 +34,7 @@ function saveUser (req, res){
 			return res.status(500).send({message: `Error al salvar en la base de datos: ${err}`})};
 		res.status(200).send({usuario: usuarioStored});
 	})
-}
+}*/
 
 function updateUser2 (req, res){
 	let usuarioId = req.params.userId
@@ -46,7 +46,7 @@ function updateUser2 (req, res){
 		res.status(200).send({usuario: usuarioUpdated})
 	})
 }
-
+/*
 function deleteUser (req, res){
 	let usuarioId = req.params.userId
 
@@ -58,7 +58,7 @@ function deleteUser (req, res){
 			res.status(200).send({message:'El usuario ha sido eliminado'})
 		})
 	})
-}
+}*/
 
 
 function signUp(req,res){

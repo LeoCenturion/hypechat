@@ -544,7 +544,7 @@ function getRestrictedWords(req, res){
 	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		if (organization) return res.status(200).send({restrictedWords:organization.restrictedWords})
-		res.status(404).send({message: 'La organizacion no existe'})
+		res.status(404).send({message: 'La organizacion no existe', req:req})
 		
 	})
 }

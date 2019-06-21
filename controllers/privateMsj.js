@@ -22,7 +22,7 @@ function all(req,res){
 
 
 //devuelve los mensajes privados que tiene un usuario.
-//El token debe ser pasado en el body
+//El token debe ser pasado en la url (params)
 function getPrivateMsj(req, res){
     let token = req.params.token
     
@@ -135,7 +135,7 @@ function privateMsjInfoOrganization(req, res){
         //chequeo que exista el email
         User.findOne({email: userEmail}, (err, user2)=>{
             if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-            if (!user2) return res.status(404).send({message: 'No existe el email en el sistema o organizacion'})
+            if (!user2) return res.status(404).send({message: 'No existe el email en el sistema u organizacion'})
             
             //chequear que exista el email y id
 	        PrivateMsj.findOne({id: id_organization, email_user1: userEmail, email_user2: user.email}, (err, msjs)=>{

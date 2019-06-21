@@ -539,7 +539,8 @@ function getLocationsOrganization(req, res){
 }
 
 function getRestrictedWords(req, res){
-	Organization.findOne({id: req.params.id}, (err, organization)=>{
+	let id_organization = req.params.id
+	Organization.findOne({id: id_organization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
 		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
 		
@@ -570,6 +571,29 @@ function addRestrictedWords(req, res){
 	})
 }
 
+function deleteRestrictedWords(req, res){
+	/*User.findOne({token: req.body.token}, (err, user)=>{
+		if(err) return res.status(500).send({message: `Error del servidor al buscar un usuario: ${err}`})
+		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.token}`})
+		Organization.findOne({id: req.params.id}, (err, organization)=>{
+			if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
+			if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+			
+			let members = organization.members
+			if(!members.includes(user.email)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
+			
+			let owner = organization.owner
+			let moderators = organization.moderators
+			if(!owner.includes(user.email) && !moderators.includes(user.email)) return res.status(401).send({message:'El usuario no tiene permisos para editar las palabras prohibidas de la organizacion'})
+			
+			Organization.updateOne({id: req.params.id},{ $push: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
+				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+				res.status(200).send({restrictedWords:org.restrictedWords})
+			})
+		})
+	})*/
+}
+
 module.exports={
 	getUserOrganizations,
 	isOrganizationIDValid,
@@ -588,5 +612,6 @@ module.exports={
 	getLocationsOrganization,
 	all,
 	getRestrictedWords,
-	addRestrictedWords
+	addRestrictedWords,
+	deleteRestrictedWords
 }

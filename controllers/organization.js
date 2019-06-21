@@ -591,13 +591,12 @@ function deleteRestrictedWords(req, res){
 			let moderators = organization.moderators
 			if(!owner.includes(user.email) && !moderators.includes(user.email)) return res.status(401).send({message:'El usuario no tiene permisos para editar las palabras prohibidas de la organizacion'})
 			
-			Organization.updateOne({id: req.params.id},{ $pull: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
-				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-				
-				let filtered = org.restrictedWords.filter(function(value, index, arr){
+			let filtered = organization.restrictedWords.filter(function(value, index, arr){
 				    return value != req.body.restrictedWords;
 				});
 
+			Organization.updateOne({id: req.params.id},{ restrictedWords: filtered},(err, org)=>{
+				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 				res.status(200).send({restrictedWords: filtered})
 			})
 		})

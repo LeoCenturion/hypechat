@@ -580,7 +580,6 @@ describe('ORGANIZATION', () => {
    			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('restrictedWords')
-								console.log(obj.restrictedWords)
 								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
 								return obj}}}}
 			organizationControllers.deleteRestrictedWords(req,res);

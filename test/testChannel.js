@@ -107,6 +107,17 @@ describe('CHANNEL', () => {
         
     });
 
+    it('all succesfull', (done) => {
+	        let req = {}
+			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('canales');
+								return obj}}}}
+			
+			channelControllers.all(req,res)
+			done();
+   		});
+
     it('createChannel succesfull', (done) => {
         req = {body:{id:organizationMock.id,
         		owner:userMock.email,

@@ -369,6 +369,29 @@ add a new restricted word to the organization
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request | object |
+| 401 | user is not authorized | [Error](#error) |
+| 404 | user or organization dose not exist | [Error](#error) |
+| 406 | user is not organization's member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+#### DELETE
+##### Summary:
+
+delete an organization's restricted word
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userToken and restrictedWord | body |  | Yes | object |
+| id | path | organization's id | Yes | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 401 | user is not authorized | [Error](#error) |
 | 404 | user or organization dose not exist | [Error](#error) |
 | 406 | user is not organization's member | [Error](#error) |
 | 500 | Server faild | [Error](#error) |

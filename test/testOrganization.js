@@ -506,7 +506,7 @@ describe('ORGANIZATION', () => {
 			organizationControllers.getLocationsOrganization(req,res);
 			done();
    		});
-
+/*
    		it("getRestrectedWords succesfull", (done)=>{
    			let req = {params:{id:organizationMock.id}}
    			let res = {status: function(nro){assert.equal(nro,200)
@@ -548,7 +548,7 @@ describe('ORGANIZATION', () => {
 								return obj}}}}
 			organizationControllers.deleteRestrictedWords(req,res);
    			done();
-   		})
+   		})*/
 
    	});
    	   	

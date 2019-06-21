@@ -59,6 +59,7 @@ api.get('/organization/restrictedWords/:id/:token', organizationControllers.getR
 api.post('/organization/restrictedWords/:id/:token', organizationControllers.addRestrictedWords)
 api.delete('/organization/restrictedWords/:id/:token', organizationControllers.deleteRestrictedWords)
 
+
 api.get('/allOrg',organizationControllers.all)
 
 //---------CHANNELS----------

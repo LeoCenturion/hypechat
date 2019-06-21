@@ -554,9 +554,9 @@ function getRestrictedWords(req, res){
 }
 
 function addRestrictedWords(req, res){
-	User.findOne({token: req.body.token}, (err, user)=>{
+	User.findOne({token: req.params.token}, (err, user)=>{
 		if(err) return res.status(500).send({message: `Error del servidor al buscar un usuario: ${err}`})
-		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.token}`})
+		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.params.token}`})
 		Organization.findOne({id: req.params.id}, (err, organization)=>{
 			if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
 			if (!organization) return res.status(404).send({message: 'La organizacion no existe'})

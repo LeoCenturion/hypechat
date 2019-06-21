@@ -331,7 +331,7 @@ returns message without restrected organization words
 | ---- | ---------- | ----------- | -------- | ---- |
 | message | body |  | Yes | object |
 
-### organization/:id/restrictedWords
+### organization/restrictedWords/:id/:token
 
 #### GET
 ##### Summary:
@@ -342,7 +342,7 @@ returns organization's restricted words
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| id | path | organization's id | Yes | object |
+| OrdanizationID and userToken | path | organization's id and user's token | Yes | object |
 
 ##### Responses
 
@@ -350,6 +350,7 @@ returns organization's restricted words
 | ---- | ----------- | ------ |
 | 200 | Successful request | object |
 | 404 | organization dose not exist | [Error](#error) |
+| 406 | user is not organization's member | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
 #### PUT
@@ -361,8 +362,8 @@ add a new restricted word to the organization
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| userToken and restrictedWords | body |  | Yes | object |
-| id | path | organization's id | Yes | object |
+| restrictedWords | body |  | Yes | object |
+| organizationID and userToken | path | organization's id and user's token | Yes | object |
 
 ##### Responses
 
@@ -383,8 +384,8 @@ delete an organization's restricted word
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| userToken and restrictedWord | body |  | Yes | object |
-| id | path | organization's id | Yes | object |
+| restrictedWord | body |  | Yes | object |
+| organizationID and userToken | path | organization's id and user's token | Yes | object |
 
 ##### Responses
 

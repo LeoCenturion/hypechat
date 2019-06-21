@@ -628,18 +628,19 @@ paths:
               schema:
                 $ref: '#/definitions/Error'
 
-  organization/:id/restrictedWords:
+  organization/restrictedWords/:id/:token:
     get:
       summary: returns organization's restricted words
       parameters:
         - in: path
-          name: id
-          description: organization's id
+          name: OrdanizationID and userToken
+          description: organization's id and user's token
           required: true
           schema:
             type: object
             required: 
               - id
+              - token
       responses:
         200:
           description: Successful request
@@ -655,32 +656,33 @@ paths:
               description: organization dose not exist
               schema:
                 $ref: '#/definitions/Error'
+        406:
+          description: user is not organization's member
+          schema:
+            $ref: '#/definitions/Error'
     put:
       summary: add a new restricted word to the organization
       parameters:
         - in: body
-          name: userToken and restrictedWords
+          name: restrictedWords
           required: true
           schema:
             type: object
-            required: 
-              - token
+            required:
               - restrictedWords
             properties:
-                token:
-                  type: string
-                  description: user's token
                 restrictedWords:
                   type: string
                   description: new restricted word
         - in: path
-          name: id
-          description: organization's id
+          name: organizationID and userToken
+          description: organization's id and user's token
           required: true
           schema:
             type: object
             required: 
               - id
+              - token
       responses:
         200:
           description: Successful request
@@ -708,28 +710,25 @@ paths:
       summary: delete an organization's restricted word
       parameters:
         - in: body
-          name: userToken and restrictedWord
+          name: restrictedWord
           required: true
           schema:
             type: object
-            required: 
-              - token
+            required:
               - restrictedWords
             properties:
-                token:
-                  type: string
-                  description: user's token
                 restrictedWords:
                   type: string
                   description: restricted word to delete
         - in: path
-          name: id
-          description: organization's id
+          name: organizationID and userToken
+          description: organization's id and user's token
           required: true
           schema:
             type: object
             required: 
               - id
+              - token
       responses:
         200:
           description: Successful request

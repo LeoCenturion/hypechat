@@ -276,6 +276,17 @@ describe('ORGANIZATION', () => {
 	        createChannelStub.restore();
 	    });
 
+	    it('all succesfull', (done) => {
+	        let req = {}
+			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('organizations');
+								return obj}}}}
+			
+			organizationControllers.all(req,res)
+			done();
+   		});
+
    		it('addUserToOrganization succesfull', (done) => {
 	        let req = {body:{email: userMock.email,
 	        			token: userMock.token,

@@ -568,18 +568,19 @@ function addRestrictedWords(req, res){
 			let moderators = organization.moderators
 			if(!owner.includes(user.email) && !moderators.includes(user.email)) return res.status(401).send({message:'El usuario no tiene permisos para editar las palabras prohibidas de la organizacion'})
 			
+			if(organization.restrictedWords.includes(req.body.restrictedWords)) return res.status(400).send({message:'La palabra ya esta prohibida en la organizacion'})
 			Organization.updateOne({id: req.params.id},{ $push: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
 				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-				res.status(200).send({restrictedWords:org.restrictedWords})
+				res.status(200).send({restrictedWords:org.restrictedWords.concat(req.body.restrictedWords)})
 			})
 		})
 	})
 }
 
 function deleteRestrictedWords(req, res){
-	/*User.findOne({token: req.body.token}, (err, user)=>{
+	User.findOne({token: req.params.token}, (err, user)=>{
 		if(err) return res.status(500).send({message: `Error del servidor al buscar un usuario: ${err}`})
-		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.token}`})
+		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.params.token}`})
 		Organization.findOne({id: req.params.id}, (err, organization)=>{
 			if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
 			if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
@@ -591,12 +592,12 @@ function deleteRestrictedWords(req, res){
 			let moderators = organization.moderators
 			if(!owner.includes(user.email) && !moderators.includes(user.email)) return res.status(401).send({message:'El usuario no tiene permisos para editar las palabras prohibidas de la organizacion'})
 			
-			Organization.updateOne({id: req.params.id},{ $push: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
+			Organization.updateOne({id: req.params.id},{ $pull: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
 				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 				res.status(200).send({restrictedWords:org.restrictedWords})
 			})
 		})
-	})*/
+	})
 }
 
 module.exports={

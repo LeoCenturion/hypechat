@@ -568,7 +568,9 @@ function addRestrictedWords(req, res){
 			let moderators = organization.moderators
 			if(!owner.includes(user.email) && !moderators.includes(user.email)) return res.status(401).send({message:'El usuario no tiene permisos para editar las palabras prohibidas de la organizacion'})
 			
-			//if(organization.restrictedWords.includes(req.body.restrictedWords)) return res.status(400).send({message:'La palabra ya esta prohibida en la organizacion'})
+			let orgRestrictedWords = organization.restrictedWords;
+			if(orgRestrictedWords.includes(req.body.restrictedWords)) return res.status(400).send({message:'La palabra ya esta prohibida en la organizacion'});
+			
 			Organization.updateOne({id: req.params.id},{ $push: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
 				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 				res.status(200).send({restrictedWords:org.restrictedWords.concat(req.body.restrictedWords)})

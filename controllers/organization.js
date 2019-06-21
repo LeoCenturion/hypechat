@@ -539,13 +539,17 @@ function getLocationsOrganization(req, res){
 }
 
 function getRestrictedWords(req, res){
-	let id_organization = req.params.id
-	
-	Organization.findOne({id: id_organization}, (err, organization)=>{
-		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-		if (organization) return res.status(200).send({restrictedWords:organization.restrictedWords})
-		res.status(404).send({message: `La organizacion con id ${id_organization} no existe`})
-		
+	User.findOne({token: req.params.token}, (err, user)=>{
+		if(err) return res.status(500).send({message: `Error del servidor al buscar un usuario: ${err}`})
+		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.token}`})
+		Organization.findOne({id: req.params.id}, (err, organization)=>{
+			if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
+			if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+			
+			let members = organization.members
+			if(!members.includes(user.email)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
+			return res.status(200).send({restrictedWords:organization.restrictedWords})
+		})
 	})
 }
 

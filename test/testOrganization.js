@@ -508,7 +508,7 @@ describe('ORGANIZATION', () => {
    		});
 
    		it("getRestrectedWords succesfull", (done)=>{
-   			let req = {params:{id:organizationMock.id}}
+   			let req = {params:{id:organizationMock.id, token:userMock.token}}
    			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('restrictedWords')

@@ -593,7 +593,12 @@ function deleteRestrictedWords(req, res){
 			
 			Organization.updateOne({id: req.params.id},{ $pull: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
 				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-				res.status(200).send({restrictedWords:org.restrictedWords})
+				
+				let filtered = org.restrictedWords.filter(function(value, index, arr){
+				    return value != req.body.restrictedWords;
+				});
+
+				res.status(200).send({restrictedWords: filtered})
 			})
 		})
 	})

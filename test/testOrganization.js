@@ -206,6 +206,24 @@ describe('ORGANIZATION', () => {
 				token: 'userMock2Token'
 			}
 
+			userMock3 = {
+				_id: '12345qwert',
+				email:"noMember@gmail.com",
+				name: "name",
+				psw: "password",
+				photo: "photoUrl",
+				nickname: "nickname",
+				organizations: [],
+				question1: 'question1',
+				question2: 'question2',
+				answer1: 'answer1',
+				answer2: 'answer2',
+				latitud: 0,
+				longitud: 0,
+				recoverPasswordToken: 'itsToken',
+				token: 'userMock3Token'
+			};
+
 			organizationMock = {
 	   			id:'idOrganization',
 				psw: 'pswOrganization',
@@ -225,9 +243,14 @@ describe('ORGANIZATION', () => {
 	    	updateOneOrganization = sinon.stub(Organization, 'updateOne').callsFake((a,b, cb)=> cb(null, organizationMock));
 	    	addUserToChannelStub = sinon.stub(channelController, 'addUserToChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
 	    	findOneAndUpdateOrganizationStub = sinon.stub(Organization, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, organizationMock));
-	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((user, cb)=> {if(user.email == userMock2.email ||user.token ==userMock2.token){
+	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((user, cb)=> {
+	        																	if(user.email == userMock2.email ||user.token ==userMock2.token){
 	        																		return cb(null,userMock2)}
-																		        cb(null, userMock)});
+	        																	else if(user.email == userMock.email ||user.token ==userMock.token){
+	        																		return cb(null, userMock)
+	        																	}
+	        																		cb(null, userMock3)
+																		        });
 	        findOneAndUpdateUserStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
 	        findUserStub = sinon.stub(User, 'find').callsFake((user, cb)=> { cb(null, [userMock,userMock2])});
 
@@ -530,7 +553,7 @@ describe('ORGANIZATION', () => {
    			done();
    		})
 
-   		it("addRestrictedWords succesfull", (done)=>{
+   		it("addRestrictedWords no succesfull bucause user is not authorizate", (done)=>{
    			let req = {params:{id:organizationMock.id, token:userMock2.token}, body:{restrictedWords:'newRestrictedWord'}}
    			let res = {status: function(nro){assert.equal(nro,401)
 				return {send:function(obj){
@@ -540,8 +563,8 @@ describe('ORGANIZATION', () => {
 			organizationControllers.addRestrictedWords(req,res);
    			done();
    		})
-/*
-   		it("addRestrictedWords succesfull", (done)=>{
+
+   		it("addRestrictedWords no succesfull because user is not member", (done)=>{
    			let req = {params:{id:organizationMock.id, token:userMock3.token}, body:{restrictedWords:'newRestrictedWord'}}
    			let res = {status: function(nro){assert.equal(nro,406)
 				return {send:function(obj){
@@ -550,13 +573,36 @@ describe('ORGANIZATION', () => {
 								return obj}}}}
 			organizationControllers.addRestrictedWords(req,res);
    			done();
-   		})*/
+   		})
 
    		it("deleteRestrictedWords succesfull", (done)=>{
-   			let req = {params:{id:organizationMock.id}, body:{token:userMock.token, restrictedWords:'cat'}}
+   			let req = {params:{id:organizationMock.id, token:userMock.token}, body:{restrictedWords:'cat'}}
    			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('restrictedWords')
+								console.log(obj.restrictedWords)
+								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
+								return obj}}}}
+			organizationControllers.deleteRestrictedWords(req,res);
+   			done();
+   		})
+
+   		it("deleteRestrictedWords no succesfull bucause user is not authorizate", (done)=>{
+   			let req = {params:{id:organizationMock.id, token:userMock2.token}, body:{restrictedWords:'cat'}}
+   			let res = {status: function(nro){assert.equal(nro,401)
+				return {send:function(obj){
+								obj.should.have.property('message')
+								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
+								return obj}}}}
+			organizationControllers.deleteRestrictedWords(req,res);
+   			done();
+   		})
+
+   		it("deleteRestrictedWords no succesfull because user is not member", (done)=>{
+   			let req = {params:{id:organizationMock.id, token:userMock3.token}, body:{restrictedWords:'cat'}}
+   			let res = {status: function(nro){assert.equal(nro,406)
+				return {send:function(obj){
+								obj.should.have.property('message')
 								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
 								return obj}}}}
 			organizationControllers.deleteRestrictedWords(req,res);

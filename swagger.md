@@ -336,14 +336,33 @@ returns message without restrected organization words
 #### GET
 ##### Summary:
 
-returns orcanization's restricted words
+returns organization's restricted words
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| userToken | body |  | Yes | object |
-| organizationID | path |  | Yes | object |
+| id | path | organization's id | Yes | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 404 | organization dose not exist | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+#### PUT
+##### Summary:
+
+add a new restricted word to the organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userToken and restrictedWords | body |  | Yes | object |
+| id | path | organization's id | Yes | object |
 
 ##### Responses
 

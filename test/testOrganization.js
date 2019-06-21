@@ -284,7 +284,7 @@ describe('ORGANIZATION', () => {
 	        			name: 'newNameOrganization'}}
 			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
-								obj.should.have.property('usuario');
+								obj.should.have.property('organization');
 								return obj}}}}
 			
 			organizationControllers.updateNameOrganization(req,res)
@@ -508,13 +508,24 @@ describe('ORGANIZATION', () => {
    		});
 
    		it("getRestrectedWords succesfull", (done)=>{
-   			let req = {params:{id:organizationMock.id}, body:{token:userMock.token}}
+   			let req = {params:{id:organizationMock.id}}
    			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('restrictedWords')
 								obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
 								return obj}}}}
 			organizationControllers.getRestrictedWords(req,res);
+   			done();
+   		})
+
+   		it("addRestrictedWords succesfull", (done)=>{
+   			let req = {params:{id:organizationMock.id}, body:{token:userMock.token, restrictedWords:'newRestrictedWord'}}
+   			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('restrictedWords')
+								obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
+								return obj}}}}
+			organizationControllers.addRestrictedWords(req,res);
    			done();
    		})
 

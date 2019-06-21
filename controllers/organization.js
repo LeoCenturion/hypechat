@@ -163,9 +163,7 @@ function addUserToOrganization (req, res){
 			}
 			//si no esta agregado, agrego la organizacion al usuario y el usuario a la organizacion
 			Organization.updateOne({id: idOrganization},{ $push: { members: userEmail } },(err, org)=>{
-				if (err) {
-					return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-				}
+				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 				User.updateOne({email: userEmail},{ $push: { organizations: organization.id } },(err, usuario)=>{
 					if (err) {
 						return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
@@ -236,7 +234,7 @@ function updateNameOrganization (req, res){
 	Organization.findOneAndUpdate({id: id_organization}, update, (err,orgUpdated)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
 
-		res.status(200).send({usuario: orgUpdated})
+		res.status(200).send({organization: orgUpdated})
 	})
 }
 
@@ -541,6 +539,15 @@ function getLocationsOrganization(req, res){
 }
 
 function getRestrictedWords(req, res){
+	Organization.findOne({id: req.params.id}, (err, organization)=>{
+		if (err) return res.status(500).send({message: `Error del servidor al buscar una organizacion: ${err}`})
+		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		
+		res.status(200).send({restrictedWords:organization.restrictedWords})
+	})
+}
+
+function addRestrictedWords(req, res){
 	User.findOne({token: req.body.token}, (err, user)=>{
 		if(err) return res.status(500).send({message: `Error del servidor al buscar un usuario: ${err}`})
 		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.token}`})
@@ -551,7 +558,14 @@ function getRestrictedWords(req, res){
 			let members = organization.members
 			if(!members.includes(user.email)) return res.status(406).send({message: 'El usuario no es parte de la organizacion'})
 			
-			res.status(200).send({restrictedWords:organization.restrictedWords})
+			let owner = organization.owner
+			let moderators = organization.moderators
+			if(!owner.includes(user.email) && !moderators.includes(user.email)) return res.status(401).send({message:'El usuario no tiene permisos para editar las palabras prohibidas de la organizacion'})
+			
+			Organization.updateOne({id: req.params.id},{ $push: { restrictedWords: req.body.restrictedWords } },(err, org)=>{
+				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+				res.status(200).send({restrictedWords:org.restrictedWords})
+			})
 		})
 	})
 }
@@ -573,5 +587,6 @@ module.exports={
 	getMessageWithoutRestrictedWords,
 	getLocationsOrganization,
 	all,
-	getRestrictedWords
+	getRestrictedWords,
+	addRestrictedWords
 }

@@ -56,6 +56,7 @@ api.get('/moderator/:token/:id/:email',organizationControllers.hasEditPermission
 
 api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords
 api.get('/organization/:id/restrictedWords', organizationControllers.getRestrictedWords)
+api.put('/organization/:id/restrictedWords', organizationControllers.addRestrictedWords)
 
 api.get('/allOrg',organizationControllers.all)
 

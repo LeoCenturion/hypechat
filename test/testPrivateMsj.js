@@ -145,6 +145,21 @@ describe('PRIVATE MESSAGE', () => {
 		privateMsjControllers.privateMsjInfo(req,res)
 		done();
 	});
+
+	it('privateMsjInfo succesfull with other user', (done) => {
+        let req = {params:{token:userMock.token, email:userMock2.email, id:organizationMock.id }}
+		let res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+							obj.should.have.property('private_msj');
+							let compare = arrayCompare([obj.private_msj._id, obj.private_msj.name],[privateMsjMock._id, userMock2.email])
+							//son dos arrays iguales:
+							assert(compare.missing.length == 0 && compare.added.length == 0)
+							return obj}}}}
+		
+		privateMsjControllers.privateMsjInfo(req,res)
+		done();
+	});
+
 	
 	it('privateMsjInfoOrganization succesfull', (done) => {
         let req = {params:{token:userMock.token, email:userMock.email, id:organizationMock.id }}

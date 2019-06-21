@@ -202,7 +202,8 @@ describe('ORGANIZATION', () => {
 				answer2: 'answer2',
 				latitud: 0,
 				longitud: 0,
-				recoverPasswordToken: 'itsToken'
+				recoverPasswordToken: 'itsToken',
+				token: 'userMock2Token'
 			}
 
 			organizationMock = {
@@ -224,7 +225,7 @@ describe('ORGANIZATION', () => {
 	    	updateOneOrganization = sinon.stub(Organization, 'updateOne').callsFake((a,b, cb)=> cb(null, organizationMock));
 	    	addUserToChannelStub = sinon.stub(channelController, 'addUserToChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
 	    	findOneAndUpdateOrganizationStub = sinon.stub(Organization, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, organizationMock));
-	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((user, cb)=> {if(user.email == userMock2.email){
+	        findOneUserStub = sinon.stub(User, 'findOne').callsFake((user, cb)=> {if(user.email == userMock2.email ||user.token ==userMock2.token){
 	        																		return cb(null,userMock2)}
 																		        cb(null, userMock)});
 	        findOneAndUpdateUserStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
@@ -523,6 +524,17 @@ describe('ORGANIZATION', () => {
    			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('restrictedWords')
+								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords.concat('newRestrictedWord'))
+								return obj}}}}
+			organizationControllers.addRestrictedWords(req,res);
+   			done();
+   		})
+
+   		it("addRestrictedWords succesfull", (done)=>{
+   			let req = {params:{id:organizationMock.id, token:userMock2.token}, body:{restrictedWords:'newRestrictedWord'}}
+   			let res = {status: function(nro){assert.equal(nro,401)
+				return {send:function(obj){
+								obj.should.have.property('message')
 								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords.concat('newRestrictedWord'))
 								return obj}}}}
 			organizationControllers.addRestrictedWords(req,res);

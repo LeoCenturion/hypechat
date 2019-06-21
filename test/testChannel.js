@@ -49,6 +49,17 @@ describe('CHANNEL', () => {
 			description: 'this is a channel',
 			welcome: 'welcome'
 		}
+
+		channelMock2 = {
+			private: false,
+			id: 'idChannel2',
+			name: 'channel2',
+			owner: userMock.email,
+			members: [userMock.email],
+			description: 'this is a channel 2',
+			welcome: 'welcome'
+		}
+
 		userMock2 = {
 			_id: '12345qwert',
 			email:"member@gmail.com",
@@ -70,7 +81,7 @@ describe('CHANNEL', () => {
 			id:'idOrganization',
 			psw: 'pswOrganization',
 			name: 'nameOrganization',
-			channels: [channelMock.name],
+			channels: [channelMock.name, channelMock2.name],
 			owner: [userMock.email],
 			moderators: ['moderator@gmail.com'],
 			members: [userMock.email, userMock2.email],
@@ -90,7 +101,9 @@ describe('CHANNEL', () => {
         findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, channelMock));
         updateOneOrganizationStub = sinon.stub(Organization, 'updateOne').callsFake((a, b, cb)=> cb(null, organizationMock));
         findOneAndDeleteChannelStub = sinon.stub(Channel, 'findOneAndDelete').callsFake((_, cb)=> cb(null, channelMock));
-        findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((_, cb)=> cb(null, channelMock));
+        findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((dataChannel, cb)=> {
+        	if(dataChannel.name==channelMock.name && dataChannel.id==channelMock.id) return cb(null, channelMock);
+        																					cb(null, channelMock2)});
         findChannelStub = sinon.stub(Channel, 'find').callsFake((_, cb)=> cb(null, [channelMock]));
     });
 
@@ -167,10 +180,24 @@ describe('CHANNEL', () => {
 		done();
    	});
 
-   	it("addUserToChannel succesfull", (done) => {
+   	it("addUserToChannel succesfull with private channel", (done) => {
         req = {body:{token:'tokenUserMock',
         			id:organizationMock.id,
         			name: channelMock.name,
+        			mo_email: userMock.email,
+        			email: userMock2.email}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){obj.should.have.property('message')
+									return obj}}}}
+		
+		channelControllers.addUserToChannel(req,res)
+		done();
+   	});
+
+   	it("addUserToChannel succesfull with public channel", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:organizationMock.id,
+        			name: channelMock2.name,
         			mo_email: userMock.email,
         			email: userMock2.email}}
 		res = {status: function(nro){assert.equal(nro,200)
@@ -229,7 +256,7 @@ describe('CHANNEL', () => {
    	
    	it("removeUserFromChannel succesfull", (done) => {
         req = {params:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			name: channelMock.name,
         			email: userMock.email}}
 		res = {status: function(nro){assert.equal(nro,200)
@@ -242,7 +269,7 @@ describe('CHANNEL', () => {
 
 	it("removeUserFromChannel not succesfull - user not in channel", (done) => {
         req = {params:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			name: channelMock.name,
         			email: userMock2.email}}
 		res = {status: function(nro){assert.equal(nro,403)
@@ -255,7 +282,7 @@ describe('CHANNEL', () => {
 
    	it("removeUserFromChannel not succesfull - channel does not exist", (done) => {
         req = {params:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			name: 'channelAnexistent',
         			email: userMock.email}}
 		res = {status: function(nro){assert.equal(nro,402)
@@ -306,7 +333,7 @@ describe('CHANNEL', () => {
 
    	it("getDescription succesfull", (done) => {
         req = {params:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('description')
@@ -319,7 +346,7 @@ describe('CHANNEL', () => {
    	
    	it("getWelcome succesfull", (done) => {
         req = {params:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('welcome')
@@ -332,7 +359,7 @@ describe('CHANNEL', () => {
 
    	it("getPrivate succesfull", (done) => {
         req = {params:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('private')
@@ -369,7 +396,7 @@ describe('CHANNEL', () => {
    	
    	it("channelInfo succesfull", (done) => {
         req = {params:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('channel')
@@ -381,7 +408,7 @@ describe('CHANNEL', () => {
    	
    	it("userChannels succesfull", (done) => {
         req = {body:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			email: userMock.email}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('channel')
@@ -393,7 +420,7 @@ describe('CHANNEL', () => {
    	
    	it("userAllChannels succesfull", (done) => {
         req = {body:{token:'tokenUserMock',
-        			id:organizationMock.id,
+        			id:channelMock.id,
         			email: userMock.email}}
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('channel')

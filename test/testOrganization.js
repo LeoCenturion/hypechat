@@ -160,6 +160,8 @@ describe('ORGANIZATION', () => {
    		let mongoStub = null;
 	    let findOneUserStub = null; 
 	    let findUserStub = null;
+	    let findChannelStub = null;
+	    let findOneAndUpdateChannelStub = null;
 
 	    let findOrganizationStub = null;
 	    let findPrivateMsjStub = null;
@@ -224,11 +226,21 @@ describe('ORGANIZATION', () => {
 				token: 'userMock3Token'
 			};
 
+			channelMock = {
+				private: false,
+				id: 'channel',
+				name: 'channelName',
+				owner: userMock.email,
+				members: [userMock.email],
+				description: "it's a channel",
+				welcome: 'Welcome to the channel'
+			}
+
 			organizationMock = {
 	   			id:'idOrganization',
 				psw: 'pswOrganization',
 				name: 'nameOrganization',
-				channels: [],
+				channels: [channelMock.id],
 				owner: userMock.email,
 				moderators: [moderatorEmail],
 				members: [userMock.email, userMock2.email],
@@ -258,6 +270,8 @@ describe('ORGANIZATION', () => {
 	    	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
 	    	updateOneUserStub = sinon.stub(User, 'updateOne').callsFake((a, b, cb)=> cb(null, userMock));
 	    	createChannelStub = sinon.stub(channelController, 'createChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
+	    	findChannelStub = sinon.stub(Channel, 'find').callsFake((_, cb)=>{cb(null, [channelMock])})
+	    	findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a, b)=>{return channelMock})
 	    });
 
 	    afterEach(() => {
@@ -269,6 +283,8 @@ describe('ORGANIZATION', () => {
 	        findOneUserStub.restore();
 	        findOneAndUpdateUserStub.restore();
 	        findUserStub.restore();
+	        findChannelStub.restore();
+	        findOneAndUpdateChannelStub.restore();
 
 	        findOrganizationStub.restore();
 	        findPrivateMsjStub.restore();	        

@@ -23,6 +23,7 @@ describe('CHANNEL', () => {
     let findOneChannelStub = null;
     
     beforeEach(() => {
+    	let idOrganization = 'idOrganization'
     	userMock = {
 			_id: '1234qwer',
 			email:"email@gmail.com",
@@ -30,7 +31,7 @@ describe('CHANNEL', () => {
 			psw: "password",
 			photo: "photoUrl",
 			nickname: "nickname",
-			organizations: ['idOrganization'],
+			organizations: [idOrganization],
 			question1: 'question1',
 			question2: 'question2',
 			answer1: 'answer1',
@@ -42,7 +43,7 @@ describe('CHANNEL', () => {
 
 		channelMock = {
 			private: true,
-			id: 'idChannel',
+			id: idOrganization,
 			name: 'channel',
 			owner: userMock.email,
 			members: [userMock.email],
@@ -52,7 +53,7 @@ describe('CHANNEL', () => {
 
 		channelMock2 = {
 			private: false,
-			id: 'idChannel2',
+			id: idOrganization,
 			name: 'channel2',
 			owner: userMock.email,
 			members: [userMock.email],
@@ -67,7 +68,7 @@ describe('CHANNEL', () => {
 			psw: "password",
 			photo: "photoUrl",
 			nickname: "nickname",
-			organizations: ['idOrganization'],
+			organizations: [idOrganization],
 			question1: 'question1',
 			question2: 'question2',
 			answer1: 'answer1',
@@ -78,7 +79,7 @@ describe('CHANNEL', () => {
 		}
 
 		organizationMock = {
-			id:'idOrganization',
+			id:idOrganization,
 			psw: 'pswOrganization',
 			name: 'nameOrganization',
 			channels: [channelMock.name, channelMock2.name],

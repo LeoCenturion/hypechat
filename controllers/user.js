@@ -387,9 +387,9 @@ function setLocation(req,res){
 module.exports={
 	getUser,
 	getUsers,
-	saveUser,
+	//saveUser,
 	updateUser2,
-	deleteUser,
+	//deleteUser,
 	signUp,
 	logIn,
 	getUserProfile,

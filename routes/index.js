@@ -55,9 +55,9 @@ api.get('/locations/:token/:id',organizationControllers.getLocationsOrganization
 api.get('/moderator/:token/:id/:email',organizationControllers.hasEditPermission)
 
 api.post('/organization/senderMenssage', organizationControllers.getMessageWithoutRestrictedWords)
-api.get('/organization/:id/restrictedWords', organizationControllers.getRestrictedWords)
-api.put('/organization/:id/restrictedWords', organizationControllers.addRestrictedWords)
-api.delete('/organization/:id/restrictedWords', organizationControllers.addRestrictedWords)
+api.get('/organization/restrictedWords/:id', organizationControllers.getRestrictedWords)
+api.put('/organization/restrictedWords/:id', organizationControllers.addRestrictedWords)
+api.delete('/organization/restrictedWords/:id', organizationControllers.addRestrictedWords)
 
 api.get('/allOrg',organizationControllers.all)
 

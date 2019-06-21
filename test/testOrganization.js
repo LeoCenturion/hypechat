@@ -506,7 +506,7 @@ describe('ORGANIZATION', () => {
 			organizationControllers.getLocationsOrganization(req,res);
 			done();
    		});
-/*
+
    		it("getRestrectedWords succesfull", (done)=>{
    			let req = {params:{id:organizationMock.id}}
    			let res = {status: function(nro){assert.equal(nro,200)
@@ -528,7 +528,7 @@ describe('ORGANIZATION', () => {
 			organizationControllers.addRestrictedWords(req,res);
    			done();
    		})
-
+/*
    		it("deleteRestrictedWords succesfull", (done)=>{
    			let req = {params:{id:organizationMock.id}, body:{token:userMock.token, restrictedWords:'cat'}}
    			let res = {status: function(nro){assert.equal(nro,200)

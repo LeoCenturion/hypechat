@@ -61,6 +61,7 @@ api.put('/organization/restrictedWords/:id/:token', organizationControllers.addR
 api.delete('/organization/restrictedWords/:id/:token', organizationControllers.deleteRestrictedWords)
 
 api.post('/message',organizationControllers.checkMessage)
+api.post('/mention',organizationControllers.checkMention)
 
 api.get('/allOrg',organizationControllers.all)
 

@@ -638,6 +638,30 @@ function checkMessage(req, res){
 }
 
 
+//Devuelve la informacion del canal (200)
+// 404 - si no existe la organizacion o canal
+// 500 - Error de server
+function checkMention(req, res){
+	let token = req.body.token
+	let msj = req.body.message
+
+	User.findOne({token: token}, (err, usuario)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+		if (!usuario) return res.status(400).send({message: 'Token invalido'})
+			var pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
+			let result = msj.match(pattern);
+			let ss= []
+			if(result != null){
+				result.forEach(function (element){
+					ss.push(element.substr(1));	
+				})
+			}
+		
+			return res.status(200).send({mentions: ss})
+			
+	})
+}
+
 module.exports={
 	getUserOrganizations,
 	isOrganizationIDValid,
@@ -658,5 +682,6 @@ module.exports={
 	getRestrictedWords,
 	addRestrictedWords,
 	deleteRestrictedWords,
-	checkMessage
+	checkMessage,
+	checkMention
 }

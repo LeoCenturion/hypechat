@@ -197,7 +197,6 @@ function createPrivateMsj(req, res){
                             })
                             
                             private_msj.save((err)=>{
-                                console.log("HOLII")
                                 if(err) {
                                     logger.error(`Error al crear el chat privado ${name}: ${err}`)
                                     return res.status(500).send({message: `privateMsj - Error al crear el chat privado: ${err}`})
@@ -221,7 +220,6 @@ function createPrivateMsj(req, res){
                                     })
                                     //si los usuarios pertenecen a la organizacion entonces creo el chat
                                     private_msj_org.save((err)=>{
-                                        console.log("HOLAA")
                                         if(err) {
                                             logger.error(`Error al crear el chat privado ${name}: ${err}`)
                                             return res.status(500).send({message: `privateMsj - Error al crear el chat privado: ${err}`})

@@ -605,6 +605,39 @@ function deleteRestrictedWords(req, res){
 	})
 }
 
+//Devuelve la informacion del canal (200)
+// 404 - si no existe la organizacion o canal
+// 500 - Error de server
+function checkMessage(req, res){
+	let token = req.body.token
+	let idOrganization = req.body.id
+	let msj = req.body.message
+
+	User.findOne({token: token}, (err, usuario)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+		if (!usuario) return res.status(400).send({message: 'Token invalido'})
+		
+		Organization.findOne({id: idOrganization}, (err, organization)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+			if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+			var array = msj.split(" ");
+			organization.restrictedWords.forEach(function (element){
+				if(array.includes(element)){
+					var index = array.indexOf(element);
+					if (index !== -1) {
+    					array[index] = "****";
+					}
+				}
+			})
+			var msj2 = array.join(" ");
+			return res.status(200).send({message: msj2})
+
+		})
+			
+	})
+}
+
+
 module.exports={
 	getUserOrganizations,
 	isOrganizationIDValid,
@@ -624,5 +657,6 @@ module.exports={
 	all,
 	getRestrictedWords,
 	addRestrictedWords,
-	deleteRestrictedWords
+	deleteRestrictedWords,
+	checkMessage
 }

@@ -36,7 +36,8 @@ api.get('/answersQuestions/:token',userControllers.getAnswersSecretQuestions)
 api.put('/secretQuestios',userControllers.updateSecretQuestions)
 api.get('/location/:token/:email',userControllers.getLocation)
 api.put('/location',userControllers.setLocation)
-
+api.get('/registration/months/:token',userControllers.getTotalRegistrations)
+api.get('/registration/year/:token/:year',userControllers.getTotalRegistrationsPerYear)
 
 //---------ORGANIZATIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)
@@ -59,6 +60,7 @@ api.get('/organization/restrictedWords/:id/:token', organizationControllers.getR
 api.put('/organization/restrictedWords/:id/:token', organizationControllers.addRestrictedWords)
 api.delete('/organization/restrictedWords/:id/:token', organizationControllers.deleteRestrictedWords)
 
+api.post('/message',organizationControllers.checkMessage)
 
 api.get('/allOrg',organizationControllers.all)
 
@@ -80,6 +82,8 @@ api.post('/channels/user',channelControllers.userChannels)
 api.post('/channelsAvailable/user',channelControllers.userAllChannels)
 
 api.get('/allChannel',channelControllers.all)
+
+
 
 //------- PRIVATE CHATS ----------
 api.get('/privateChats/:token/:id',privateControllers.getPrivateMsjInOrganization)

@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const PrivateMsjSchema = new Schema({
     email_user1: {type:String, required: true},
     email_user2: {type:String, required: true},
-	id: {type:String}
+    id: {type:String},
+    mensajes: {type: Number, default: 0 }
 
 });
 

@@ -62,6 +62,7 @@ function deleteUser (req, res){
 
 
 function signUp(req,res){
+	var date_now = new Date()
     const user = new User({
 		email: req.body.email,
 		name: req.body.name,
@@ -72,6 +73,9 @@ function signUp(req,res){
 		question2: req.body.question2,
 		answer1: req.body.asw1,
 		answer2: req.body.asw2,
+		registration_day: date_now.getDate(),
+		registration_month: (date_now.getMonth()+1),
+		registration_year: date_now.getFullYear()
 	})
 
 	user.save((err)=>{
@@ -384,6 +388,89 @@ function setLocation(req,res){
 }
 
 
+//500 - Server error
+//400 - Token invalido
+function getTotalRegistrations(req,res){
+	let token = req.params.token;
+
+	var dateNow = new Date()
+	let year = dateNow.getFullYear()
+	let month = (dateNow.getMonth() +1)
+	let resultados = []
+
+	User.findOne({token: token} ,(err,user)=>{
+		if(err){
+			logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`setLocation - Error (400), token invalido: ${token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+		User.find({registration_month: month, registration_year: year} ,(err,users1)=>{
+			if(err){
+				logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
+				return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+			}
+			User.find({registration_month: (month-1), registration_year: year} ,(err,users2)=>{
+				if(err){
+					logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
+					return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+				}
+				User.find({registration_month: (month-2), registration_year: year} ,(err,users3)=>{
+					if(err){
+						logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
+						return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+					}
+					User.find({registration_month: (month-3), registration_year: year} ,(err,users4)=>{
+						if(err){
+							logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
+							return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+						}
+						logger.info(`setLocation - Devuelvo la cantidad de usuarios registrados en los ultimos 4 meses del ${year}`)
+						resultados.push({year: year, month: (month-3), total: users4.length})
+						resultados.push({year: year, month: (month-2), total: users3.length})
+						resultados.push({year: year, month: (month-1), total: users2.length})
+						resultados.push({year: year, month: (month), total: users1.length})
+						return res.status(200).send({resultados})
+					})
+				})
+			})
+		})
+	})
+}
+
+
+//500 - Server error
+//400 - Token invalido
+function getTotalRegistrationsPerYear(req,res){
+	let token = req.params.token;
+	let year = req.params.year;
+
+	User.findOne({token: token} ,(err,user)=>{
+		if(err){
+			logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
+			return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+		}
+		if(!user){
+			logger.error(`setLocation - Error (400), token invalido: ${token}`)
+			return res.status(400).send({message: 'El token es invalido'})
+		}
+		User.find({registration_year: year} ,(err,users)=>{
+			if(err){
+				logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
+				return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
+			}
+	
+			return res.status(200).send({total: users.length})
+		
+		})
+	})
+}
+
+
+
+
 module.exports={
 	getUser,
 	getUsers,
@@ -401,5 +488,7 @@ module.exports={
 	getAnswersSecretQuestions,
 	updateSecretQuestions,
 	getLocation,
-	setLocation
+	setLocation,
+	getTotalRegistrations,
+	getTotalRegistrationsPerYear
 }

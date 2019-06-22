@@ -651,13 +651,21 @@ function checkMention(req, res){
 			var pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
 			let result = msj.match(pattern);
 			let ss= []
+			let ss2= []
 			if(result != null){
 				result.forEach(function (element){
 					ss.push(element.substr(1));	
 				})
 			}
-		
-			return res.status(200).send({mentions: ss})
+			logger.info(`Las menciones son: ${ss}`)
+			User.find({email: {$in: ss}}, (err, usuarios)=>{
+				if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+				usuarios.forEach(function (element){
+					ss2.push(element.email);	
+				})
+				return res.status(200).send({mentions: ss2})
+			})
+			
 			
 	})
 }

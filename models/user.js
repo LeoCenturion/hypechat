@@ -10,6 +10,7 @@ const UserSchema = new Schema({
 	photo: {type:String, default:''}, //guardamos la url de la imagen
 	nickname: {type:String, default:''},
 	token: String,
+	token_notifications: {type: String,default: ''},
 	organizations: {type: Array, default:[]},
 	question1: {type:String, required: true},
 	question2: {type:String, required: true},

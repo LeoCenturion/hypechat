@@ -640,10 +640,10 @@ function getTotalMessages(req, res){
 							res_canales.push({name: canal.name, total: canal.messages})
 							total = total + canal.messages
 						})
-						return res.status(200).send({total: total, canales: res_canales})
+						return {total: total, canales: res_canales}
 					})
 				}else{
-					return res.status(200).send({total: 0, canales: []})
+					return {total: 0, canales: []}
 				}
 				
 			});

@@ -104,7 +104,9 @@ function logIn (req, res) {
 		
 		let usuarioId = user._id
 		let newToken = service.createToken(user)
-		let update = {token: newToken, token_notifications: req.body.tokenPush}
+		let newTokenPush = user.token_notifications
+		if(req.body.tokenPush != null ) newTokenPush = req.body.tokenPush
+		let update = {token: newToken, token_notifications: newTokenPush}
 
 		User.findByIdAndUpdate(usuarioId, update, (err,usuarioUpdated)=>{
 			if(err) {

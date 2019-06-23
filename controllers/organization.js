@@ -641,6 +641,53 @@ function checkMessage(req, res){
 //Devuelve la informacion del canal (200)
 // 404 - si no existe la organizacion o canal
 // 500 - Error de server
+function getTotalMessages(req, res){
+	let token = req.params.token
+
+	User.findOne({token: token}, (err, usuario)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+		if (!usuario) return res.status(400).send({message: 'Token invalido'})
+		
+		Organization.find({id: {$in: usuario.organizations}}, (err, organizations)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+			if(organizations.length == 0) return res.status(200).send({organizations: organizations})
+			
+			const addOnlyOwnerOrModeratorCanales = organizations.map(function(element) {
+				
+				if(element.owner.includes(usuario.email) || element.moderators.includes(usuario.email)){
+					let total = 0
+					let res_canales = []
+					Channel.find({id: {$in: element.id}}, (err, canales)=>{
+		
+						if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+						canales.forEach(function (canal){
+							res_canales.push({name: canal.name, total: canal.messages})
+							total = total + canal.messages
+						})
+						return res.status(200).send({total: total, canales: res_canales})
+					})
+				}else{
+					return res.status(200).send({total: 0, canales: []})
+				}
+				
+			});
+			
+			Promise.all(addOnlyOwnerOrModeratorCanales).then((info_canales) => {
+				return res.status(200).send(info_canales)
+
+			}).catch((err) =>{ 
+				return res.status(500).send({message: `Error al traer info de mensajes: ${err}`});
+			})
+			
+
+		})
+			
+	})
+}
+
+//Devuelve la informacion del canal (200)
+// 404 - si no existe la organizacion o canal
+// 500 - Error de server
 function checkMention(req, res){
 	let token = req.body.token
 	let msj = req.body.message
@@ -691,5 +738,6 @@ module.exports={
 	addRestrictedWords,
 	deleteRestrictedWords,
 	checkMessage,
-	checkMention
+	checkMention,
+	getTotalMessages
 }

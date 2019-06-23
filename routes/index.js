@@ -62,6 +62,7 @@ api.delete('/organization/restrictedWords/:id/:token', organizationControllers.d
 
 api.post('/message',organizationControllers.checkMessage)
 api.post('/mention',organizationControllers.checkMention)
+api.get('/messages/:token',organizationControllers.getTotalMessages)
 
 api.get('/allOrg',organizationControllers.all)
 
@@ -83,6 +84,8 @@ api.post('/channels/user',channelControllers.userChannels)
 api.post('/channelsAvailable/user',channelControllers.userAllChannels)
 
 api.get('/allChannel',channelControllers.all)
+
+
 
 
 

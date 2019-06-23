@@ -12,7 +12,7 @@ const ChannelSchema = new Schema({
 	members: {type: Array, default: []},
 	description: {type: String, default: ''},
 	welcome: {type: String, default: 'Bienvenido al canal'},
-	mensajes: {type: Number, default: 0 }
+	messages: {type: Number, default: 0 }
 	//signupDate: {type: Date, default: Date.now()},
 	//lastLogin: Date
 });

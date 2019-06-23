@@ -119,7 +119,8 @@ function logIn (req, res) {
 			token: newToken,
 			name: user.name,
 			nickname: user.nickname,
-			email: user.email })
+			email: user.email,
+			photo: user.photo })
 		});
 	
 }

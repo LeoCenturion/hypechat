@@ -524,17 +524,18 @@ describe('ORGANIZATION', () => {
 			done();
    		});
 
-   		it("getMessageWithoutRestrictedWords succesfull", (done) => {
+   		it("checkMessage succesfull", (done) => {
 	        let req = {body:{userToken: userMock.token,
 	        			organizationID: organizationMock.id,
-	        			message: 'dog Hello cat cat'}}
+	        			message: 'dog Hello cat cat',
+	        			channelID: null}}
 			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								obj.message.should.be.equal('*** Hello *** ***');
 								return obj}}}}
 			
-			organizationControllers.getMessageWithoutRestrictedWords(req,res);
+			organizationControllers.checkMessage(req,res);
 			done();
    		});
 

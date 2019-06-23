@@ -497,18 +497,26 @@ function remove(req, res){
 }
 */
 
-function getMessageWithoutRestrictedWords(req, res){
+function checkMessage(req, res){
 	User.findOne({token: req.body.userToken}, (err, user)=>{
 		if(err) return res.status(500).send({message: `Error al buscar un usuario: ${err}`})
 		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.userToken}`})
 		Organization.findOne({id: req.body.organizationID}, (err, organization)=>{
-			if(err) return res.status(500).send({message: `Error al buscar la organizacion: ${err}`})
+			if(err) return res.status(500).send({message: `Error al buscar una organizacion: ${err}`})
 			if(!organization) return res.status(404).send({message: `No existe organizacoin con id ${req.body.organizationID}`})
 			let restrictedWords = organization.restrictedWords;
 			let message = req.body.message;
 			for(let i=0; i<restrictedWords.length; i++){
 				message = message.split(restrictedWords[i]).join('***')
 			}
+			Channel.findOne({id:req.body.channelID},(err,channel)=>{
+				if(err) return res.status(500).send({message: `Error al buscar un canal: ${err}`})
+				if(channel){
+					//sumo un mensaje al channel si existe, es decir que no es null
+					//si id de channel es null --> channel no existe
+					channel.messages += 1;
+				}
+			})
 			return res.status(200).send({message: message});
 		})
 	})
@@ -602,38 +610,6 @@ function deleteRestrictedWords(req, res){
 				res.status(200).send({restrictedWords: filtered})
 			})
 		})
-	})
-}
-
-//Devuelve la informacion del canal (200)
-// 404 - si no existe la organizacion o canal
-// 500 - Error de server
-function checkMessage(req, res){
-	let token = req.body.token
-	let idOrganization = req.body.id
-	let msj = req.body.message
-
-	User.findOne({token: token}, (err, usuario)=>{
-		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
-		if (!usuario) return res.status(400).send({message: 'Token invalido'})
-		
-		Organization.findOne({id: idOrganization}, (err, organization)=>{
-			if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-			if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
-			var array = msj.split(" ");
-			organization.restrictedWords.forEach(function (element){
-				if(array.includes(element)){
-					var index = array.indexOf(element);
-					if (index !== -1) {
-    					array[index] = "****";
-					}
-				}
-			})
-			var msj2 = array.join(" ");
-			return res.status(200).send({message: msj2})
-
-		})
-			
 	})
 }
 
@@ -731,7 +707,6 @@ module.exports={
 	removeUser,
 	updateWelcomeOrganization,
 	updatePhotoOrganization,
-	getMessageWithoutRestrictedWords,
 	getLocationsOrganization,
 	all,
 	getRestrictedWords,

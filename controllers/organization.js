@@ -649,7 +649,7 @@ async function getTotalMessages(req, res){
 					}
 					
 				});*/
-				let totalOrganizations = {total: 0, organizations: [], org: organizations, usr: user.email}
+				let totalOrganizations = {total: 0, organizations: [], len:organizations.length, org: organizations, usr: user.email}
 				for(let i=0; i<=organizations.length; i++){
 					if(i==organizations.length){
 						return res.status(200).send(totalOrganizations)

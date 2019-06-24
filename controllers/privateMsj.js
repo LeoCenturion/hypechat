@@ -6,6 +6,7 @@ const Organization = require('../models/organization');
 const Channel = require('../models/channel');
 const PrivateMsj = require('../models/privateMsj');
 const logger = require('../utils/logger');
+const admin = require('../sendNotification');
 
 
 function all(req,res){
@@ -243,7 +244,95 @@ function createPrivateMsj(req, res){
 	
 }
 
+function existe_chat_privado(email1, email2, id){
+    return new Promise(function(resolve, reject){
+        PrivateMsj.findOne({id: id, email_user1: email1, email_user2: email2}, (err, msjs)=>{
+            if (err) return reject(new Error(`Error al realizar la peticion: ${err}`))
+            if(!msjs){
+                PrivateMsj.findOne({id: id, email_user1: email2, email_user2: email1}, (err, msjs2)=>{
+                    if (err) return reject(new Error(`Error al realizar la peticion: ${err}`))
+                    if(!msjs2) return reject(new Error(`No existe el chat entre ambos usuarios`))
+                    return resolve("existe")
+                })
+            }else{
+                return resolve("existe")
+            }
+            })
+    })
+}
 
+
+//Devuelve la informacion del canal (200)
+// 404 - si no existe la organizacion o canal
+// 500 - Error de server
+function checkMentionPrivado(req, res){
+	let token = req.body.token
+	let msj = req.body.message
+    let userEmail = req.body.email
+    let id_organization = req.body.id
+    let texto_org = (userEmail+" en la organizacion: "+id_organization)
+    if(id_organization == null) texto_org = userEmail
+
+	User.findOne({token: token}, (err, user)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+		if (!user) return res.status(400).send({message: 'Token invalido'})
+
+        var payload ={
+            notification: {
+              "body" : ("Te han @ en el chat con "+texto_org),
+              "title" : "Rapido! Revisa tus mensajes"
+            },
+            data : {
+              "Titulo" : "Te han @",
+              "Subtitulo" : "Chat privado"
+            }
+        };
+        var options = {
+            priority: "high",
+            timeToLive: 60 * 60 * 24
+        };
+        var pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
+			let result = msj.match(pattern);
+			let ss= []
+			let ss2= []
+			if(result != null){
+				result.forEach(function (element){
+					ss.push(element.substr(1));	
+				})
+            }
+        
+             //me fijo q no este creado
+          
+         
+        var promesa = existe_chat_privado(userEmail,user.email,id_organization)   
+
+        promesa.then(function(resultado) {
+                if(ss.includes(userEmail)){
+                    User.findOne({email: userEmail}, (err, user2)=>{
+                        if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+                        if (!user2) return res.status(400).send({message: 'Usuario invalido'})
+                        var registrationToken = user2.token_notifications
+                        console.log("RegistrationToken: ",registrationToken);
+                        admin.messaging().sendToDevice(registrationToken, payload, options)
+                            .then(function(response){
+                                console.log("Se envio correctamente la push notification: ",response);
+                                return res.status(200).send("se han enviado las notificaciones")
+                            })
+                            .catch(function(error){
+                                console.log("Problema al eviar la push notification: ",error);
+                                return res.status(404).send({message: 'Error al enviar las notificaciones'})
+                            })
+                    })
+                }else{
+                    return res.status(200).send("se han enviado las notificaciones")
+                }  
+				
+			}).catch(function(err){ 
+				return res.status(500).send({message: `Error al enviar las notificaciones: ${err}`});
+			})
+	
+	})
+}
 
 module.exports={
     all,
@@ -251,5 +340,6 @@ module.exports={
     getPrivateMsjInOrganization,
     privateMsjInfo,
     privateMsjInfoOrganization,
-    createPrivateMsj
+    createPrivateMsj,
+    checkMentionPrivado
 }

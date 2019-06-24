@@ -435,6 +435,7 @@ function getTotalRegistrations(req,res){
 						resultados.push({year: year, month: (month-2), total: users3.length})
 						resultados.push({year: year, month: (month-1), total: users2.length})
 						resultados.push({year: year, month: (month), total: users1.length})
+						logger.info(`getTotalRegistrations - Se le devolvio cantidad y usuarios registrados por mes al usuario con token: ${req.params.token}`)
 						return res.status(200).send({resultados})
 					})
 				})

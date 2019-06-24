@@ -8,7 +8,7 @@ admin.initializeApp({
 });
 
 /*
-var registrationToken = "e_Y7iSg7ftA:APA91bGubl-ovEsLcE3bMMHAPhWVHFC15F4mJ5DU-jlceX9Za-sWPlUMnx_TQnd_SZSyIZy2QDM9DPGP_gP2iwclJBdCE7nzf4ExRTuIDaFz8UxpgixI71lNW1fNCIhLsE6iMm7bv4mX"
+var registrationToken = "c31K_qCGCIs:APA91bGFPMPZCeye8Cbwv9p_MJ8VvVRyJwXz6h1j7O9fTgcPWRbJW6ZX9OJsuwk2XfotBqvFnjclK4opVdKA0Rwq6H9j4TalrazTl971m5oJK_kCjKcJFUu_pTn8s7cuA4UexbF-snVn"
 
 var payload ={
     
@@ -36,6 +36,6 @@ admin.messaging().sendToDevice(registrationToken, payload, options)
     .catch(function(error){
         console.log("Problema al eviar la push notification: ",error);
     })
-*/
 
-    module.exports= admin;
+*/
+module.exports= admin;

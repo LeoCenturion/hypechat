@@ -38,6 +38,7 @@ api.get('/location/:token/:email',userControllers.getLocation)
 api.put('/location',userControllers.setLocation)
 api.get('/registration/months/:token',userControllers.getTotalRegistrations)
 api.get('/registration/year/:token/:year',userControllers.getTotalRegistrationsPerYear)
+api.get('/logout/:token',userControllers.logout)
 
 //---------ORGANIZATIONS----------
 api.get('/organizations/:userEmail',organizationControllers.getUserOrganizations)
@@ -82,6 +83,8 @@ api.get('/channel/:token/:id/:name',channelControllers.channelInfo)
 api.post('/channels/user',channelControllers.userChannels)
 api.post('/channelsAvailable/user',channelControllers.userAllChannels)
 
+api.post('/channel/mention',channelControllers.checkMentionChannel)
+
 api.get('/allChannel',channelControllers.all)
 
 
@@ -94,6 +97,7 @@ api.get('/privateChats/:token',privateControllers.getPrivateMsj)
 api.get('/privateChat/:token/:email/:id',privateControllers.privateMsjInfoOrganization)
 api.get('/privateChat/:token/:email',privateControllers.privateMsjInfo)
 api.post('/privateChat',privateControllers.createPrivateMsj)
+api.post('/privateChat/mention',privateControllers.checkMentionPrivado)
 
 api.get('/allPrivates',privateControllers.all)
 

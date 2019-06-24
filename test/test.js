@@ -221,7 +221,7 @@ describe('USER', () => {
 
 	})
 
-	    describe('With userMock',()=>{
+	describe('With userMock',()=>{
 	    beforeEach(() => {
 	    	userMock = {
 				_id: '1234qwer',
@@ -450,6 +450,19 @@ describe('USER', () => {
 			userControllers.getTotalRegistrationsPerYear(req,res)
 			done();
 	   	});
+
+	   	it('logout no succesfull', (done) => {
+
+	        req = {params:{token: 'userMockToken'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+					obj.should.have.property('message');
+					return obj}}}}
+
+			userControllers.logout(req,res)
+			done();
+	   	});
+
 	})
 });
 

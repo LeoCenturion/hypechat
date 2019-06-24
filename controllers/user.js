@@ -472,8 +472,6 @@ function getTotalRegistrationsPerYear(req,res){
 	})
 }
 
-
-
 function logout(req, res) {
 	User.findOne({token: req.params.token}, (err,user)=>{
 		if(err) return res.status(500).send({message:`Error al desloguar el usuario: ${err}`})
@@ -482,10 +480,8 @@ function logout(req, res) {
 			if(err) res.status(500).send({message:`Error al desloguar el usuario: ${err2}`})
 			return res.status(200).send({message: "el usuario se puede desloguear"})
 		})	
-	})
-	
+	})	
 }
-
 
 
 module.exports={

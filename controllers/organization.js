@@ -660,8 +660,9 @@ async function getTotalMessages(req, res){
 								channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channelss[j].messages, name: channelss[j].name}])
 								channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
 								totalOrganizations["total"] = totalOrganizations.total +channelss[j].messages
-								if(j==1) return res.status(200).send(totalOrganizations)
+								//if(j==1) return res.status(200).send(totalOrganizations)
 							}
+							return res.status(200).send(totalOrganizations)
 							/*
 							channels.forEach(function (channel){
 								channelsPerOrganization["channels"] =channelsPerOrganization.channels.concat([{total: channel.messages, name: channel.name}])

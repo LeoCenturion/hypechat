@@ -655,24 +655,25 @@ async function getTotalMessages(req, res){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
 						Channel.find({id: organizations[i].id, name:{$in: organizations[i].channels}}, (err, channelss)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
-							channelsPerOrganization["channels"]=channelss
-							/*if(channels){
+							//channelsPerOrganization["channels"]=channelss
+							if(channels){
 								for(let j=0; j<=channels.length; j++){
 									channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channels[j].messages, name: channels[j].name}])
 									channelsPerOrganization["total"] = channelsPerOrganization.total + channels[j].messages
 									totalOrganizations["total"] = totalOrganizations.total +channels[j].messages
 									return res.status(200).send(totalOrganizations)
 								}
-							}*/
+							}
 							/*
 							channels.forEach(function (channel){
 								channelsPerOrganization["channels"] =channelsPerOrganization.channels.concat([{total: channel.messages, name: channel.name}])
 								channelsPerOrganization["total"] = channelsPerOrganization.total + channel.messages
 								totalOrganizations["total"] = totalOrganizations.total +channel.messages
 							})*/
-							totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
+
 						})
-						//totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
+						
+						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}
 				}
 				return res.status(200).send(totalOrganizations)

@@ -653,9 +653,9 @@ async function getTotalMessages(req, res){
 				for(let i=0; i<organizations.length; i++){
 					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
-						Channel.find({id: {$in: organizations[i].id}}, (err, channelss)=>{
+						Channel.find({id: organizations[i].id}, (err, channelss)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
-							channelsPerOrganization["channels"]=channelss
+							//channelsPerOrganization["channels"]=channelss
 							/*if(channels){
 								for(let j=0; j<=channels.length; j++){
 									channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channels[j].messages, name: channels[j].name}])
@@ -664,12 +664,12 @@ async function getTotalMessages(req, res){
 									return res.status(200).send(totalOrganizations)
 								}
 							}*/
-							/*
+							
 							channels.forEach(function (channel){
 								channelsPerOrganization["channels"] =channelsPerOrganization.channels.concat([{total: channel.messages, name: channel.name}])
 								channelsPerOrganization["total"] = channelsPerOrganization.total + channel.messages
 								totalOrganizations["total"] = totalOrganizations.total +channel.messages
-							})*/
+							})
 						})
 						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}

@@ -651,11 +651,6 @@ async function getTotalMessages(req, res){
 				});*/
 				let totalOrganizations = {total: 0, organizations: [], len:organizations.length, org: organizations, usr: user.email}
 				for(let i=0; i<=organizations.length; i++){
-					
-					if(i==organizations.length){
-						totalOrganizations["i"] = i
-						return res.status(200).send(totalOrganizations)
-					}
 					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
 						Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{
@@ -674,6 +669,7 @@ async function getTotalMessages(req, res){
 						})
 						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}
+					return res.status(200).send(totalOrganizations)
 				}
 				
 				/*

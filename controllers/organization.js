@@ -670,8 +670,9 @@ async function getTotalMessages(req, res){
 								channelsPerOrganization["total"] = channelsPerOrganization.total + channel.messages
 								totalOrganizations["total"] = totalOrganizations.total +channel.messages
 							})*/
+							totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 						})
-						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
+						//totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}
 				}
 				return res.status(200).send(totalOrganizations)

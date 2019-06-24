@@ -618,61 +618,68 @@ function deleteRestrictedWords(req, res){
 //Devuelve la informacion del canal (200)
 // 404 - si no existe la organizacion o canal
 // 500 - Error de server
-function getTotalMessages(req, res){
-	let token = req.params.token
+async function getTotalMessages(req, res){
+	try{
+		let token = req.params.token
 
-	User.findOne({token: token}, (err, usuario)=>{
-		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
-		if (!usuario) return res.status(400).send({message: 'Token invalido'})
-		
-		Organization.find({id: {$in: usuario.organizations}}, (err, organizations)=>{
-			if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-			if(organizations.length == 0) return res.status(200).send({organizations: organizations})
-			/*
-			const addOnlyOwnerOrModeratorCanales = organizations.map(function(element) {
-				
-				if(element.owner.includes(usuario.email) || element.moderators.includes(usuario.email)){
-					let total = 0
-					let res_canales = []
-					Channel.find({id: {$in: element.id}}, (err, canales)=>{
-		
-						if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-						canales.forEach(function (canal){
-							res_canales.push({name: canal.name, total: canal.messages})
-							total = total + canal.messages
+		User.findOne({token: token}, (err, usuario)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+			if (!usuario) return res.status(400).send({message: 'Token invalido'})
+			
+			Organization.find({id: {$in: usuario.organizations}}, (err, organizations)=>{
+				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+				if(organizations.length == 0) return res.status(200).send({organizations: organizations})
+				/*
+				const addOnlyOwnerOrModeratorCanales = organizations.map(function(element) {
+					
+					if(element.owner.includes(usuario.email) || element.moderators.includes(usuario.email)){
+						let total = 0
+						let res_canales = []
+						Channel.find({id: {$in: element.id}}, (err, canales)=>{
+			
+							if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+							canales.forEach(function (canal){
+								res_canales.push({name: canal.name, total: canal.messages})
+								total = total + canal.messages
+							})
+							return {total: total, canales: res_canales}
 						})
-						return {total: total, canales: res_canales}
-					})
-				}else{
-					return {total: 0, canales: []}
-				}
-				
-			});*/
-			let addOnlyOwnerOrModeratorCanales = {total: 0, canales: []}
-			for(let i=0; i<organizations.length; i++){
-				if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
-					Channel.find({id: {$in: organizations[i].id}}, (err, canales)=>{
-						if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
-						canales.forEach(function (canal){
-							addOnlyOwnerOrModeratorCanales.canales.push({name: canal.name, total: canal.messages})
+					}else{
+						return {total: 0, canales: []}
+					}
+					
+				});*/
+				let addOnlyOwnerOrModeratorCanales = {total: 0, canales: []}
+
+				for(let i=0; i<organizations.length; i++){
+					if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
+						let canales =  Channel.find({id: {$in: organizations[i].id}}).exec();
+						canales.forEach((canal)=>{
+							addOnlyOwnerOrModeratorCanales.canales.concat({name: canal.name, total: canal.messages})
 							addOnlyOwnerOrModeratorCanales.total = addOnlyOwnerOrModeratorCanales.total + canal.messages
 						})
-					})
+					}
 				}
-			}
-			res.status(200).send(addOnlyOwnerOrModeratorCanales)
-			/*
-			Promise.all(addOnlyOwnerOrModeratorCanales).then((info_canales) => {
-				return res.status(200).send(info_canales)
+				res.status(200).send(addOnlyOwnerOrModeratorCanales)
+				
 
-			}).catch((err) =>{ 
-				return res.status(500).send({message: `Error al traer info de mensajes: ${err}`});
-			})*/
-			
 
+				/*
+				Promise.all(addOnlyOwnerOrModeratorCanales).then((info_canales) => {
+					return res.status(200).send(info_canales)
+
+				}).catch((err) =>{ 
+					return res.status(500).send({message: `Error al traer info de mensajes: ${err}`});
+				})*/
+				
+
+			})
+				
 		})
-			
-	})
+	}
+	catch(err){
+		ress.status(500).send({message: "SERVER ERROR"})
+	}
 }
 
 //Devuelve la informacion del canal (200)

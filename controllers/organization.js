@@ -650,24 +650,21 @@ async function getTotalMessages(req, res){
 					
 				});*/
 				let addOnlyOwnerOrModeratorCanales = {total: 0, canales: []}
-
 				for(let i=0; i<organizations.length; i++){
 					if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
-						let canales =  Channel.find({id: {$in: organizations[i].id}});
-						canales.forEach((canal)=>{
-							addOnlyOwnerOrModeratorCanales.canales.concat({name: canal.name, total: canal.messages})
-							addOnlyOwnerOrModeratorCanales.total = addOnlyOwnerOrModeratorCanales.total + canal.messages
+						Channel.find({id: {$in: organizations[i].id}}, (err, canales)=>{
+							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
+							canales.forEach(function (canal){
+								addOnlyOwnerOrModeratorCanales.canales.push({name: canal.name, total: canal.messages})
+								addOnlyOwnerOrModeratorCanales.total = addOnlyOwnerOrModeratorCanales.total + canal.messages
+							})
 						})
 					}
 				}
 				res.status(200).send(addOnlyOwnerOrModeratorCanales)
-				
-
-
 				/*
 				Promise.all(addOnlyOwnerOrModeratorCanales).then((info_canales) => {
 					return res.status(200).send(info_canales)
-
 				}).catch((err) =>{ 
 					return res.status(500).send({message: `Error al traer info de mensajes: ${err}`});
 				})*/

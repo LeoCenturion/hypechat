@@ -528,7 +528,7 @@ describe('ORGANIZATION', () => {
 	        let req = {body:{userToken: userMock.token,
 	        			organizationID: organizationMock.id,
 	        			message: 'dog Hello cat cat',
-	        			channelID: null}}
+	        			channelName: null}}
 			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('message');

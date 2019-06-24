@@ -650,7 +650,7 @@ async function getTotalMessages(req, res){
 					
 				});*/
 				let totalOrganizations = {total: 0, organizations: [], len:organizations.length, org: organizations, usr: user.email}
-				for(let i=0; i<=organizations.length; i++){
+				for(let i=0; i<organizations.length; i++){
 					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
 						Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{

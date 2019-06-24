@@ -659,6 +659,7 @@ async function getTotalMessages(req, res){
 								channelsPerOrganization["channels"] =channelsPerOrganization.channels.concat([{total: channels[j].messages, name: channels[j].name}])
 								channelsPerOrganization["total"] = channelsPerOrganization.total + channels[j].messages
 								totalOrganizations["total"] = totalOrganizations.total +channels[j].messages
+								return res.status(200).send(totalOrganizations)
 							}
 							/*
 							channels.forEach(function (channel){
@@ -669,8 +670,8 @@ async function getTotalMessages(req, res){
 						})
 						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}
-					return res.status(200).send(totalOrganizations)
 				}
+				return res.status(200).send(totalOrganizations)
 				
 				/*
 				Promise.all(addOnlyOwnerOrModeratorCanales).then((info_canales) => {

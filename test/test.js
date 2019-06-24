@@ -236,6 +236,18 @@ describe('USER', () => {
 		done();
    	});
 
+   	it('getTotalRegistrationsPerYear succesfull', (done) => {
+
+        req = {params:{token: 'userMockToken', year:'2019'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('total');
+				obj.total.should.be.equal(1);
+				return obj}}}}
+
+		userControllers.getTotalRegistrationsPerYear(req,res)
+		done();
+   	});
 
 });
 

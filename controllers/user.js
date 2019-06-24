@@ -435,7 +435,7 @@ function getTotalRegistrations(req,res){
 						resultados.push({year: year, month: (month-2), total: users3.length})
 						resultados.push({year: year, month: (month-1), total: users2.length})
 						resultados.push({year: year, month: (month), total: users1.length})
-						logger.info(`getTotalRegistrations - Se le devolvio cantidad y usuarios registrados por mes al usuario con token: ${req.params.token}`)
+						logger.info(`getTotalRegistrations - Se le devolvio cantidad y usuarios registrados por mes al usuario con token ${req.params.token}`)
 						return res.status(200).send({resultados})
 					})
 				})
@@ -465,7 +465,7 @@ function getTotalRegistrationsPerYear(req,res){
 				logger.error(`setLocation - Error (500) al buscar el usuario: ${err}`)
 				return res.status(500).send({message: `Error al buscar el token del usuario: ${err}`})
 			}
-	
+			logger.info(`getTotalRegistrationsPerYear - Se le devolvio cantidad de usuarios registrados en el anio ${year} al usuario con token ${req.params.token}`)
 			return res.status(200).send({total: users.length})
 		
 		})

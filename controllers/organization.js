@@ -509,7 +509,7 @@ function checkMessage(req, res){
 			for(let i=0; i<restrictedWords.length; i++){
 				message = message.split(restrictedWords[i]).join('***')
 			}
-			Channel.findOne({id:req.body.channelID},(err,channel)=>{
+			Channel.findOne({_id:req.body.channelID},(err,channel)=>{
 				if(err) return res.status(500).send({message: `Error al buscar un canal: ${err}`})
 				if(channel){
 					//sumo un mensaje al channel si existe, es decir que no es null

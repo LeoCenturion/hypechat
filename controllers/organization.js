@@ -651,6 +651,7 @@ async function getTotalMessages(req, res){
 				});*/
 				let totalOrganizations = {total: 0, organizations: [], len:organizations.length, org: organizations, usr: user.email}
 				for(let i=0; i<=organizations.length; i++){
+					
 					if(i==organizations.length){
 						return res.status(200).send(totalOrganizations)
 					}
@@ -659,12 +660,12 @@ async function getTotalMessages(req, res){
 						Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							channels.forEach(function (channel){
-								channelsPerOrganization.channels.concat([{total: channel.messages, name: channel.name}])
-								channelsPerOrganization.total = channelsPerOrganization.total + channel.messages
-								totalOrganizations.total = totalOrganizations.total +channel.messages
+								channelsPerOrganization[channels] =channelsPerOrganization.channels.concat([{total: channel.messages, name: channel.name}])
+								channelsPerOrganization[total] = channelsPerOrganization.total + channel.messages
+								totalOrganizations[total] = totalOrganizations.total +channel.messages
 							})
 						})
-						totalOrganizations.organizations.concat([channelsPerOrganization])
+						totalOrganizations[organizations] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}
 				}
 				

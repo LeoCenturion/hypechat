@@ -650,7 +650,7 @@ async function getTotalMessages(req, res){
 					
 				});*/
 				let totalOrganizations = {total: 0, organizations: [], len:organizations.length, org: organizations, usr: user.email}
-				let channelsPerOrganization = {total: 0, name:organizations[0].name, channels: []}
+				//let channelsPerOrganization = {total: 0, name:organizations[0].name, channels: []}
 				for(let i=0; i<organizations.length; i++){
 					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
@@ -658,8 +658,8 @@ async function getTotalMessages(req, res){
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							//channelsPerOrganization["channels"]=channelss
 							for(let j=0; j<channelss.length; j++){
-								totalOrganizations["channels"] =totalOrganizations["channels"].concat([{total: channelss[j].messages, name: channelss[j].name}])
-								//channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
+								channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channelss[j].messages, name: channelss[j].name}])
+								channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
 								totalOrganizations["total"] = totalOrganizations.total +channelss[j].messages
 								if (j==1) return res.status(200).send(totalOrganizations)
 							}

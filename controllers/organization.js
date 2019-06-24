@@ -514,7 +514,7 @@ function checkMessage(req, res){
 				if(channel){
 					//sumo un mensaje al channel si existe, es decir que no es null
 					//si id de channel es null --> channel no existe
-					channel.messages += 1;
+					channel.messages = channel.messages + 1;
 					console.log(channel.messages)
 				}
 			})
@@ -648,21 +648,16 @@ function getTotalMessages(req, res){
 				}
 				
 			});*/
-
+			let addOnlyOwnerOrModeratorCanales = {total: 0, canales: []}
 			for(let i=0; i<organizations.length; i++){
 				if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
-					let total = 0
-					let res_canales = []
 					Channel.find({id: {$in: organizations[i].id}}, (err, canales)=>{
 						if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 						canales.forEach(function (canal){
-							res_canales.push({name: canal.name, total: canal.messages})
-							total = total + canal.messages
+							addOnlyOwnerOrModeratorCanales.canales.push({name: canal.name, total: canal.messages})
+							addOnlyOwnerOrModeratorCanales.total = addOnlyOwnerOrModeratorCanales.total + canal.messages
 						})
-						let addOnlyOwnerOrModeratorCanales = {total: total, canales: res_canales}
 					})
-				}else{
-					let addOnlyOwnerOrModeratorCanales = {total: 0, canales: []}
 				}
 			}
 			res.status(200).send(addOnlyOwnerOrModeratorCanales)

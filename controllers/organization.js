@@ -654,20 +654,13 @@ async function getTotalMessages(req, res){
 					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
 						Channel.find({id: organizations[i].id}, (err, channelss)=>{
-							return res.status(200).send(channelss)
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							//channelsPerOrganization["channels"]=channelss
-							if(channelss){
-								return res.status(200).send(channels)
-								for(let j=0; j<=channelss.length; j++){
-									channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channelss[j].messages, name: channels[j].name}])
-									channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
-									totalOrganizations["total"] = totalOrganizations.total +channelss[j].messages
-									return res.status(200).send(totalOrganizations)
-								}
-							}
-							if(!channelss){
-								return res.status(200).send(`ES NULL!! id: ${organizations[i].id} , name: ${organizations[i].channels}`)
+							for(let j=0; j<=channelss.length; j++){
+								channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channelss[j].messages, name: channelss[j].name}])
+								channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
+								totalOrganizations["total"] = totalOrganizations.total +channelss[j].messages
+								return res.status(200).send(totalOrganizations)
 							}
 							/*
 							channels.forEach(function (channel){

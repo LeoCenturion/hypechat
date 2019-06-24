@@ -653,7 +653,7 @@ async function getTotalMessages(req, res){
 
 				for(let i=0; i<organizations.length; i++){
 					if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
-						let canales =  Channel.find({id: {$in: organizations[i].id}}).exec();
+						let canales =  Channel.find({id: {$in: organizations[i].id}});
 						canales.forEach((canal)=>{
 							addOnlyOwnerOrModeratorCanales.canales.concat({name: canal.name, total: canal.messages})
 							addOnlyOwnerOrModeratorCanales.total = addOnlyOwnerOrModeratorCanales.total + canal.messages

@@ -514,7 +514,7 @@ function checkMessage(req, res){
 				if(channel){
 					//sumo un mensaje al channel si existe, es decir que no es null
 					//si id de channel es null --> channel no existe
-					Channel.findOneAndUpdate({id: req.body.organizationID, name: req.body.channelName}, {message: (channel.messages +1)},(err,channel2)=>{
+					Channel.findOneAndUpdate({id: req.body.organizationID, name: req.body.channelName}, {messages: (channel.messages +1)},(err,channel2)=>{
 						if(err) return res.status(500).send({message: `Error al buscar un canal: ${err}`})})
 				}
 			})

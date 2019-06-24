@@ -18,6 +18,7 @@ describe('USER', () => {
     let findByIdAndUpdateStub = null;
     let updateStub = null;
     let findOneAndUpdateStub = null;
+    let findStub = null;
 
     beforeEach(() => {
     	userMock = {
@@ -42,6 +43,7 @@ describe('USER', () => {
         findByIdAndUpdateStub = sinon.stub(User, 'findByIdAndUpdate').callsFake((a,b, cb)=> cb(null, userMock));
     	updateStub = sinon.stub(User, 'update').callsFake((a,b, cb)=> cb(null, userMock));
     	findOneAndUpdateStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
+    	findStub = sinon.stub(User, 'find').callsFake((_, cb)=> cb(null,[userMock]))
     });
 
     afterEach(() => {
@@ -50,6 +52,7 @@ describe('USER', () => {
         findByIdAndUpdateStub.restore();
         updateStub.restore();
         findOneAndUpdateStub.restore();
+        findStub.restore();
     });
 
     it('Login user succesfull', (done) => {
@@ -214,6 +217,35 @@ describe('USER', () => {
 				return obj}}}}
 
 		userControllers.setLocation(req,res)
+		done();
+   	});
+
+   	it('getTotalRegistrations succesfull', (done) => {
+
+        req = {params:{token: 'userMockToken'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('resultados');
+				obj.resultados[0].should.have.property('year')
+				obj.resultados[0].should.have.property('month')
+				obj.resultados[0].should.have.property('total')
+				assert(obj.resultados.length == 4)
+				return obj}}}}
+
+		userControllers.getTotalRegistrations(req,res)
+		done();
+   	});
+
+   	it('getTotalRegistrationsPerYear succesfull', (done) => {
+
+        req = {params:{token: 'userMockToken', year:'2019'}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('total');
+				obj.total.should.be.equal(1);
+				return obj}}}}
+
+		userControllers.getTotalRegistrationsPerYear(req,res)
 		done();
    	});
 

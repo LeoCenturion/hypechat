@@ -514,8 +514,8 @@ function checkMessage(req, res){
 				if(channel){
 					//sumo un mensaje al channel si existe, es decir que no es null
 					//si id de channel es null --> channel no existe
-					channel.messages = channel.messages + 1;
-					console.log(channel.messages)
+					Channel.findOneAndUpdate({id: req.body.organizationID, name: req.body.channelName}, {message: (channel.messages +1)},(err,channel2)=>{
+						if(err) return res.status(500).send({message: `Error al buscar un canal: ${err}`})})
 				}
 			})
 			return res.status(200).send({message: message});
@@ -628,7 +628,7 @@ async function getTotalMessages(req, res){
 			
 			Organization.find({id: {$in: usuario.organizations}}, (err, organizations)=>{
 				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-				if(organizations.length == 0) return res.status(200).send({organizations: organizations})
+				if(organizations.length == 0 ) return res.status(200).send({organizations: organizations})
 				/*
 				const addOnlyOwnerOrModeratorCanales = organizations.map(function(element) {
 					

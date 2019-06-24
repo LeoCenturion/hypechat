@@ -659,11 +659,11 @@ async function getTotalMessages(req, res){
 						Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							channels.forEach(function (channel){
-								channelsPerOrganization.channels.push({total: channel.messages, name: channel.name})
+								channelsPerOrganization.channels.concat({total: channel.messages, name: channel.name})
 								channelsPerOrganization.total = channelsPerOrganization.total + channel.messages
 							})
 						})
-					totalOrganizations.push(channelsPerOrganization)
+						totalOrganizations.concat([channelsPerOrganization])
 					}
 				}
 				res.status(200).send(totalOrganizations)

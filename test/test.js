@@ -206,6 +206,19 @@ describe('USER', () => {
 			userControllers.getTotalRegistrationsPerYear(req,res)
 			done();
 	   	});
+
+	   	it('logout no succesfull', (done) => {
+
+	        req = {params:{token: 'userMockToken'}}
+			res = {status: function(nro){assert.equal(nro,500)
+				return {send:function(obj){
+					obj.should.have.property('message');
+					return obj}}}}
+
+			userControllers.logout(req,res)
+			done();
+	   	});
+
 	})
 
 	    describe('With userMock',()=>{

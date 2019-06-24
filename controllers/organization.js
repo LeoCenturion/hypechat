@@ -653,8 +653,9 @@ async function getTotalMessages(req, res){
 
 				
 				for(let i=0; i<organizations.length; i++){
-					let channelsPerOrganization = {total: 0, channels: []}
+					
 					if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
+						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
 						Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							channels.forEach(function (channel){

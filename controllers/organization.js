@@ -653,6 +653,20 @@ async function getTotalMessages(req, res){
 				for(let i=0; i<organizations.length; i++){
 					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
+
+						Channel.find({id: organizations[i].id}).then(function(channels){
+							let listChannels = [];
+							channels.forEach(function(c){
+								listChannels.push({total: c.messages, name: c.name})
+							})
+
+							Promise.all(listChannels);
+						}).then(function(listOfChannels){
+							return channelsPerOrganization["channels"] = listOfChannels
+						}).catch(function(error) {
+						res.status(500).send('one of the queries failed', error);
+						});
+/*
 						Channel.find({id: organizations[i].id}, (err, channelss)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							//channelsPerOrganization["channels"]=channelss
@@ -670,7 +684,7 @@ async function getTotalMessages(req, res){
 								totalOrganizations["total"] = totalOrganizations.total +channel.messages
 							})*/
 
-						})
+						/*})*/
 						return res.status(200).send(totalOrganizations)
 						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}

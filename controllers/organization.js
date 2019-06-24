@@ -649,24 +649,11 @@ async function getTotalMessages(req, res){
 					}
 					
 				});*/
-				let totalOrganizations = {total: 0, organizations: [], len:organizations.length, org: organizations, usr: user.email}
+				let totalOrganizations = {total: 0, organizations: []}
 				for(let i=0; i<organizations.length; i++){
 					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
 
-						Channel.find({id: organizations[i].id}).then(function(channels){
-							let listChannels = [];
-							channels.forEach(function(c){
-								listChannels.push({total: c.messages, name: c.name})
-							})
-
-							Promise.all(listChannels);
-						}).then(function(listOfChannels){
-							return channelsPerOrganization["channels"] = listOfChannels
-						}).catch(function(error) {
-						res.status(500).send('one of the queries failed', error);
-						});
-/*
 						Channel.find({id: organizations[i].id}, (err, channelss)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							//channelsPerOrganization["channels"]=channelss
@@ -683,9 +670,8 @@ async function getTotalMessages(req, res){
 								channelsPerOrganization["total"] = channelsPerOrganization.total + channel.messages
 								totalOrganizations["total"] = totalOrganizations.total +channel.messages
 							})*/
-
-						/*})*/
-						return res.status(200).send(totalOrganizations)
+							return res.status(200).send(totalOrganizations) //hay que ver como quitar esto que esta dentro del find y que se sigan guardndo las cosas como hasta este punto
+						})
 						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
 					}
 				}

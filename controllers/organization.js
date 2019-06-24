@@ -656,16 +656,16 @@ async function getTotalMessages(req, res){
 						Channel.find({id: organizations[i].id, name:{$in: organizations[i].channels}}, (err, channelss)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							//channelsPerOrganization["channels"]=channelss
-							if(channels){
+							if(channelss){
 								return res.status(200).send(channels)
-								for(let j=0; j<=channels.length; j++){
-									channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channels[j].messages, name: channels[j].name}])
-									channelsPerOrganization["total"] = channelsPerOrganization.total + channels[j].messages
-									totalOrganizations["total"] = totalOrganizations.total +channels[j].messages
+								for(let j=0; j<=channelss.length; j++){
+									channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channelss[j].messages, name: channels[j].name}])
+									channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
+									totalOrganizations["total"] = totalOrganizations.total +channelss[j].messages
 									return res.status(200).send(totalOrganizations)
 								}
 							}
-							if(!channels){
+							if(!channelss){
 								return res.status(200).send(`ES NULL!! id: ${organizations[i].id} , name: ${organizations[i].channels}`)
 							}
 							/*

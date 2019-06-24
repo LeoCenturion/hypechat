@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hypechat-taller2",
+  "private_key_id": "640ab1302ff300e50d578fa7977c0a84dda080bd",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDKrebpdGReY6bT\nUnClEhk+pUf0xQ/PwcY9u9kDKW5mM+ZOpPQnDFSifPxTECon9mSCDfgayGELk2mY\n0VdWY1FpjUJDQoYznp+EuFQyTo4VEAO2bta87iYf4zUCWl0EM8h2781wH941dhU2\n4LFld4b/a0PdUu7C8FIEKTQv+kr8bwsFFoP2JcfjP0Ve2iFT7NmnXMrhTq4QHHiv\nD3ukpwAmyaCtUccVfLKgiZaSc/mcoOKVYWKX31bLezzCATjmfFCqpWzPgiiuJJl6\nUWCgMI1LaBdGcGRVoA25FyjS1mIsDqt0Zzhubt+e3diz7JKXqfRfjg5cNLMuxJDN\nGA28rSe1AgMBAAECggEAFoRlgBBHSllF4nppO12cYmJYcTAnhoxfquIgxQIoWsBv\nWNNosKHlETxTiCLmnBP6rJxCsS8L4Q5aj/jJ/DYCiHiCIRjV8gwwar1T1Vb24A4s\na2s6/jhzEd3bOMyzQtFB9zzDFS7lMAlTaApkiwJRhDT1kDQzhILQidfODXqANDUr\nNwYyeeVIaS5+eGzVTCEG7gd35x7zEoWVyC5LEKHGgEfz+OPrlvepYXc6veFAkzSm\n/nO1mAEun8BGkTDEGJx0OnETxsXjBVbVJvzvEqjuV7EULzZ+m9vg4HDLbPl39oVW\nyfO1WxwiLKRSvQDhS1vfHVB9qNlyi+GXEtaFW7MZIQKBgQD4EpXyO9Bwm+zTwnMI\nNA7WtLIyIErU7FDAJ4ww7qJLkPlQOW8K5/Jht+RHnZ5mYGx80wbmqrCLxnTy+p/F\nRlferDokPqxanqk6x+X086Dsgysj92l+hO8PEll++A6qs88yfCEUvbKq+k2AHfqD\nPMKaTNWeAX02mEZQke+5u3xH+QKBgQDRJ/dSeMS3kMZO6S53Esa7yDbaM4BOzcVz\nn7xHDpeQZ1D0sMleKfr02vtxccsL2mGtM14+nhSlpZqU+D3KEhycOYMmQT6oyG2+\n5qoS1sm/WXghCqbqy6V4tzUSUrbykvV8KL39MlFYKY6BHR0w2qtaLAyu5F1JjyPS\nKkuEM4YknQKBgQDufA+jHFW6rGv0+A7WaBWL25MkFV9bawQGdv6TXBayRuEnes+B\n0JJ31u2i26iYC0LAja8ouheXiGaN4NsQMBvxeek7RvUy+Sz/0YUFA+JE/aTPot7M\nPsgD2UQoiBixisM6aZLz+Zp2PMOc0zUuTY9X/12t1QinH6UZd/Lav58vIQKBgGWS\nxi5cDhSjj1r1LSaQjMjXE6RmDHK4xaJAObw8Xui28/7Q+Ant0z0kN6ZBP/1Socru\nPl+kf5xuTyL3Z3KB1zkbSRDD8L0hEQL7nC6n9rQhrBBHzwYJviNgvbpXRxeIvQT9\n+D5FOHHbRKR5UhrOpxaUe9hXeOJnTFsdRS0/pG6VAoGAJPcTOIB3osDx2f6bJFMo\nceT2J7nGY81Z14wlrQLvfy4vk9wZHmG9TXdIEPzK1U7pRByQeShKeddKLcOI3+jg\nznbjtpRmRBx9VVZU48Y0ZbkmnjIR/Ua98zs5OH7v+ofK8u6jutKHDnjt5HLoAQgh\ne+CTC8u1RQI0sU7wbyhaJI8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-b1kdy@hypechat-taller2.iam.gserviceaccount.com",
+  "client_id": "109206904002878518470",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-b1kdy%40hypechat-taller2.iam.gserviceaccount.com"
+}

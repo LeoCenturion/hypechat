@@ -252,7 +252,11 @@ function updatePasswordOrganization (req, res){
 		res.status(200).send({usuario: orgUpdated})
 	})
 }
-
+//500 - server error
+//404 - la organizacion no existe
+//405 - el usuario ya es moderador
+//406 - el usuario no es parte de la organizacion
+//recibe como body: token , organizationID, userEmail
 //Asigna a una usuario como moderador
 function asignModerator (req, res){
 	let token = req.body.token
@@ -278,6 +282,10 @@ function asignModerator (req, res){
 	})
 }
 
+//500 - server error
+//404 - la organizacion no existe
+//405 - el usuario no es moderador
+//recibe como body: token , organizationID, userEmail
 //Elimino la asignacion de un usuario como moderador
 function revokeModerator (req, res){
 	let token = req.body.token
@@ -327,6 +335,10 @@ function hasEditPermission (req, res){
 }
 
 //Elimino un usuario de la organizacion
+//500 - server error
+//404 - la organizacion no existe
+//405 - no se puede eliminar al owner
+//406 - el usuario no es parte de la organizacion 
 function removeUser (req, res){
 	let token = req.params.token
 	let id_organization = req.params.id
@@ -618,20 +630,20 @@ function deleteRestrictedWords(req, res){
 //Devuelve la informacion del canal (200)
 // 404 - si no existe la organizacion o canal
 // 500 - Error de server
-async function getTotalMessages(req, res){
-	try{
-		let token = req.params.token
+function getTotalMessages(req, res){
+	let token = req.params.token
 
-		User.findOne({token: token}, (err, user)=>{
-			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
-			if (!user) return res.status(400).send({message: 'Token invalido'})
+	User.findOne({token: token}, (err, usuario)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+		if (!usuario) return res.status(400).send({message: 'Token invalido'})
+		
+		Organization.find({id: {$in: usuario.organizations}}, (err, organizations)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
+			if(organizations.length == 0 ) return res.status(200).send({organizations: organizations})
 			
-			Organization.find({id: {$in: user.organizations}}, (err, organizations)=>{
-				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-				if(organizations.length == 0 ) return res.status(200).send({organizations: organizations})
-				/*
-				const addOnlyOwnerOrModeratorCanales = organizations.map(function(element) {
-					
+			const addOnlyOwnerOrModeratorCanales = organizations.map(function(element) {
+				
+				return new Promise((resolve, reject) => {
 					if(element.owner.includes(usuario.email) || element.moderators.includes(usuario.email)){
 						let total = 0
 						let res_canales = []
@@ -640,58 +652,24 @@ async function getTotalMessages(req, res){
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 							canales.forEach(function (canal){
 								res_canales.push({name: canal.name, total: canal.messages})
-								total = total + canal.messages
+								total = (total + canal.messages)
 							})
-							return {total: total, canales: res_canales}
+							return resolve({name: element.name, total: total, canales: res_canales})
 						})
-					}else{
-						return {total: 0, canales: []}
+					} else{
+						return resolve({})
 					}
-					
-				});*/
-				let totalOrganizations = {total: 0, organizations: []}
-				for(let i=0; i<organizations.length; i++){
-					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
-						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
-
-						Channel.find({id: organizations[i].id}, (err, channelss)=>{
-							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
-							//channelsPerOrganization["channels"]=channelss
-							for(let j=0; j<channelss.length; j++){
-								channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channelss[j].messages, name: channelss[j].name}])
-								channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
-								totalOrganizations["total"] = totalOrganizations.total +channelss[j].messages
-								//if(j==1) return res.status(200).send(totalOrganizations)
-							}
-							
-							/*
-							channels.forEach(function (channel){
-								channelsPerOrganization["channels"] =channelsPerOrganization.channels.concat([{total: channel.messages, name: channel.name}])
-								channelsPerOrganization["total"] = channelsPerOrganization.total + channel.messages
-								totalOrganizations["total"] = totalOrganizations.total +channel.messages
-							})*/
-							return res.status(200).send(totalOrganizations) //hay que ver como quitar esto que esta dentro del find y que se sigan guardndo las cosas como hasta este punto
-						})
-						totalOrganizations["organizations"] = totalOrganizations.organizations.concat([channelsPerOrganization])
-					}
-				}
-				//return res.status(200).send(totalOrganizations)
+				})
 				
-				/*
-				Promise.all(addOnlyOwnerOrModeratorCanales).then((info_canales) => {
-					return res.status(200).send(info_canales)
-				}).catch((err) =>{ 
-					return res.status(500).send({message: `Error al traer info de mensajes: ${err}`});
-				})*/
-				
-
+			});
+	
+			Promise.all(addOnlyOwnerOrModeratorCanales).then((info_canales) => {
+				return res.status(200).send(info_canales)
+			}).catch((err) =>{ 
+				return res.status(500).send({message: `Error al traer info de mensajes: ${err}`});
 			})
-				
 		})
-	}
-	catch(err){
-		ress.status(500).send({message: "SERVER ERROR"})
-	}
+})
 }
 
 //Devuelve la informacion del canal (200)

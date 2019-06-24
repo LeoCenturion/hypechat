@@ -656,14 +656,14 @@ async function getTotalMessages(req, res){
 					
 					if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
-						/*Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{
+						Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							channels.forEach(function (channel){
 								channelsPerOrganization.channels.concat({total: channel.messages, name: channel.name})
 								channelsPerOrganization.total = channelsPerOrganization.total + channel.messages
 							})
-						})*/
-						totalOrganizations.concat([channelsPerOrganization])
+						})
+						totalOrganizations.organizations.concat([channelsPerOrganization])
 					}
 				}
 				res.status(200).send(totalOrganizations)

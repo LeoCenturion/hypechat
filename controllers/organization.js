@@ -656,7 +656,7 @@ async function getTotalMessages(req, res){
 						Channel.find({id: organizations[i].id}, (err, channelss)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})
 							//channelsPerOrganization["channels"]=channelss
-							for(let j=0; j<=channelss.length; j++){
+							for(let j=0; j<channelss.length; j++){
 								channelsPerOrganization["channels"] =channelsPerOrganization["channels"].concat([{total: channelss[j].messages, name: channelss[j].name}])
 								channelsPerOrganization["total"] = channelsPerOrganization.total + channelss[j].messages
 								totalOrganizations["total"] = totalOrganizations.total +channelss[j].messages

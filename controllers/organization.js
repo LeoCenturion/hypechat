@@ -503,7 +503,7 @@ function checkMessage(req, res){
 		if(!user) return res.status(404).send({message: `No existe usuario con token ${req.body.userToken}`})
 		Organization.findOne({id: req.body.organizationID}, (err, organization)=>{
 			if(err) return res.status(500).send({message: `Error al buscar una organizacion: ${err}`})
-			if(!organization) return res.status(404).send({message: `No existe organizacoin con id ${req.body.organizationID}`})
+			if(!organization) return res.status(200).send({message: req.body.message}); //res.status(404).send({message: `No existe organizacoin con id ${req.body.organizationID}`})
 			let restrictedWords = organization.restrictedWords;
 			let message = req.body.message;
 			for(let i=0; i<restrictedWords.length; i++){
@@ -515,10 +515,11 @@ function checkMessage(req, res){
 					//sumo un mensaje al channel si existe, es decir que no es null
 					//si id de channel es null --> channel no existe
 					channel.messages += 1;
+					console.log(channel.messages)
 				}
 			})
 			return res.status(200).send({message: message});
-		})
+		})		
 	})
 }
 

@@ -622,11 +622,11 @@ async function getTotalMessages(req, res){
 	try{
 		let token = req.params.token
 
-		User.findOne({token: token}, (err, usuario)=>{
+		User.findOne({token: token}, (err, user)=>{
 			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
-			if (!usuario) return res.status(400).send({message: 'Token invalido'})
+			if (!user) return res.status(400).send({message: 'Token invalido'})
 			
-			Organization.find({id: {$in: usuario.organizations}}, (err, organizations)=>{
+			Organization.find({id: {$in: user.organizations}}, (err, organizations)=>{
 				if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 				if(organizations.length == 0 ) return res.status(200).send({organizations: organizations})
 				/*
@@ -649,12 +649,12 @@ async function getTotalMessages(req, res){
 					}
 					
 				});*/
-				let totalOrganizations = {total: 0, organizations: [], org: organizations}
+				let totalOrganizations = {total: 0, organizations: [], org: organizations, usr: user.email}
 
 				
 				for(let i=0; i<organizations.length; i++){
 					
-					if(organizations[i].owner.includes(usuario.email) || organizations[i].moderators.includes(usuario.email)){
+					if(organizations[i].owner.includes(user.email) || organizations[i].moderators.includes(user.email)){
 						let channelsPerOrganization = {total: 0, name:organizations[i].name, channels: []}
 						Channel.find({id: {$in: organizations[i].id}}, (err, channels)=>{
 							if (err) return res.status(500).send({message: `Error al realizar la peticion de canales: ${err}`})

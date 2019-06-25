@@ -221,7 +221,22 @@ describe('PRIVATE MESSAGE', () => {
 			privateMsjControllers.createPrivateMsj(req,res)
 			done();
 		});
+
+		it('checkMentionPrivado no succesfull', (done) => {
+	        let req = {body: {token:userMock.token, email:userMock.email, id:organizationMock.id, message:"Hello!" }}
+			let res = {status: function(nro){
+				assert.equal(nro,500)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			privateMsjControllers.checkMentionPrivado(req,res)
+			done();
+		});
+		
 	});
+
+
 	describe('findOnePrivateMsjStub returns null allways',()=>{
 	
 	    let findOnePrivateMsjStub = null;

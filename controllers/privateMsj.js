@@ -20,8 +20,6 @@ function all(req,res){
 	})
 }
 
-
-
 //devuelve los mensajes privados que tiene un usuario.
 //El token debe ser pasado en la url (params)
 function getPrivateMsj(req, res){
@@ -257,7 +255,7 @@ function existe_chat_privado(email1, email2, id){
             }else{
                 return resolve("existe")
             }
-            })
+        })
     })
 }
 

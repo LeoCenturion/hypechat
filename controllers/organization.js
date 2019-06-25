@@ -637,7 +637,6 @@ function getTotalMessages(req, res){
 			if(organizations.length == 0 ) return res.status(200).send({organizations: organizations})
 			
 			const addOnlyOwnerOrModeratorCanales = organizations.map(function(element) {
-				
 				return new Promise((resolve, reject) => {
 					if(element.owner.includes(usuario.email) || element.moderators.includes(usuario.email)){
 						let total = 0

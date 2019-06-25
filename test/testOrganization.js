@@ -268,7 +268,7 @@ describe('ORGANIZATION', () => {
 				psw: 'pswOrganization',
 				name: 'nameOrganization',
 				channels: [channelMock.id],
-				owner: userMock.email,
+				owner: [userMock.email],
 				moderators: [moderatorEmail],
 				members: [userMock.email, userMock2.email],
 				welcome: 'Bienvenido a la organizacion',
@@ -293,7 +293,7 @@ describe('ORGANIZATION', () => {
 	        findOneAndUpdateUserStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
 	        findUserStub = sinon.stub(User, 'find').callsFake((user, cb)=> { cb(null, [userMock,userMock2])});
 
-	        findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, userMock.organizations));
+	        findOrganizationStub = sinon.stub(Organization, 'find').callsFake((_, cb)=> cb(null, [organizationMock]));
 	    	findPrivateMsjStub = sinon.stub(PrivateMsj, 'find').callsFake((_, cb)=> cb(null, [{email_user2:'msj_usr2', email_user1:'msj_usr1'}]));
 	    	updateOneUserStub = sinon.stub(User, 'updateOne').callsFake((a, b, cb)=> cb(null, userMock));
 	    	createChannelStub = sinon.stub(channelController, 'createChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});

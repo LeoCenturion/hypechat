@@ -171,7 +171,7 @@ describe('ORGANIZATION', () => {
 	    let updateOneUserStub = null;
 	    let createChannelStub = null;
 
-	    //let findOneChannelStub = null;
+	    let findOneChannelStub = null;
 	    //let updateOneChannelStub = null;
 
 	    let moderatorEmail = 'moderator@gmail.com';
@@ -277,7 +277,7 @@ describe('ORGANIZATION', () => {
 	    	createChannelStub = sinon.stub(channelController, 'createChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
 	    	findChannelStub = sinon.stub(Channel, 'find').callsFake((_, cb)=>{cb(null, [channelMock])})
 	    	findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a, b)=>{return channelMock})
-	    	//findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((a, cb)=>cb(null,channelMock))
+	    	findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((a, cb)=>cb(null,channelMock))
 	    	//updateOneChannelStub = sinon.stub(Channel, 'updateOne').callsFake((a, b, cb)=>cb(null,channelMock))
 	    });
 
@@ -298,7 +298,7 @@ describe('ORGANIZATION', () => {
 	        updateOneUserStub.restore();
 	        createChannelStub.restore();
 
-	        //findOneChannelStub.restore();
+	        findOneChannelStub.restore();
 	        //updateOneChannelStub.restore();
 	    });
 

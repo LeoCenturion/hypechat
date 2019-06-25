@@ -596,14 +596,14 @@ function checkMentionChannel(req, res){
 					  admin.messaging().sendMulticast(message)
 						.then((response) => {
 							  console.log(response.successCount + ' messages were sent successfully');
-							  return res.status(200).send("se han enviado las notificaciones")
+							  return res.status(200).send({message: "se han enviado las notificaciones"})
 						})
 						  .catch((error) => {
 							console.log('Error sending message:', error);
 							return res.status(404).send({message: 'Error al enviar las notificaciones'})
 						  });
 				}else{
-					return res.status(200).send("se han enviado las notificaciones")
+					return res.status(200).send({message: "se han enviado las notificaciones"})
 				}
 			}).catch(function(err){ 
 				return res.status(500).send({message: `Error al enviar las notificaciones: ${err}`});

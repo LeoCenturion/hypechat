@@ -517,7 +517,6 @@ function getTokensMentionsChannel(mentions,id,channel,emailUser){
 		if (err) return reject(new Error(`Error al realizar la peticion de Organizacion: ${err}`))
 		if (!organization) return reject(new Error('La organizacion no existe'))
 		//si existe me fijo en las organizaciones del usuario a ver si ya esta agregado
-
 		let email_mencionados = mentions
 		Channel.findOne({name: channel, id: id},(err, udChannel)=>{
 			if (err) return reject(new Error(`Error al realizar la peticion de Organizacion: ${err}`))
@@ -569,45 +568,45 @@ function checkMentionChannel(req, res){
 	User.findOne({token: token}, (err, usuario)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
 		if (!usuario) return res.status(400).send({message: 'Token invalido'})
-			var pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
-			let result = msj.match(pattern);
-			let ss= []
-			if(result != null){
-				result.forEach(function (element){
-					ss.push(element.substr(1));	
-				})
+		var pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
+		let result = msj.match(pattern);
+		let ss= []
+		if(result != null){
+			result.forEach(function (element){
+				ss.push(element.substr(1));	
+			})
+		}
+		// Create a list containing up to 100 registration tokens.
+		// These registration tokens come from the client FCM SDKs.
+		var promesa = getTokensMentionsChannel(ss,id,channel,usuario.email)
+		promesa.then(function(registrationTokens) {
+			if(registrationTokens.length > 0){
+				console.log('registrationTokens: '+registrationTokens);
+				let texto_org = (channel+" dentro de: "+id)
+				const message = {
+					notification: {
+						title: "Rapido! Revisa tus mensajes",
+						body: ("Te han @ en "+texto_org)
+					  },
+					data: {score: '850', time: '2:45'},
+					tokens: registrationTokens,
+				  }
+	  
+				  admin.messaging().sendMulticast(message)
+					.then((response) => {
+						  console.log(response.successCount + ' messages were sent successfully');
+						  return res.status(200).send({message: "se han enviado las notificaciones"})
+					})
+					  .catch((error) => {
+						console.log('Error sending message:', error);
+						return res.status(404).send({message: 'Error al enviar las notificaciones'})
+					  });
+			}else{
+				return res.status(200).send({message: "se han enviado las notificaciones"})
 			}
-			// Create a list containing up to 100 registration tokens.
-			// These registration tokens come from the client FCM SDKs.
-			var promesa = getTokensMentionsChannel(ss,id,channel,usuario.email)
-			promesa.then(function(registrationTokens) {
-				if(registrationTokens.length > 0){
-					console.log('registrationTokens: '+registrationTokens);
-					let texto_org = (channel+" dentro de: "+id)
-					const message = {
-						notification: {
-							title: "Rapido! Revisa tus mensajes",
-							body: ("Te han @ en "+texto_org)
-						  },
-						data: {score: '850', time: '2:45'},
-						tokens: registrationTokens,
-					  }
-		  
-					  admin.messaging().sendMulticast(message)
-						.then((response) => {
-							  console.log(response.successCount + ' messages were sent successfully');
-							  return res.status(200).send({message: "se han enviado las notificaciones"})
-						})
-						  .catch((error) => {
-							console.log('Error sending message:', error);
-							return res.status(404).send({message: 'Error al enviar las notificaciones'})
-						  });
-				}else{
-					return res.status(200).send({message: "se han enviado las notificaciones"})
-				}
-			}).catch(function(err){ 
-				return res.status(500).send({message: `Error al enviar las notificaciones: ${err}`});
-			})		
+		}).catch(function(err){ 
+			return res.status(500).send({message: `Error al enviar las notificaciones: ${err}`});
+		})		
 			
 	})
 }

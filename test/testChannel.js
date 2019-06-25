@@ -21,6 +21,7 @@ describe('CHANNEL', () => {
     let findOneAndDeleteChannelStub = null;
     let findChannelStub = null;
     let findOneChannelStub = null;
+    let findUserStub = null;
     
     beforeEach(() => {
     	let idOrganization = 'idOrganization'
@@ -106,6 +107,9 @@ describe('CHANNEL', () => {
         	if(dataChannel.name==channelMock.name && dataChannel.id==channelMock.id) return cb(null, channelMock);
         																					cb(null, channelMock2)});
         findChannelStub = sinon.stub(Channel, 'find').callsFake((_, cb)=> cb(null, [channelMock]));
+        findUserStub = sinon.stub(User, 'find').callsFake((user, cb)=> {if(user.email == userMock2.email){
+	        																		return cb(null,[userMock2])}
+																		        cb(null, [userMock])});
     });
 
     afterEach(() => {
@@ -118,6 +122,7 @@ describe('CHANNEL', () => {
         findOneAndDeleteChannelStub.restore();
         findChannelStub.restore();
         findOneChannelStub.restore();
+        findUserStub.restore();
         
     });
 
@@ -430,5 +435,20 @@ describe('CHANNEL', () => {
 		channelControllers.userAllChannels(req,res)
 		done();
    	});
-   	
+
+   	it("checkMentionChannel no succesfull", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:channelMock.id,
+        			message:"hello",
+        			channel:channelMock.name}}
+        //no resuelve la promesa
+		res = {status: function(nro){assert.equal(nro,500)
+			return {send:function(obj){
+				console.log("HOLAAAAA")
+				console.log(obj)
+				obj.should.have.property('message')
+									return obj}}}}
+		channelControllers.checkMentionChannel(req,res)
+		done();
+   	});
 });

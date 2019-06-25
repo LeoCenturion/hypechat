@@ -163,7 +163,6 @@ describe('ORGANIZATION', () => {
    	it("getTotalMessages succesfull", (done)=>{
    			let req = {params:{token:userMock.token}}
    			let res = {status: function(nro){
-   				console.log(nro)
    				assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('organizations')

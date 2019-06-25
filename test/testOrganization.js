@@ -160,6 +160,19 @@ describe('ORGANIZATION', () => {
    			done();
    		})
 
+   	it("getTotalMessages succesfull", (done)=>{
+   			let req = {params:{token:userMock.token}}
+   			let res = {status: function(nro){
+   				console.log(nro)
+   				assert.equal(nro,200)
+				return {send:function(obj){
+					console.log(obj)
+								obj.should.have.property('organizations')
+								return obj}}}}
+			organizationControllers.getTotalMessages(req,res);
+   			done();
+   		})
+
    	})
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -684,7 +697,7 @@ describe('ORGANIZATION', () => {
    		it("getTotalMessages no succesfull", (done)=>{
    			let req = {params:{token:userMock.token}}
    			let res = {status: function(nro){
-   				console.log(nro)
+   				//no hace la promesa
    				assert.equal(nro,500)
 				return {send:function(obj){
 					console.log(obj)

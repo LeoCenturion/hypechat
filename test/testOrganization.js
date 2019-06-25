@@ -151,6 +151,8 @@ describe('ORGANIZATION', () => {
    	});
    	})
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    	describe("When do 'find organization', organization exist",()=>{
    		let updateOneOrganization = null;
@@ -169,6 +171,9 @@ describe('ORGANIZATION', () => {
 	    let updateOneUserStub = null;
 	    let createChannelStub = null;
 
+	    //let findOneChannelStub = null;
+	    //let updateOneChannelStub = null;
+
 	    let moderatorEmail = 'moderator@gmail.com';
 
    		beforeEach(() => {
@@ -179,7 +184,7 @@ describe('ORGANIZATION', () => {
 				psw: "password",
 				photo: "photoUrl",
 				nickname: "nickname",
-				organizations: [],
+				organizations: ["idOrganization"],
 				question1: 'question1',
 				question2: 'question2',
 				answer1: 'answer1',
@@ -272,6 +277,8 @@ describe('ORGANIZATION', () => {
 	    	createChannelStub = sinon.stub(channelController, 'createChannel').callsFake((req, res)=> {res.status(200).send({message:'OK'})});
 	    	findChannelStub = sinon.stub(Channel, 'find').callsFake((_, cb)=>{cb(null, [channelMock])})
 	    	findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a, b)=>{return channelMock})
+	    	//findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((a, cb)=>cb(null,channelMock))
+	    	//updateOneChannelStub = sinon.stub(Channel, 'updateOne').callsFake((a, b, cb)=>cb(null,channelMock))
 	    });
 
 	    afterEach(() => {
@@ -290,6 +297,9 @@ describe('ORGANIZATION', () => {
 	        findPrivateMsjStub.restore();	        
 	        updateOneUserStub.restore();
 	        createChannelStub.restore();
+
+	        //findOneChannelStub.restore();
+	        //updateOneChannelStub.restore();
 	    });
 
 	    it('all succesfull', (done) => {
@@ -299,16 +309,30 @@ describe('ORGANIZATION', () => {
 								obj.should.have.property('organizations');
 								return obj}}}}
 			
-			organizationControllers.all(req,res)
+			organizationControllers.all(req,res);
 			done();
    		});
 
    		it('addUserToOrganization succesfull', (done) => {
+	        let req = {body:{email: userMock3.email,
+	        			token: userMock3.token,
+	        			idOrganization: organizationMock.id,
+	        			psw: organizationMock.psw}}
+			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			organizationControllers.addUserToOrganization(req,res)
+			done();
+   		});
+
+   		it('addUserToOrganization no succesfull because user is member', (done) => {
 	        let req = {body:{email: userMock.email,
 	        			token: userMock.token,
 	        			idOrganization: organizationMock.id,
 	        			psw: organizationMock.psw}}
-			let res = {status: function(nro){assert.equal(nro,200)
+			let res = {status: function(nro){assert.equal(nro,400)
 				return {send:function(obj){
 								obj.should.have.property('message');
 								return obj}}}}
@@ -635,6 +659,18 @@ describe('ORGANIZATION', () => {
 			organizationControllers.deleteRestrictedWords(req,res);
    			done();
    		})
+/*
+   		it("getTotalMessages succesfull", (done)=>{
+   			let req = {params:{token:userMock.token}}
+   			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+					console.log(obj)
+								obj.should.have.property('organizations')
+								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
+								return obj}}}}
+			organizationControllers.getTotalMessages(req,res);
+   			done();
+   		})*/
 
    	});
    	   	

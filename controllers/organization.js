@@ -10,14 +10,9 @@ const logger = require('../utils/logger');
 
 
 function all(req, res){
-
-
 	Organization.find({}, (err, org)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
-		
-			return res.status(200).send({organizations: org})
-		
-		
+		return res.status(200).send({organizations: org})
 	})
 	
 }

@@ -166,7 +166,6 @@ describe('ORGANIZATION', () => {
    				console.log(nro)
    				assert.equal(nro,200)
 				return {send:function(obj){
-					console.log(obj)
 								obj.should.have.property('organizations')
 								return obj}}}}
 			organizationControllers.getTotalMessages(req,res);
@@ -700,7 +699,6 @@ describe('ORGANIZATION', () => {
    				//no hace la promesa
    				assert.equal(nro,500)
 				return {send:function(obj){
-					console.log(obj)
 								obj.should.have.property('message')
 								return obj}}}}
 			organizationControllers.getTotalMessages(req,res);

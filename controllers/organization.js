@@ -244,7 +244,7 @@ function updatePasswordOrganization (req, res){
 	Organization.findOneAndUpdate({id: id_organization}, update, (err,orgUpdated)=>{
 		if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
 
-		res.status(200).send({usuario: orgUpdated})
+		res.status(200).send({organization: orgUpdated})
 	})
 }
 //500 - server error

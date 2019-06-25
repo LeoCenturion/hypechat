@@ -19,7 +19,7 @@ paths:
           $ref: '#/definitions/loginCredentials'
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             $ref: '#/definitions/user'
         404:
@@ -61,7 +61,7 @@ paths:
           $ref: '#/definitions/facebookLoginCredentials'
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             $ref: '#/definitions/user'
         400:
@@ -84,7 +84,7 @@ paths:
         type: string
       responses:
         200:
-          description: Request Exitoso!
+          description: Successful Request
           schema:
             $ref: '#/definitions/userProfile'
         400:
@@ -147,7 +147,7 @@ paths:
         type: string
       responses:
         200:
-          description: Request Exitoso!
+          description: Successful Request
           schema:
             type: object
             properties:
@@ -162,13 +162,13 @@ paths:
           schema:
             $ref: '#/definitions/Error' 
         500:
-          description: Fallo el servidor
+          description: Server error
           schema:
             $ref: '#/definitions/Error' 
                 
   /privateMsj:
     get:
-      description: Trae todas los mensajes privados de la organizacion del usuario
+      description: returns all user's private messages in the organization
       parameters:
         - in: body
           name: datos
@@ -181,20 +181,20 @@ paths:
             properties:
               token:
                 type: string
-                description: el token del usuario
+                description: user token
                 example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
               organizacion_id:
                 type: string
-                description: el id de la organizacion
+                description: organization id
                 example: "taller2_2019"
               email:
                 type: string
-                description: el email del usuario
+                description: user email
                 example: "test@1.com"
                 
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             type: object
             properties:
@@ -203,23 +203,23 @@ paths:
                 items:
                   type: string
                 example: [{"name":"general"},{"name":"varios"},{"name":"tp1"}]
-                description: lista con los nombres de los canales que tiene el usuario en esa organizacion
+                description: array that conteins names of channels of user in the organization
               msjPrivados:
                 type: array
                 items:
                   type: string
                 example: [{"name":"CapitalMarvel"},{"name":"Iroman"},{"name":"Thor"}]
-                description: lista con los nombre de contactos con los que tiene msj privados en la organizacion 
+                description: array that conteins names of user which  email user has private messages in the organization
         400:
-          description: email no existe.
+          description: invalid email
           schema:
             $ref: '#/definitions/Error' 
         401:
-          description: la orgainzacion id no existe.
+          description: invalid id organization
           schema:
             $ref: '#/definitions/Error'    
         500:
-          description: Fallo el servidor
+          description: Server error
           schema:
             $ref: '#/definitions/Error' 
                 
@@ -235,30 +235,26 @@ paths:
                 
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: sucssusful request 
           schema:
             type: object
             properties:   
               message:
                 type: string
-                example: No existe una organizacion con ese ID, por lo tanto es valido!
-  
-   
         400:
-          description: Request Invalida!
+          description: Invalid Request
           schema:
             type: object
             properties:   
               message:
                 type: string
-                example: Ya existe una organizacion con ese ID!
 
   /organization:
     post:
-      description: Crea una nueva organizacion
+      description: Create a new organization
       parameters: 
         - in: body
-          name: datos
+          name: data
           schema:
             type: object
             required: 
@@ -270,28 +266,28 @@ paths:
             properties:
               token:
                 type: string
-                description: el token del usuario
+                description: user token
                 example: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9"
               nombre:
                 type: string
-                description: nombre de la organizacion
+                description: name organization
                 example: "Organizacion de datos"
               id:
                 type: string
-                description: id de la organizacion
+                description: id organization
                 example: "orga-2019"
-              email_usuario:
+              email:
                 type: string
-                description: email del usuario que creo la organizacion
+                description: owner organization
                 example: "test@1.com"
               contraseña:
                 type: string
-                description: contraseña de la organizacion
+                description: password organization
                 example: "orga12345"
 
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             type: object
             properties:   
@@ -339,7 +335,7 @@ paths:
                 example: "it is the password"
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             type: object
             properties:   
@@ -373,22 +369,22 @@ paths:
 
   /organization/{token}/{organizationID}:
     get:
-      description: Trae la informacion de la organizacion
+      description: returns information of organization with id "{organizationID}"
       parameters:
         - name: token
           in: path
-          description: el token del usuario
+          description: user token
           required: true
           type: string
-        - name: id_organizacion
+        - name: organizationID
           in: path
-          description: id de la organizacion
+          description: organization id
           required: true
           type: string
                 
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             type: object
             properties:
@@ -453,7 +449,7 @@ paths:
 
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             type: object
             properties:   
@@ -505,7 +501,7 @@ paths:
 
       responses:
         200:
-          description: Se realizo la request con exito!
+          description: Successful request
           schema:
             type: object
             properties:   
@@ -1026,6 +1022,68 @@ paths:
               description: invalid token
               schema:
                 $ref: '#/definitions/Error'
+
+  /organization/user:
+    post:
+      summary: adds user to organization
+      parameters:
+        - in: body
+          name: token, idOrganization, email, psw
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+              description: invalid organization
+              schema:
+                $ref: '#/definitions/Error'
+        401:
+              description: user is organization's member
+              schema:
+                $ref: '#/definitions/Error'
+
+  /organization/name:
+    put:
+      summary: updates organization name
+      parameters:
+        - in: body
+          name: token, organizationID, name
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: organization
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+
+  /organization/password:
+    put:
+      summary: updates organization password
+      parameters:
+        - in: body
+          name: token, organizationID, psw
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: organization
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   user:

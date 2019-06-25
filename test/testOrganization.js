@@ -394,7 +394,7 @@ describe('ORGANIZATION', () => {
 	        			psw: 'newPswOrganization'}}
 			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
-								obj.should.have.property('usuario');
+								obj.should.have.property('organization');
 								return obj}}}}
 			
 			organizationControllers.updatePasswordOrganization(req,res)

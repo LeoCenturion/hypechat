@@ -20,7 +20,7 @@ Valida al usuario que quiere ingresar a la app
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | [user](#user) |
+| 200 | Successful request | [user](#user) |
 | 404 | Bad login information | [Error](#error) |
 | 500 | Server error | [Error](#error) |
 
@@ -61,7 +61,7 @@ sends user's facebook token for login.
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | [user](#user) |
+| 200 | Successful request | [user](#user) |
 | 400 | Bad login information | [Error](#error) |
 | 500 | Server error | [Error](#error) |
 
@@ -82,7 +82,7 @@ Se muestran los datos (sin pws y token) del usuario al cual le corresponde el em
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Request Exitoso! | [userProfile](#userprofile) |
+| 200 | Successful Request | [userProfile](#userprofile) |
 | 400 | email del path no existe. | [Error](#error) |
 | 500 | Fallo el servidor | [Error](#error) |
 
@@ -143,16 +143,16 @@ Se muestran todas las organizaciones(sin pws y token) del usuario al cual le cor
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Request Exitoso! | object |
+| 200 | Successful Request | object |
 | 400 | email del path no existe. | [Error](#error) |
-| 500 | Fallo el servidor | [Error](#error) |
+| 500 | Server error | [Error](#error) |
 
 ### /privateMsj
 
 #### GET
 ##### Description:
 
-Trae todas los mensajes privados de la organizacion del usuario
+returns all user's private messages in the organization
 
 ##### Parameters
 
@@ -164,10 +164,10 @@ Trae todas los mensajes privados de la organizacion del usuario
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
-| 400 | email no existe. | [Error](#error) |
-| 401 | la orgainzacion id no existe. | [Error](#error) |
-| 500 | Fallo el servidor | [Error](#error) |
+| 200 | Successful request | object |
+| 400 | invalid email | [Error](#error) |
+| 401 | invalid id organization | [Error](#error) |
+| 500 | Server error | [Error](#error) |
 
 ### /idOrganizationValid/{organizationID}
 
@@ -186,27 +186,27 @@ Responde si existe o no una organizacion con ese ID
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
-| 400 | Request Invalida! | object |
+| 200 | sucssusful request | object |
+| 400 | Invalid Request | object |
 
 ### /organization
 
 #### POST
 ##### Description:
 
-Crea una nueva organizacion
+Create a new organization
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| datos | body |  | No | object |
+| data | body |  | No | object |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
+| 200 | Successful request | object |
 | 500 | Request Invalida! | object |
 
 ### /userOrganization
@@ -226,7 +226,7 @@ Agregar un usuario a la organizacion
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
+| 200 | Successful request | object |
 | 400 | Request Invalida! | object |
 | 401 | Request Invalida! | object |
 | 404 | Request Invalida! | object |
@@ -236,20 +236,20 @@ Agregar un usuario a la organizacion
 #### GET
 ##### Description:
 
-Trae la informacion de la organizacion
+returns information of organization with id "{organizationID}"
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| token | path | el token del usuario | Yes | string |
-| id_organizacion | path | id de la organizacion | Yes | string |
+| token | path | user token | Yes | string |
+| organizationID | path | organization id | Yes | string |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
+| 200 | Successful request | object |
 | 404 | Request Invalida! | object |
 | 500 | Request Invalida! | object |
 
@@ -270,7 +270,7 @@ Setea un nuevo nombre a la organizacion
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
+| 200 | Successful request | object |
 | 404 | Request Invalida! | object |
 | 500 | Request Invalida! | object |
 
@@ -291,7 +291,7 @@ Setea un nuevo password a la organizacion
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | Se realizo la request con exito! | object |
+| 200 | Successful request | object |
 | 400 | Request Invalida! | object |
 
 ### /recoveredPassword
@@ -585,6 +585,68 @@ updates user token_notifications to ' '
 | ---- | ----------- | ------ |
 | 200 | Successful request | object |
 | 400 | invalid token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /organization/user
+
+#### POST
+##### Summary:
+
+adds user to organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, idOrganization, email, psw | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 401 | user is organization's member | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /organization/name
+
+#### PUT
+##### Summary:
+
+updates organization name
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, name | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 500 | Server faild | [Error](#error) |
+
+### /organization/password
+
+#### PUT
+##### Summary:
+
+updates organization password
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, psw | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
 | 500 | Server faild | [Error](#error) |
 
 ### Models

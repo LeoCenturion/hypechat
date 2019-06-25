@@ -235,8 +235,20 @@ describe('PRIVATE MESSAGE', () => {
 			done();
 		});
 
-		it('checkMentionPrivado no succesfull', (done) => {
+		it('checkMentionPrivado succesfull', (done) => {
 	        let req = {body: {token:userMock.token, email:userMock.email, id:organizationMock.id, message:`Hello ${userMock.email}!` }}
+			let res = {status: function(nro){
+				assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('message');
+								return obj}}}}
+			
+			privateMsjControllers.checkMentionPrivado(req,res)
+			done();
+		});
+
+		it('checkMentionPrivado succesfull', (done) => {
+	        let req = {body: {token:userMock.token, email:userMock2.email, id:organizationMock.id, message:`Hello ${userMock2.email}!` }}
 			let res = {status: function(nro){
 				assert.equal(nro,200)
 				return {send:function(obj){

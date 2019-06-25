@@ -628,7 +628,7 @@ paths:
               schema:
                 $ref: '#/definitions/Error'
 
-  organization/restrictedWords/:id/:token:
+  organization/restrictedWords/{id}/{token}:
     get:
       summary: returns organization's restricted words
       parameters:
@@ -757,6 +757,276 @@ paths:
           description: user is not authorized
           schema:
             $ref: '#/definitions/Error'
+
+  /answerQuestions/{userEmail}/{asw1}/{asw2}:
+    get:
+      summary: returns recover password token if "asw1" and "asw2" are correct
+      parameters:
+        - in: path
+          name: asw1, asw2, userEmail
+          description: answers for secret questions of userEmail
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: recoverPasswordToken
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid user email
+              schema:
+                $ref: '#/definitions/Error'
+        401:
+          description: incorrect answers
+          schema:
+            $ref: '#/definitions/Error'
+
+  /secretQuestions/{userEmail}:
+    get:
+      summary: returns userEmail's secret questions
+      parameters:
+        - in: path
+          name: userEmail
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: question1, question2
+          schema:
+            type: object
+            properties:
+              question1:
+                type: string
+              question2:
+                type: string
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid user email
+              schema:
+                $ref: '#/definitions/Error'
+
+  /answersQuestions/{token}:
+    get:
+      summary: returns answers of secret questions
+      parameters:
+        - in: path
+          name: token
+          required: true
+          description: token of user
+      responses:
+        200:
+          description: Successful request
+          name: answers
+          schema:
+            type: object
+            properties:
+              answers:
+                type: object
+                properties:
+                  answer1:
+                    type: string
+                  answer2:
+                    type: string
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid token
+              schema:
+                $ref: '#/definitions/Error'
+
+  /secretQuestios:
+    put:
+      summary: returns answers of secret questions
+      parameters:
+        - in: body
+          name: token, question1, question2, answer1, answer2
+          required: true
+          description: token of user
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+              question1:
+                type: string
+              question2:
+                type: string
+              answer1:
+                type: string
+              answer2:
+                type: string
+            required:
+              - token
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid token
+              schema:
+                $ref: '#/definitions/Error'
+
+  /location/{token}/{email}:
+    get:
+      summary: returns to token's user longitude and latitude of email's user
+      parameters:
+        - in: path
+          name: token, email
+          required: true
+          description: token of user
+      responses:
+        200:
+          description: Successful request
+          name: latitud, longitud
+          schema:
+            type: object
+            properties:
+              latitud:
+                type: Number
+              longitud:
+                type: Number
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid token
+              schema:
+                $ref: '#/definitions/Error'
+
+  /location:
+    put:
+      summary: updates user location (longitude and/or latitude)
+      parameters:
+        - in: body
+          name: token, lotitud, longitud
+          properties:
+            token:
+              type: string
+            longitud:
+              type: Number
+            latitud:
+              type: Number
+          required: true
+          description: longitude and latitude of token's user
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid token
+              schema:
+                $ref: '#/definitions/Error'
+
+  /registration/months/{token}:
+    get:
+      summary: returns the number of users who registered in the last four months
+      parameters:
+        - in: path
+          name: token
+          properties:
+            token:
+              type: string
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: resultados
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                year:
+                  type: number
+                month:
+                  type: number
+                total:
+                  type: number
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid token
+              schema:
+                $ref: '#/definitions/Error'
+
+  /registration/year/{token}/{year}:
+    get:
+      summary: returns the number of users who registered on year "{year}"
+      parameters:
+        - in: path
+          name: token, year
+          properties:
+            token:
+              type: string
+            year:
+              type: number
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: total
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid token
+              schema:
+                $ref: '#/definitions/Error'
+
+  /logout/{token}:
+    get:
+      summary: updates user token_notifications to ' '
+      parameters:
+        - in: path
+          name: token, year
+          properties:
+            token:
+              type: string
+            year:
+              type: number
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+              description: invalid token
+              schema:
+                $ref: '#/definitions/Error'
+
 definitions:
   user:
     type: object

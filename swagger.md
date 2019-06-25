@@ -331,7 +331,7 @@ returns message without restrected organization words
 | ---- | ---------- | ----------- | -------- | ---- |
 | message | body |  | Yes | object |
 
-### organization/restrictedWords/:id/:token
+### organization/restrictedWords/{id}/{token}
 
 #### GET
 ##### Summary:
@@ -395,6 +395,196 @@ delete an organization's restricted word
 | 401 | user is not authorized | [Error](#error) |
 | 404 | user or organization dose not exist | [Error](#error) |
 | 406 | user is not organization's member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /answerQuestions/{userEmail}/{asw1}/{asw2}
+
+#### GET
+##### Summary:
+
+returns recover password token if "asw1" and "asw2" are correct
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| asw1, asw2, userEmail | path | answers for secret questions of userEmail | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user email | [Error](#error) |
+| 401 | incorrect answers | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /secretQuestions/{userEmail}
+
+#### GET
+##### Summary:
+
+returns userEmail's secret questions
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userEmail | path |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user email | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /answersQuestions/{token}
+
+#### GET
+##### Summary:
+
+returns answers of secret questions
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token | path | token of user | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /secretQuestios
+
+#### PUT
+##### Summary:
+
+returns answers of secret questions
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, question1, question2, answer1, answer2 | body | token of user | Yes | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /location/{token}/{email}
+
+#### GET
+##### Summary:
+
+returns to token's user longitude and latitude of email's user
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, email | path | token of user | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /location
+
+#### PUT
+##### Summary:
+
+updates user location (longitude and/or latitude)
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, lotitud, longitud | body | longitude and latitude of token's user | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /registration/months/{token}
+
+#### GET
+##### Summary:
+
+returns the number of users who registered in the last four months
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token | path |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | [ object ] |
+| 400 | invalid token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /registration/year/{token}/{year}
+
+#### GET
+##### Summary:
+
+returns the number of users who registered on year "{year}"
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, year | path |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /logout/{token}
+
+#### GET
+##### Summary:
+
+updates user token_notifications to ' '
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, year | path |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid token | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
 ### Models

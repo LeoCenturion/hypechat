@@ -385,7 +385,7 @@ delete an organization's restricted word
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | restrictedWord | body |  | Yes | object |
-| organizationID and userToken | path | organization's id and user's token | Yes | object |
+| organizationID and userToken | path | organization's id and user's token | Yes |  |
 
 ##### Responses
 

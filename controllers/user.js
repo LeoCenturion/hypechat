@@ -148,8 +148,8 @@ function getUserProfile(req, res) {
 	User.findOne({token: req.body.token}, (err1,user1)=>{
 		User.findOne({email: req.params.email}, (err2, user2) =>{
 		if(err1 || err2) {
-			logger.error(`getUserProfile - Error (500) al buscar informacion del usuario ${req.params.email}: ${err}`)
-			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err}`})}
+			logger.error(`getUserProfile - Error (500) al buscar informacion del usuario ${req.params.email}: ${err1}, ${err2}`)
+			return res.status(500).send({message: `Error al buscar informacion del usuario: ${err1}, ${err2}`})}
 		if(!user1 || !user2) {
 			logger.error(`getUserProfile - Error (400), el usuario con mail ${req.params.email} no existe, o el usuario con token ${req.body.token} no existes`)
 			return res.status(400).send({message: `El usuario con mail ${req.params.email} no existe, o el usuario con token ${req.body.token} no existe`})}
@@ -172,7 +172,7 @@ function updateUser(req, res){
 	User.update({token: userToken}, update, (err,userUpdated)=>{
 		if(err) {
 			logger.error(`updateUser - Error (500) al actualizar el usuario: ${err}`)
-			res.status(500).send({message:`Error al actualizar el usuario: ${err}`})
+			return res.status(500).send({message:`Error al actualizar el usuario: ${err}`})
 		}
 		logger.info(`updateUser - El usuario ${userToken} se modificó correctamente`)
 		res.status(200).send({message: 'El usuario se modificó correctamente'})
@@ -472,20 +472,16 @@ function getTotalRegistrationsPerYear(req,res){
 	})
 }
 
-
-
 function logout(req, res) {
 	User.findOne({token: req.params.token}, (err,user)=>{
-		if(err) res.status(500).send({message:`Error al desloguar el usuario: ${err}`})
-				if (!user) return res.status(400).send({message: 'No existe un usuario con ese token'})
-				User.findOneAndUpdate({token: req.params.token},{token_notifications: ''}, (err,user_update)=>{
-					if(err) res.status(500).send({message:`Error al desloguar el usuario: ${err}`})
-					return res.status(200).send({message: "el usuario se puede desloguear"})
-				})	
-	})
-	
+		if(err) return res.status(500).send({message:`Error al desloguar el usuario: ${err}`})
+		if (!user) return res.status(400).send({message: 'No existe un usuario con ese token'})
+		User.findOneAndUpdate({token: req.params.token},{token_notifications: ''}, (err2,user_update)=>{
+			if(err) res.status(500).send({message:`Error al desloguar el usuario: ${err2}`})
+			return res.status(200).send({message: "el usuario se puede desloguear"})
+		})	
+	})	
 }
-
 
 
 module.exports={

@@ -726,6 +726,11 @@ paths:
           required: true
           schema:
             type: object
+            properties:
+              id:
+                type: String
+              token:
+                type: String
             required: 
               - id
               - token

@@ -155,7 +155,6 @@ describe('ORGANIZATION', () => {
    			let res = {status: function(nro){assert.equal(nro,500)
 				return {send:function(obj){
 								obj.should.have.property('message')
-								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
 								return obj}}}}
 			organizationControllers.checkMention(req,res);
    			done();
@@ -677,23 +676,23 @@ describe('ORGANIZATION', () => {
    			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('mentions')
-								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
 								return obj}}}}
 			organizationControllers.checkMention(req,res);
    			done();
    		})
-/*
-   		it("getTotalMessages succesfull", (done)=>{
+
+   		it("getTotalMessages no succesfull", (done)=>{
    			let req = {params:{token:userMock.token}}
-   			let res = {status: function(nro){assert.equal(nro,200)
+   			let res = {status: function(nro){
+   				console.log(nro)
+   				assert.equal(nro,500)
 				return {send:function(obj){
 					console.log(obj)
-								obj.should.have.property('organizations')
-								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
+								obj.should.have.property('message')
 								return obj}}}}
 			organizationControllers.getTotalMessages(req,res);
    			done();
-   		})*/
+   		})
 
    	});
    	   	

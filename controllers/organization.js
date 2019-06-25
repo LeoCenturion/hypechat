@@ -681,7 +681,6 @@ function checkMention(req, res){
 		let result = msj.match(pattern);
 		let ss= []
 		let ss2= []
-		console.log(result)
 		if(result != null){
 			result.forEach(function (element){
 				ss.push(element.substr(1));	

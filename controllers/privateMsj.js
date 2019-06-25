@@ -314,7 +314,7 @@ function checkMentionPrivado(req, res){
                         admin.messaging().sendToDevice(registrationToken, payload, options)
                             .then(function(response){
                                 console.log("Se envio correctamente la push notification: ",response);
-                                return res.status(200).send("se han enviado las notificaciones")
+                                return res.status(200).send({message: "se han enviado las notificaciones"})
                             })
                             .catch(function(error){
                                 console.log("Problema al eviar la push notification: ",error);
@@ -322,7 +322,7 @@ function checkMentionPrivado(req, res){
                             })
                     })
                 }else{
-                    return res.status(200).send("se han enviado las notificaciones")
+                    return res.status(200).send({message: "se han enviado las notificaciones"})
                 }  
 				
 			}).catch(function(err){ 

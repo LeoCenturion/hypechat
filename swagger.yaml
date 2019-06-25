@@ -724,14 +724,16 @@ paths:
           name: organizationID and userToken
           description: organization's id and user's token
           required: true
-          schema: {
-              "id": {
-                "type": "string"
-              },
-              "token": {
-                "type": "string"
-              }
-          }
+          schema:
+            properties:
+              id:
+                type: string
+              token:
+                type: string
+            required: 
+              - id
+              - token
+            type: object
       responses:
         200:
           description: Successful request

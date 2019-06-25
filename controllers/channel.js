@@ -580,6 +580,7 @@ function checkMentionChannel(req, res){
 		// These registration tokens come from the client FCM SDKs.
 		var promesa = getTokensMentionsChannel(ss,id,channel,usuario.email)
 		promesa.then(function(registrationTokens) {
+			console.log(registrationTokens)
 			if(registrationTokens.length > 0){
 				console.log('registrationTokens: '+registrationTokens);
 				let texto_org = (channel+" dentro de: "+id)
@@ -602,9 +603,9 @@ function checkMentionChannel(req, res){
 						return res.status(404).send({message: 'Error al enviar las notificaciones'})
 					  });
 			}else{
-				return res.status(200).send({message: "se han enviado las notificaciones"})
+				return res.status(200).send({message: "se han enviado las notificaciones"});
 			}
-		}).catch(function(err){ 
+		}).catch(function(err){
 			return res.status(500).send({message: `Error al enviar las notificaciones: ${err}`});
 		})		
 			

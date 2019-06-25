@@ -39,7 +39,8 @@ describe('CHANNEL', () => {
 			answer2: 'answer2',
 			latitud: 0,
 			longitud: 0,
-			recoverPasswordToken: 'itsToken'
+			recoverPasswordToken: 'itsToken',
+			token_notifications:'tokenNotification'
 		};
 
 		channelMock = {
@@ -76,7 +77,8 @@ describe('CHANNEL', () => {
 			answer2: 'answer2',
 			latitud: 0,
 			longitud: 0,
-			recoverPasswordToken: 'itsToken'
+			recoverPasswordToken: 'itsToken',
+			token_notifications:'tokenNotification2'
 		}
 
 		organizationMock = {
@@ -100,7 +102,8 @@ describe('CHANNEL', () => {
 	        																		return cb(null,userMock2)}
 																		        cb(null, userMock)});
         updateOneChannelStub = sinon.stub(Channel, 'updateOne').callsFake((a, b, cb)=> cb(null, channelMock));
-        findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a,b, cb)=> cb(null, channelMock));
+        findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a,b, cb)=> {if(!cb){return channelMock}
+        	cb(null, channelMock)});
         updateOneOrganizationStub = sinon.stub(Organization, 'updateOne').callsFake((a, b, cb)=> cb(null, organizationMock));
         findOneAndDeleteChannelStub = sinon.stub(Channel, 'findOneAndDelete').callsFake((_, cb)=> cb(null, channelMock));
         findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((dataChannel, cb)=> {
@@ -436,16 +439,13 @@ describe('CHANNEL', () => {
 		done();
    	});
 
-   	it("checkMentionChannel no succesfull", (done) => {
+   	it("checkMentionChannel succesfull", (done) => {
         req = {body:{token:'tokenUserMock',
         			id:channelMock.id,
-        			message:"hello",
+        			message:`hello @${userMock2.email}`,
         			channel:channelMock.name}}
-        //no resuelve la promesa
-		res = {status: function(nro){assert.equal(nro,500)
+		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){
-				console.log("HOLAAAAA")
-				console.log(obj)
 				obj.should.have.property('message')
 									return obj}}}}
 		channelControllers.checkMentionChannel(req,res)

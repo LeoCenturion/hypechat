@@ -683,7 +683,17 @@ describe('ORGANIZATION', () => {
    		})
 
    		it("checkMention succesfull", (done)=>{
-   			let req = {body:{token:userMock.token, message:"it is a message"}}
+   			let req = {body:{token:userMock.token, message:`it is a message @${userMock2.email}`}}
+   			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('mentions')
+								return obj}}}}
+			organizationControllers.checkMention(req,res);
+   			done();
+   		})
+
+   		it("checkMention succesfull", (done)=>{
+   			let req = {body:{token:userMock.token, message:`it is a message `}}
    			let res = {status: function(nro){assert.equal(nro,200)
 				return {send:function(obj){
 								obj.should.have.property('mentions')

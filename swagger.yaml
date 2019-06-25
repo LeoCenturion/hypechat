@@ -1294,6 +1294,215 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /organization/restrictedWords/{id}/{token}:
+    get:
+      summary: returns restricted words of organization
+      parameters:
+        - in: path
+          name: token, id
+          parameters:
+            token:
+              type: string
+              description: user token
+            id:
+              type: string
+              description: id organization
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: restrictedWords
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid user token or organization
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: user is not member
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: adds a restricted word of organization
+      parameters:
+        - in: path
+          name: token, id
+          parameters:
+            token:
+              type: string
+              description: user token
+            id:
+              type: string
+              description: id organization
+          required: true
+        - in: body
+          name: restrictedWords
+          description: restricted word to add
+      responses:
+        200:
+          description: Successful request
+          name: restrictedWords
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid user token or organization
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: user is not member
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: user has not permission
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: deletes a restricted word of organization
+      parameters:
+        - in: path
+          name: token, id
+          parameters:
+            token:
+              type: string
+              description: user token
+            id:
+              type: string
+              description: id organization
+          required: true
+        - in: body
+          name: restrictedWords
+          description: restricted word to delete
+      responses:
+        200:
+          description: Successful request
+          name: restrictedWords
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid user token or organization
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: user is not member
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: user has not permission
+          schema:
+            $ref: '#/definitions/Error'
+
+  /message:
+    post:
+      summary: returns message without restricted words
+      parameters:
+        - in: body
+          name: userToken, message, organizationID, channelName
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+
+  /mention:
+    post:
+      summary: returns array with users's emails that were mentioned
+      parameters:
+        - in: body
+          name: token, message
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: mentions
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+
+  /messages/{token}:
+    get:
+      summary: returns array with users's emails that were mentioned
+      parameters:
+        - in: body
+          name: token, message
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: totalInfo
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                total:
+                  type: number
+                canales:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      total:
+                        type: number
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+
+  /allOrg:
+    get:
+      summary: returns array with all organizations
+      responses:
+        200:
+          description: Successful request
+          name: organizations
+          
+          schema:
+            type: array
+            items:
+              type: object
+              description: organization
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+
+
+
+
+
 
 definitions:
   user:

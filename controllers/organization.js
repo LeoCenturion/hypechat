@@ -14,7 +14,6 @@ function all(req, res){
 		if (err) return res.status(500).send({message: `Error al realizar la peticion: ${err}`})
 		return res.status(200).send({organizations: org})
 	})
-	
 }
 
 //devuelve las organizaciones que tiene un usuario.
@@ -33,9 +32,7 @@ function getUserOrganizations(req, res){
 			})
 			res.status(200).send({organizations: userOrg})
 		})
-		
 	})
-	
 }
 
 
@@ -666,7 +663,6 @@ function getTotalMessages(req, res){
 })
 }
 
-//Devuelve la informacion del canal (200)
 // 404 - si no existe la organizacion o canal
 // 500 - Error de server
 function checkMention(req, res){

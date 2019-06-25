@@ -804,6 +804,149 @@ returns status 200 if user email is owner or moderator
 | 404 | invalid organization | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
+### /organization/restrictedWords/{id}/{token}
+
+#### GET
+##### Summary:
+
+returns restricted words of organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id | path |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 404 | invalid user token or organization | [Error](#error) |
+| 406 | user is not member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+#### PUT
+##### Summary:
+
+adds a restricted word of organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id | path |  | Yes |  |
+| restrictedWords | body | restricted word to add | No |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 401 | user has not permission | [Error](#error) |
+| 404 | invalid user token or organization | [Error](#error) |
+| 406 | user is not member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+#### DELETE
+##### Summary:
+
+deletes a restricted word of organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id | path |  | Yes |  |
+| restrictedWords | body | restricted word to delete | No |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 401 | user has not permission | [Error](#error) |
+| 404 | invalid user token or organization | [Error](#error) |
+| 406 | user is not member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /message
+
+#### POST
+##### Summary:
+
+returns message without restricted words
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| userToken, message, organizationID, channelName | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid user token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /mention
+
+#### POST
+##### Summary:
+
+returns array with users's emails that were mentioned
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, message | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | invalid user token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /messages/{token}
+
+#### GET
+##### Summary:
+
+returns array with users's emails that were mentioned
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, message | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | [ object ] |
+| 400 | invalid user token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /allOrg
+
+#### GET
+##### Summary:
+
+returns array with all organizations
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | [ object ] |
+| 500 | Server faild | [Error](#error) |
+
 ### Models
 
 

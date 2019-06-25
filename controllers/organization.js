@@ -677,25 +677,25 @@ function checkMention(req, res){
 	User.findOne({token: token}, (err, usuario)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
 		if (!usuario) return res.status(400).send({message: 'Token invalido'})
-			var pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
-			let result = msj.match(pattern);
-			let ss= []
-			let ss2= []
-			if(result != null){
-				result.forEach(function (element){
-					ss.push(element.substr(1));	
-				})
-			}
-			logger.info(`Las menciones son: ${ss}`)
-			User.find({email: {$in: ss}}, (err, usuarios)=>{
-				if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
-				usuarios.forEach(function (element){
-					ss2.push(element.email);	
-				})
-				return res.status(200).send({mentions: ss2})
+		let pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
+		let result = msj.match(pattern);
+		let ss= []
+		let ss2= []
+		console.log(result)
+		if(result != null){
+			result.forEach(function (element){
+				ss.push(element.substr(1));	
 			})
-			
-			
+		}
+		logger.info(`checkMention - Las menciones son: ${ss}`)
+		User.find({email: {$in: ss}}, (err, usuarios)=>{
+			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+			usuarios.forEach(function (element){
+				ss2.push(element.email);	
+			})
+			logger.info(`checkMention - se le devolvieron las menciones del mensaje "${msj}" al usuario con token ${token}`)
+			return res.status(200).send({mentions: ss2})
+		})			
 	})
 }
 

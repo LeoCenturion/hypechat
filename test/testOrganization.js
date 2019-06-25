@@ -149,6 +149,18 @@ describe('ORGANIZATION', () => {
 		organizationControllers.createOrganization(req,res)
 		done();
    	});
+
+   	it("checkMention no succesfull", (done)=>{
+   			let req = {body:{token:userMock.token, message:"it is a message"}}
+   			let res = {status: function(nro){assert.equal(nro,500)
+				return {send:function(obj){
+								obj.should.have.property('message')
+								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
+								return obj}}}}
+			organizationControllers.checkMention(req,res);
+   			done();
+   		})
+
    	})
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -657,6 +669,17 @@ describe('ORGANIZATION', () => {
 								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
 								return obj}}}}
 			organizationControllers.deleteRestrictedWords(req,res);
+   			done();
+   		})
+
+   		it("checkMention succesfull", (done)=>{
+   			let req = {body:{token:userMock.token, message:"it is a message"}}
+   			let res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+								obj.should.have.property('mentions')
+								//obj.restrictedWords.should.be.equal(organizationMock.restrictedWords)
+								return obj}}}}
+			organizationControllers.checkMention(req,res);
    			done();
    		})
 /*

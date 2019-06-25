@@ -649,6 +649,161 @@ updates organization password
 | 200 | Successful request | object |
 | 500 | Server faild | [Error](#error) |
 
+### /moderator
+
+#### PUT
+##### Summary:
+
+assignates a user as moderator
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, userEmail | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 404 | invalid organization | [Error](#error) |
+| 405 | user is moderator | [Error](#error) |
+| 406 | user is not member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /revokeModerator
+
+#### PUT
+##### Summary:
+
+revokes a user as moderator
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, userEmail | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 404 | invalid organization | [Error](#error) |
+| 405 | user is not moderator | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /member/{token}/{id}/{email}
+
+#### DELETE
+##### Summary:
+
+revokes a user as moderator
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, OrganizationID, email | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 404 | invalid organization | [Error](#error) |
+| 405 | user's email is owner | [Error](#error) |
+| 406 | user is not member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /welcomeOrganization
+
+#### PUT
+##### Summary:
+
+updates welcome message of organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, welcome | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | welcome message can not be null | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /photoOrganization
+
+#### PUT
+##### Summary:
+
+updates photo of organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, photo | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | photo can not be null | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /locations/{token}/{id}
+
+#### GET
+##### Summary:
+
+returns locations of organization's members
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, photo | body |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 404 | invalid organization or user token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /moderator/{token}/{id}/{email}
+
+#### GET
+##### Summary:
+
+returns status 200 if user email is owner or moderator
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, email | path |  | Yes |  |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | user is not moderator and user is not owner | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
 ### Models
 
 

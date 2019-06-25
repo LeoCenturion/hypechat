@@ -1085,6 +1085,216 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /moderator:
+    put:
+      summary: assignates a user as moderator
+      parameters:
+        - in: body
+          name: token, organizationID, userEmail
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: user is moderator
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: user is not member
+          schema:
+            $ref: '#/definitions/Error'
+
+  /revokeModerator:
+    put:
+      summary: revokes a user as moderator
+      parameters:
+        - in: body
+          name: token, organizationID, userEmail
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: user is not moderator
+          schema:
+            $ref: '#/definitions/Error'
+
+  /member/{token}/{id}/{email}:
+    delete:
+      summary: revokes a user as moderator
+      parameters:
+        - in: body
+          name: token, OrganizationID, email
+          parameters:
+            token:
+              type: string
+              description: user who delete user of organization
+            id:
+              type: string
+              description: organization idOrganization
+            email:
+              type: string
+              description: email of user who is delete
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: user's email is owner
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: user is not member
+          schema:
+            $ref: '#/definitions/Error'
+
+  /welcomeOrganization:
+    put:
+      summary: updates welcome message of organization
+      parameters:
+        - in: body
+          name: token, organizationID, welcome
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: welcome message can not be null
+          schema:
+            $ref: '#/definitions/Error'
+
+  /photoOrganization:
+    put:
+      summary: updates photo of organization
+      parameters:
+        - in: body
+          name: token, organizationID, photo
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: photo can not be null
+          schema:
+            $ref: '#/definitions/Error'
+
+  /locations/{token}/{id}:
+    get:
+      summary: returns locations of organization's members
+      parameters:
+        - in: body
+          name: token, organizationID, photo
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: users
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  type: object
+                  parameters:
+                    nickname:
+                      type: string
+                    email:
+                      type: string
+                    longitud:
+                      type: number
+                    latitud: 
+                      type: number
+
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization or user token
+          schema:
+            $ref: '#/definitions/Error'
+
+  /moderator/{token}/{id}/{email}:
+    get:
+      summary: returns status 200 if user email is owner or moderator
+      parameters:
+        - in: path
+          name: token, id, email
+          required: true
+      responses:
+        200:
+          description: Successful request
+          name: message
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: user is not moderator and user is not owner
+          schema:
+            $ref: '#/definitions/Error'
+
+
 definitions:
   user:
     type: object

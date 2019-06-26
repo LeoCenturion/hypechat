@@ -129,6 +129,36 @@ function logIn (req, res) {
 		});
 	
 }
+
+function add_new_user_facebook(email, nombre){
+	return new Promise(function(resolve,reject){
+		User.findOne({ email:email }, (err, user) => {
+			if (err) return reject(new Error( `Error al loguearse con facebook: ${err}`))
+			if (!user){
+				//return res.status(200).send({message: 'Te has logueado correctamente'})
+				var date_now = new Date()
+				const new_user = new User({
+					email: email,
+					name: nombre,
+					nickname: nombre,
+					facebook: true,
+					registration_day: date_now.getDate(),
+					registration_month: (date_now.getMonth()+1),
+					registration_year: date_now.getFullYear()
+				})
+		
+				new_user.save((err, newUser)=>{
+					if(err) return reject(new Error( `Error al loguearse con facebook: ${err}`))
+					else return resolve(newUser)
+				})
+			}else{
+				//existe ya el usuario con ese mail
+				return resolve(user)
+			}
+		})
+	})
+}
+
 function fbLogin(req, res){
 	console.log('Entro a la funcion login facebook');
 	let token = req.body.token;
@@ -136,25 +166,52 @@ function fbLogin(req, res){
 	let email =''
 	let nombre = ''
 	https.get(URL, (resp) => {
-	// A chunk of data has been recieved.
-	let data = []
-	// A chunk of data has been recieved.
-  resp.on('data', (chunk) => {
-    data += chunk;
-  });
+	
+		let data = []
+		resp.on('data', (chunk) => {
+    		data += chunk;
+ 	 	});
 
-  // The whole response has been received. Print out the result.
-  resp.on('end', () => {
-		console.log(JSON.parse(data).email);
-		console.log(JSON.parse(data).name);
-  });
+  	// The whole response has been received. Print out the result.
+  	resp.on('end', () => {
+			var email = JSON.parse(data).email
+			var nombre = JSON.parse(data).name
+			console.log(email);
+			console.log(nombre);
+			var promesa = add_new_user_facebook(email,nombre)   
+      promesa.then(function(resultado) {
+						let usuarioId = resultado._id
+						let newToken = service.createToken(resultado)
+						let newTokenPush = resultado.token_notifications
+						if(req.body.tokenPush != null ) newTokenPush = req.body.tokenPush
+						let update = {token: newToken, token_notifications: newTokenPush}
+	
+						User.findByIdAndUpdate(usuarioId, update, (err,usuarioUpdated)=>{
+							if(err) {
+								logger.error(`logIn - Error (500) al guardar el token del usuario: ${err}`)
+								return res.status(500).send({message:`Error al guardar el token del usuario: ${err}`})
+							}
+							logger.info(`logIn - Se actualizo el token del usuario ${usuarioUpdated.email}`)
+							logger.info(`logIn - Se logueo el usuario ${usuarioUpdated.email}`)
+							return res.status(200).send({ message: 'Te has logueado correctamente',
+									token: newToken,
+									name: resultado.name,
+									nickname: resultado.nickname,
+									email: resultado.email,
+									photo: resultado.photo })
+						})		
+
+			}).catch(function(err){ 
+				return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
+			})
+
 		//console.log(resp.body.name);
   }).on("error", (err) => {
-  	console.log("Error: " + err.message);
+  	return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
 	});
 
-	if(token == null ) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
-	return res.status(200).send({message: 'Te has logueado correctamente'})
+})
+
 }
 	/*request(URL, { json: true }, (err, res2, body) => {
 		if (err) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })

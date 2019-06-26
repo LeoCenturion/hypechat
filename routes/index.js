@@ -89,7 +89,7 @@ api.post('/channel/mention',channelControllers.checkMentionChannel)
 api.get('/allChannel',channelControllers.all)
 
 
-
+api.post('/tito',channelControllers.titoCheck)
 
 
 //------- PRIVATE CHATS ----------

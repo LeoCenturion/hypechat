@@ -6,6 +6,7 @@ const Organization = require('../models/organization');
 const Channel = require('../models/channel');
 const logger = require('../utils/logger');
 const admin = require('../sendNotification');
+const https = require('https')
 
 
 function all(req,res){
@@ -504,7 +505,92 @@ function userAllChannels(req, res){
 	
 }
 
-function getTokensMentionsChannel(mentions,id,channel,emailUser){
+
+function enviar_bot(mentions,message,id,channel,email,chatID){
+	return new Promise(function(resolve, reject){
+		if(mentions.includes("tito")){
+			let new_msj = message.replace('@tito ','') 
+			var metadata ={
+				orgId: id,
+				firebaseToken: chatID,
+                channel: channel ,
+                senderEmail: email
+			  };
+			var postData = JSON.stringify({
+				metadata: metadata,
+				message: new_msj
+				//token: 'asdflakjsfalkdf'
+			  });
+			  console.log('body:', postData);
+			  var options = {
+				hostname: 'super-tito.herokuapp.com',
+				path: '/tito',
+				method: 'POST',
+				headers: {
+					'Content-Length': Buffer.byteLength(postData),
+					'Content-Type': 'application/json',
+				  }
+			  };
+			  const req = https.request(options, (res) => {
+				console.log('statusCode:', res.statusCode);
+				console.log('headers:', res.headers);
+				if(res.statusCode == 200) return resolve("se envio a tito correctamente")
+				else return reject(new Error(`Response error from tito`))
+				res.on('data', (d) => {
+				  process.stdout.write(d);
+				  //console.log('headers:', info);
+				});
+			  });
+			  
+			  req.on('error', (e) => {
+				console.error(e);
+				return reject(new Error(`Error al realizar el request a tito`))
+			  });
+			  req.write(postData);
+			  
+			  req.end();
+			  //return resolve("no hay mencion a tito")
+			  
+			  
+		}else{
+			return resolve("no hay mencion a tito")
+		}
+
+	})
+}
+
+function titoCheck(req, res){
+
+	let msj = req.body.message
+	let id = req.body.id
+	let channel = req.body.channel
+	let token = req.body.token
+	var pattern = /\B@[a-z0-9A-Z_.@-]+/gi;
+		let result = msj.match(pattern);
+		let ss= []
+		if(result != null){
+			result.forEach(function (element){
+				ss.push(element.substr(1));	
+			})
+		}
+	User.findOne({token: token}, (err, usuario)=>{
+		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+		if (!usuario) return res.status(400).send({message: 'Token invalido'})
+			
+		Channel.findOne({name: channel, id: id},(err, udChannel)=>{
+			if (err) return reject(new Error(`Error al realizar la peticion de Organizacion: ${err}`))	
+		
+			var promesa = enviar_bot(ss,msj,id,channel,usuario.email,udChannel._id)
+			promesa.then(function(response) {
+				return res.status(200).send({message: "se ha eviado el post correctamente"});
+			}).catch(function(err){
+				return res.status(500).send({message: `Error al enviar el request a tito ${err}`});
+			})	
+		})
+	})
+}
+
+function getTokensMentionsChannel(mentions,id,channel,emailUser,message){
 	return new Promise(function(resolve, reject){
 		//me fijo si la organizacion existe
 	Organization.findOne({id: id}, (err, organization)=>{
@@ -572,7 +658,7 @@ function checkMentionChannel(req, res){
 		}
 		// Create a list containing up to 100 registration tokens.
 		// These registration tokens come from the client FCM SDKs.
-		var promesa = getTokensMentionsChannel(ss,id,channel,usuario.email)
+		var promesa = getTokensMentionsChannel(ss,id,channel,usuario.email,msj)
 		promesa.then(function(registrationTokens) {
 			console.log(registrationTokens)
 			if(registrationTokens.length > 0){
@@ -626,5 +712,6 @@ module.exports={
 	userChannels,
 	userAllChannels,
 	all,
-	checkMentionChannel
+	checkMentionChannel,
+	titoCheck
 }

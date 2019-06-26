@@ -213,35 +213,6 @@ function fbLogin(req, res){
 })
 
 }
-	/*request(URL, { json: true }, (err, res2, body) => {
-		if (err) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
-		email= body.email
-		nombre = body.name
-		return res.status(200).send({ message: 'Te has logueado correctamente',
-		email: body.email,
-		nombre: body.name})
-	
-	});*/
-
-
-/*
-function getUserByEmailAndPsw(email, password){
-	User.findOne({ email: req.body.email, psw: req.body.psw }, (err, user) => {
-		if (err) {
-			logger.error(`getUserByEmailAndPsw - Server Error (500): ${err}`)
-			return {status: 500,
-					message: `Error al logearse: ${err}`}
-		}
-		if (!user) {
-			logger.error(`getUserByEmailAndPsw - Error (404) al loguearse, email o psw invalidos: ${err}`)
-			return {status: 404,
-					message: `El mail o la contraseña son invalidos`}
-		}
-		return {status: 200,
-				user: user}
-	});
-}
-*/
 function getUserProfile(req, res) {
 	User.findOne({token: req.body.token}, (err1,user1)=>{
 		User.findOne({email: req.params.email}, (err2, user2) =>{

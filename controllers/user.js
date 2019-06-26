@@ -134,7 +134,8 @@ function fbLogin(req, res){
 	let URL = ("https://graph.facebook.com/me?fields=id,name,email&access_token="+token)
 	let email =''
 	let nombre = ''
-	request(URL, { json: true }, (err, res2, body) => {
+	return res.status(200).send({ message: 'Te has logueado correctamente'})
+	/*request(URL, { json: true }, (err, res2, body) => {
 		if (err) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
 		email= body.email
 		nombre = body.name
@@ -142,7 +143,7 @@ function fbLogin(req, res){
 		email: body.email,
 		nombre: body.name})
 	
-	});
+	});*/
 }
 
 /*

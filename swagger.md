@@ -1024,7 +1024,7 @@ add user to channel
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| token, id, name, mo_email, email | body |  | No | object |
+| token, id, name, email | body |  | No | object |
 
 ##### Responses
 
@@ -1046,15 +1046,231 @@ delete user from channel
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| token, id, name, mo_email, email | body |  | No | object |
+| token, id, name, email | path |  | No | object |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request |  |
-| 400 | name of channel yet exist | [Error](#error) |
-| 403 | invalid organization | [Error](#error) |
+| 400 | email does not exist | [Error](#error) |
+| 402 | invalid channel | [Error](#error) |
+| 403 | user is not organization's member | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChannel
+
+#### PUT
+##### Summary:
+
+set message privation
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, name, private | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid channel | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChannel/{token}/{id}/{name}
+
+#### GET
+##### Summary:
+
+updates channel privation
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, name | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid channel | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /description
+
+#### PUT
+##### Summary:
+
+updates description of channel
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, name, description | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid channel | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /description/{token}/{id}/{name}
+
+#### GET
+##### Summary:
+
+returns desfription of channel "{name}" from organization with id "{id}"
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, name | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid channel | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /welcomeChannel
+
+#### PUT
+##### Summary:
+
+updates welcome message of channel
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, organizationID, name, welcome | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid channel | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /welcomeChannel/{token}/{id}/{name}
+
+#### GET
+##### Summary:
+
+returns welcome message of channel "{name}" from organization with id "{id}"
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, name | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid channel | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channel/{token}/{id}/{name}
+
+#### DELETE
+##### Summary:
+
+returns welcome message of channel "{name}" from organization with id "{id}"
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, name | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid organization | [Error](#error) |
+| 405 | invalid channel | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channels/user
+
+#### POST
+##### Summary:
+
+returns channels that user is member on organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, email | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | invalid user | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channelsAvailable/user
+
+#### POST
+##### Summary:
+
+returns channels that user is member on organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, email | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | [ string ] |
+| 400 | invalid user | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 405 | user is not member | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channel/mention
+
+#### POST
+##### Summary:
+
+returns push notification to user mentioned
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, channel, message | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | invalid user token | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
 ### /allChannel

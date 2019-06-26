@@ -92,7 +92,8 @@ function signUp(req,res){
 
 function logIn (req, res) {
 
-	User.findOne({ email: req.body.email, psw: req.body.psw, facebook: false }, (err, user) => {
+
+	User.findOne({ email: req.body.email, psw: req.body.psw}, (err, user) => {
 		if (err) {
 			logger.error(`logIn - Error (500) al loguearse: ${err}`)
 			return res.status(500).send({ message: `Error al logearse: ${err}` })

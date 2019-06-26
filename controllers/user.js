@@ -165,15 +165,18 @@ function fbLogin(req, res){
 	let URL = ("https://graph.facebook.com/me?fields=id,name,email&access_token="+token)
 	let email =''
 	let nombre = ''
+	console.log("HOLA 0")
 	https.get(URL, (resp) => {
-	
+		console.log("HOLA 1")
 		let data = []
 		resp.on('data', (chunk) => {
     		data += chunk;
  	 	});
+ 	 	console.log("HOLA 2")
 
   	// The whole response has been received. Print out the result.
   	resp.on('end', () => {
+  		console.log("HOLA 3")
 			var email = JSON.parse(data).email
 			var nombre = JSON.parse(data).name
 			console.log(email);

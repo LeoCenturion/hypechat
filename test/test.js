@@ -218,8 +218,26 @@ describe('USER', () => {
 			userControllers.logout(req,res)
 			done();
 	   	});
+/*
+	   	it('fbLogin no succesfull', (done) => {
+
+	        req = {body:{token: 'userMockFACEBOOKToken'}}
+			res = {status: function(nro){assert.equal(nro,500)
+				return {send:function(obj){
+					console.log(obj)
+					console.lo("HOLAAAA")
+					console.log(obj.message)
+					obj.should.have.property('message');
+					return obj}}}}
+
+			userControllers.fbLogin(req,res)
+			done();
+	   	});*/
 
 	})
+
+
+
 
 	describe('With userMock',()=>{
 	    beforeEach(() => {
@@ -462,6 +480,19 @@ describe('USER', () => {
 			userControllers.logout(req,res)
 			done();
 	   	});
+/*
+	   	it('fbLogin succesfull', (done) => {
+
+	        req = {body:{token: 'userMockFACEBOOKToken'}}
+			res = {status: function(nro){assert.equal(nro,200)
+				return {send:function(obj){
+					console.log(obj)
+					obj.should.have.property('message');
+					return obj}}}}
+
+			userControllers.fbLogin(req,res)
+			done();
+	   	});*/
 
 	})
 });

@@ -385,7 +385,7 @@ describe('CHANNEL', () => {
         			id:organizationMock.id,
         			name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,200)
-			return {send:function(obj){obj.should.have.property('message')
+			return {send:function(obj){obj.should.have.property('channels')
 									return obj}}}}
 		
 		channelControllers.remove(req,res)

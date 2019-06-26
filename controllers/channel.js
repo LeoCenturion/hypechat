@@ -390,7 +390,7 @@ function remove(req, res){
 			Channel.findOneAndDelete({name: nameChannel, id: idOrganization},(err, udChannel)=>{
 				if(err) res.status(500).send({message:`Error al actualizar la organizacion: ${err}`})
 				if (!udChannel) return res.status(405).send({message: 'El canal no existe en esa organizacion'})
-				res.status(200).send({message: 'El canal se ha eliminado correctamente'})
+				res.status(200).send({channels: newChannels})
 			})
 		})
 	})

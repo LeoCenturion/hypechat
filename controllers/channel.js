@@ -136,7 +136,7 @@ function addUserToChannel(req, res){
 							}
 							let ss= []
 							ss.push('tito')
-							var promesa = sendToBot(ss,"@tito greet",idOrganization,nameChannel,userEmail,canal._id)
+							var promesa = sendToBot(ss,"@tito greet",idOrganization,nameChannel,userEmail,canal._id,token)
 							promesa.then(function(response) {
 								return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
 							}).catch(function(err){
@@ -156,7 +156,7 @@ function addUserToChannel(req, res){
 						}
 							let ss= []
 							ss.push('tito')
-							var promesa = sendToBot(ss,"@tito greet",idOrganization,nameChannel,userEmail,canal._id)
+							var promesa = sendToBot(ss,"@tito greet",idOrganization,nameChannel,userEmail,canal._id,token)
 							promesa.then(function(response) {
 								return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
 							}).catch(function(err){
@@ -521,7 +521,7 @@ function userAllChannels(req, res){
 }
 
 
-function sendToBot(mentions,message,id,channel,email,chatID){
+function sendToBot(mentions,message,id,channel,email,chatID,token){
 
 	return new Promise(function(resolve, reject){
 		if(mentions.includes("tito")){
@@ -530,7 +530,8 @@ function sendToBot(mentions,message,id,channel,email,chatID){
 				orgId: id,
 				firebaseToken: chatID,
                 channel: channel ,
-                senderEmail: email
+				senderEmail: email,
+				apiToken: token
 			  };
 			var postData = JSON.stringify({
 				metadata: metadata,
@@ -596,7 +597,7 @@ function titoCheck(req, res){
 		Channel.findOne({name: channel, id: id},(err, udChannel)=>{
 			if (err) return reject(new Error(`Error al realizar la peticion de Organizacion: ${err}`))	
 		
-			var promesa = sendToBot(ss,msj,id,channel,usuario.email,udChannel._id)
+			var promesa = sendToBot(ss,msj,id,channel,usuario.email,udChannel._id,token)
 			promesa.then(function(response) {
 				return res.status(200).send({message: msj});
 			}).catch(function(err){

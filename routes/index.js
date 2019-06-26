@@ -6,6 +6,7 @@ const userControllers = require('../controllers/user')
 const organizationControllers = require('../controllers/organization')
 const channelControllers = require('../controllers/channel')
 const privateControllers = require('../controllers/privateMsj')
+const request = require('request')
 
 
 
@@ -22,7 +23,8 @@ api.put('/user/:userId', userControllers.updateUser2 )
 //---------REGISTER----------
 api.post('/signUp', userControllers.signUp )
 api.post('/login', userControllers.logIn )
-api.post('/loginFacebook', (req,res) => {res.status(500).send({message: 'not implemented yet'})})
+//api.post('/loginFacebook', (req,res) => {res.status(500).send({message: 'not implemented yet'})})
+api.post('/logFacebook',userControllers.fbLogIn)
 
 //---------USERS----------
 api.post('/profile/:email', userControllers.getUserProfile)

@@ -230,7 +230,7 @@ function removeUserFromChannel(req, res){
 			let organizations = usuario.organizations
 			//recorro todas para a ver si ya esta agregado
 			if(!usuario.organizations.includes(organization.id)){
-					return res.status(401).send({message: 'El usuario no existe en la organizacion'})
+					return res.status(404).send({message: 'El usuario no existe en la organizacion'})
 			}
             //si esta agregado, me fijo que exista el canal
             if(!organization.channels.includes(nameChannel)) return res.status(402).send({message: 'No existe el canal en la organizacion'})
@@ -594,7 +594,7 @@ function checkMentionChannel(req, res){
 					})
 					  .catch((error) => {
 						console.log('Error sending message:', error);
-						return res.status(404).send({message: 'Error al enviar las notificaciones'})
+						return res.status(500).send({message: 'Error al enviar las notificaciones'})
 					  });
 			}else{
 				return res.status(200).send({message: "se han enviado las notificaciones"});

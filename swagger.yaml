@@ -1488,12 +1488,215 @@ paths:
         200:
           description: Successful request
           name: organizations
-          
           schema:
             type: array
             items:
               type: object
               description: organization
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+
+
+
+
+
+  /channel:
+    post:
+      summary: create new channel
+      parameters:
+        - in: body
+          name: channel
+          schema:
+            $ref: '#/definitions/Channel'
+      responses:
+        200:
+          description: Successful request
+          name: message
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: name of channel yet exist
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+
+  /channelValid/{id}/{name}:
+    get:
+      summary: create new channel
+      parameters:
+        - in: path
+          name: id, name
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: organization id
+              name:
+                type: string
+                description: name of channel
+      responses:
+        200:
+          description: Successful request
+          name: message
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: name of channel yet exist
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+
+  /channel/users:
+    post:
+      summary: add user to channel
+      parameters:
+        - in: body
+          name: token, id, name, mo_email, emails
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              id:
+                type: string
+                description: id organization
+              name:
+                type: string
+                description: name of channel
+              mo_email:
+                type: email
+                description: moderator or owner email
+              emails:
+                type: array
+                description: items are users
+      responses:
+        200:
+          description: Successful request
+          name: message
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: name of channel yet exist
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+    
+  /channel/user:
+    post:
+      summary: add user to channel
+      parameters:
+        - in: body
+          name: token, id, name, mo_email, email
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              id:
+                type: string
+                description: id organization
+              name:
+                type: string
+                description: name of channel
+              mo_email:
+                type: email
+                description: moderator or owner email
+              email:
+                type: string
+                description: user to add
+      responses:
+        200:
+          description: Successful request
+          name: message
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: name of channel yet exist
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+
+  /channel/user/{token}/{id}/{name}/{email}:
+    delete:
+      summary: delete user from channel
+      parameters:
+        - in: body
+          name: token, id, name, mo_email, email
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              id:
+                type: string
+                description: id organization
+              name:
+                type: string
+                description: name of channel
+              mo_email:
+                type: email
+                description: moderator or owner email
+              email:
+                type: string
+                description: user to add
+      responses:
+        200:
+          description: Successful request
+          name: message
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: name of channel yet exist
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: invalid organization
+          schema:
+            $ref: '#/definitions/Error'
+
+
+
+
+  /allChannel:
+    get:
+      summary: returns array with all channels
+      responses:
+        200:
+          description: Successful request
+          name: channels
+          schema:
+            type: array
+            items:
+              type: object
+              description: channel
         500:
           description: Server faild
           schema:
@@ -1580,6 +1783,23 @@ definitions:
       photo:
         type: string
         description: url de la nueva foto del usuario
+  Channel:
+    type: object
+    properties:
+      name :
+        type: string
+        description: channel name
+      id:
+        type: string
+        description: id organization where channel was created
+      desc:
+        type: string
+        description: description
+      owner:
+        type: string
+      welcome:
+        type: string
+        description: welcome message
   Error:
     properties:
       code:

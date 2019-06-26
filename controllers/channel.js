@@ -13,9 +13,7 @@ function all(req,res){
 		if (err) {
 			return res.status(500).send({message: `Error al realizar la peticion del Canal: ${err}`})
 		}
-		
 		return res.status(200).send({canales: canales})
-	
 	})
 }
 
@@ -101,21 +99,21 @@ function addUserToChannel(req, res){
 	let token = req.body.token
     let idOrganization = req.body.id
 	let nameChannel = req.body.name
-	let moderator = req.body.mo_email
+	//let moderator = req.body.mo_email
 	let userEmail = req.body.email
 
 
 	//me fijo si la organizacion existe
 	Organization.findOne({id: idOrganization}, (err, organization)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
-		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
+		if (!organization) return res.status(404).send({message: `La organizacion con id ${idOrganization} no existe`})
 		//si existe me fijo en las organizaciones del usuario a ver si ya esta agregado
-		User.findOne({email: userEmail}, (err, usuario)=>{
+		User.findOne({token: token}, (err, moderator)=>{
 			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
-			if (!usuario) return res.status(400).send({message: 'No existe un usuario con ese email'})
-			let organizations = usuario.organizations
+			if (!moderator) return res.status(400).send({message: `No existe un usuario con token ${token}`})
+			let organizations = moderator.organizations
 			//recorro todas para a ver si ya esta agregado
-			if(!usuario.organizations.includes(organization.id)){
+			if(!moderator.organizations.includes(organization.id)){
 					return res.status(401).send({message: 'El usuario no existe en la organizacion'})
 			}
 			
@@ -130,7 +128,7 @@ function addUserToChannel(req, res){
 				
 				if(canal.private){
 					//si es privado el que agrega debe ser moderador o owner
-					if(organization.owner.includes(moderator) || organization.moderators.includes(moderator)){
+					if(organization.owner.includes(moderator.email) || organization.moderators.includes(moderator.email)){
 						Channel.updateOne({name: nameChannel, id: idOrganization},{ $push: { members: userEmail } },(err, udChannel)=>{
 							if (err) {
 								return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
@@ -168,7 +166,7 @@ function addUsersToChannel(req, res){
 	let token = req.body.token
     let idOrganization = req.body.id
 	let nameChannel = req.body.name
-	let moderator = req.body.mo_email
+	//let moderator = req.body.mo_email
 	let usersEmail = req.body.emails
 
 
@@ -177,30 +175,26 @@ function addUsersToChannel(req, res){
 		if (err) return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 		if (!organization) return res.status(404).send({message: 'La organizacion no existe'})
 		//si existe me fijo en las organizaciones del usuario a ver si ya esta agregado
-		User.findOne({email: moderator}, (err, moder)=>{
+		User.findOne({token: token}, (err, moder)=>{
 			if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
-			if (!moder) return res.status(400).send({message: `No existe un usuario moderador con ese email ${moderator}`})
+			if (!moder) return res.status(400).send({message: `No existe un usuario con token ${token}`})
 			let members = usersEmail;
 			//recorro todas para a ver si ya esta agregado
-			if(organization.owner.includes(moderator) || organization.moderators.includes(moderator)){
+			if(organization.owner.includes(moder.email) || organization.moderators.includes(moder.email)){
 				
-
 				var filterowners = organization.owner.filter( function( el ) {return members.indexOf( el ) < 0;});
 				var filtermoderadores = organization.moderators.filter( function( el ) {return members.indexOf( el ) < 0;});
 
-				var nuevo_members = members.concat(filterowners).concat(filtermoderadores);
-		
-				
+				var newMembers = members.concat(filterowners).concat(filtermoderadores);
+	
 			
-				Channel.findOneAndUpdate({id: idOrganization, name: nameChannel, private: true}, {members: nuevo_members},(err, udChannel)=>{
+				Channel.findOneAndUpdate({id: idOrganization, name: nameChannel, private: true}, {members: newMembers},(err, udChannel)=>{
 					if (err) return res.status(500).send({message: `Error al realizar la peticion de Canal: ${err}`})
 					if (!udChannel) return res.status(402).send({message: 'El canal no es privado o no existe'})
 	
 					return res.status(200).send({message: 'Los usuarios se han actualizado correctamente en el canal'})
 				})
 			
-			
-				
 			}else{
 				return res.status(405).send({message: 'El usuario no tiene permisos para agregar'})
 			}

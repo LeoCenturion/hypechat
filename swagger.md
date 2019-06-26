@@ -947,6 +947,130 @@ returns array with all organizations
 | 200 | Successful request | [ object ] |
 | 500 | Server faild | [Error](#error) |
 
+### /channel
+
+#### POST
+##### Summary:
+
+create new channel
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| channel | body |  | No | [Channel](#channel) |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 404 | invalid organization | [Error](#error) |
+| 405 | name of channel yet exist | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channelValid/{id}/{name}
+
+#### GET
+##### Summary:
+
+create new channel
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| id, name | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | name of channel yet exist | [Error](#error) |
+| 403 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channel/users
+
+#### POST
+##### Summary:
+
+add user to channel
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, name, mo_email, emails | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | name of channel yet exist | [Error](#error) |
+| 404 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channel/user
+
+#### POST
+##### Summary:
+
+add user to channel
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, name, mo_email, email | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | name of channel yet exist | [Error](#error) |
+| 403 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /channel/user/{token}/{id}/{name}/{email}
+
+#### DELETE
+##### Summary:
+
+delete user from channel
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, name, mo_email, email | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request |  |
+| 400 | name of channel yet exist | [Error](#error) |
+| 403 | invalid organization | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /allChannel
+
+#### GET
+##### Summary:
+
+returns array with all channels
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | [ object ] |
+| 500 | Server faild | [Error](#error) |
+
 ### Models
 
 
@@ -991,6 +1115,16 @@ returns array with all organizations
 | nickname | string | user nickname | No |
 | email | string | null | No |
 | photo | string | url de la nueva foto del usuario | No |
+
+#### Channel
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| name | string | channel name | No |
+| id | string | id organization where channel was created | No |
+| desc | string | description | No |
+| owner | string |  | No |
+| welcome | string | welcome message | No |
 
 #### Error
 

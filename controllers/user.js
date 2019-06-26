@@ -297,9 +297,13 @@ function getSecretQuestions(req,res){
 			logger.error(`getSecretQuestions - Error (400), email invalido: ${req.params.userEmail}`)
 			return res.status(400).send({message: 'El email es invalido'})
 		}
-		logger.info(`getSecretQuestions - ${req.params.userEmail} obtiene las preguntas secretas (preguntas de seguridad)`)
-		return res.status(200).send( {question1: user.question1, question2: user.question2})
-			
+		if(user.facebook){
+			logger.error(`getSecretQuestions - Error (400), El usuario se registro por facebook`)
+			return res.status(401).send({message: 'El usuario se registro por facebook'})
+		}else{
+				logger.info(`getSecretQuestions - ${req.params.userEmail} obtiene las preguntas secretas (preguntas de seguridad)`)
+				return res.status(200).send( {question1: user.question1, question2: user.question2})
+		}	
 	})
 }
 

@@ -130,7 +130,7 @@ function logIn (req, res) {
 
 
 
-
+/*
 
 function fbLogIn(req, res){
 	console.log('Entro a la funcion login facebook');
@@ -215,6 +215,7 @@ function fbLogIn(req, res){
 	});
 
 }
+*/
 
 
 /*
@@ -588,7 +589,7 @@ module.exports={
 	//deleteUser,
 	signUp,
 	logIn,
-	fbLogIn,
+	//fbLogIn,
 	getUserProfile,
 	updateUser,
 	getTokenRecoverPasswordUser,

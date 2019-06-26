@@ -1577,9 +1577,6 @@ paths:
               name:
                 type: string
                 description: name of channel
-              mo_email:
-                type: email
-                description: moderator or owner email
               emails:
                 type: array
                 description: items are users
@@ -1605,7 +1602,7 @@ paths:
       summary: add user to channel
       parameters:
         - in: body
-          name: token, id, name, mo_email, email
+          name: token, id, name, email
           schema:
             type: object
             properties:
@@ -1618,9 +1615,6 @@ paths:
               name:
                 type: string
                 description: name of channel
-              mo_email:
-                type: email
-                description: moderator or owner email
               email:
                 type: string
                 description: user to add
@@ -1645,8 +1639,8 @@ paths:
     delete:
       summary: delete user from channel
       parameters:
-        - in: body
-          name: token, id, name, mo_email, email
+        - in: params
+          name: token, id, name, email
           schema:
             type: object
             properties:
@@ -1659,9 +1653,6 @@ paths:
               name:
                 type: string
                 description: name of channel
-              mo_email:
-                type: email
-                description: moderator or owner email
               email:
                 type: string
                 description: user to add

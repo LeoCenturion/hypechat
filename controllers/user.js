@@ -5,6 +5,7 @@ const service = require('../services')
 const User = require('../models/user');
 const logger = require('../utils/logger');
 //const request = require('request');
+const https = require('https');
 
 function getUser (req, res){
 	let userId = req.params.userId
@@ -134,6 +135,24 @@ function fbLogin(req, res){
 	let URL = ("https://graph.facebook.com/me?fields=id,name,email&access_token="+token)
 	let email =''
 	let nombre = ''
+	https.get(URL, (resp) => {
+	// A chunk of data has been recieved.
+	let data = []
+	// A chunk of data has been recieved.
+  resp.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  // The whole response has been received. Print out the result.
+  resp.on('end', () => {
+		console.log(JSON.parse(data).email);
+		console.log(JSON.parse(data).name);
+  });
+		//console.log(resp.body.name);
+  }).on("error", (err) => {
+  	console.log("Error: " + err.message);
+	});
+
 	if(token == null ) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
 	return res.status(200).send({message: 'Te has logueado correctamente'})
 }

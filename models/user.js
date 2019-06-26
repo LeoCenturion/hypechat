@@ -12,16 +12,17 @@ const UserSchema = new Schema({
 	token: String,
 	token_notifications: {type: String,default: ''},
 	organizations: {type: Array, default:[]},
-	question1: {type:String, required: true},
-	question2: {type:String, required: true},
-	answer1: {type:String, required: true},
-	answer2: {type:String, required: true},
+	question1: {type:String, required: false,default: ''},
+	question2: {type:String, required: false,default: ''},
+	answer1: {type:String, required: false,default: ''},
+	answer2: {type:String, required: false,default: ''},
 	latitud: {type: Number, default: 0},
 	longitud: {type: Number, default: 0},
 	registration_day: {type: Number, required: true},
 	registration_month: {type: Number, required: true},
 	registration_year: {type: Number, required: true},
-	recoverPasswordToken: String
+	recoverPasswordToken: String,
+	facebook: {type: Boolean, default: false}
 	//signupDate: {type: Date, default: Date.now()},
 	//lastLogin: Date
 });

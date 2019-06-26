@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const service = require('../services')
 const User = require('../models/user');
 const logger = require('../utils/logger');
+const request = require('request');
 
 function getUser (req, res){
 	let userId = req.params.userId
@@ -92,7 +93,7 @@ function signUp(req,res){
 
 function logIn (req, res) {
 
-	User.findOne({ email: req.body.email, psw: req.body.psw }, (err, user) => {
+	User.findOne({ email: req.body.email, psw: req.body.psw, facebook: false }, (err, user) => {
 		if (err) {
 			logger.error(`logIn - Error (500) al loguearse: ${err}`)
 			return res.status(500).send({ message: `Error al logearse: ${err}` })
@@ -126,6 +127,96 @@ function logIn (req, res) {
 		});
 	
 }
+
+
+
+
+
+function fbLogIn(req, res){
+	console.log('Entro a la funcion login facebook');
+	let token = req.body.token;
+	let URL = ("https://graph.facebook.com/me?fields=id,name,email&access_token="+token)
+	let email =''
+	let nombre = ''
+	request(URL, { json: true }, (err, res2, body) => {
+		if (err) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
+		email= body.email
+		nombre = body.name
+		User.findOne({ email:email }, (err, user) => {
+			if (err) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
+			if (!user){
+				//return res.status(200).send({message: 'Te has logueado correctamente'})
+				var date_now = new Date()
+				const new_user = new User({
+				email: email,
+				name: nombre,
+				nickname: nombre,
+				facebook: true,
+				registration_day: date_now.getDate(),
+				registration_month: (date_now.getMonth()+1),
+				registration_year: date_now.getFullYear()
+			})
+		
+			new_user.save((err, newUser)=>{
+				if(err) {
+					logger.error(`Error al crear el usuario ${new_user.email}: ${err}`)
+					return res.status(500).send({message: `log Facebook - Error al crear el usuario: ${err}`})
+				}
+				else{
+					logger.info(`signUp - Se creo el usuario con mail ${new_user.email}`)
+					let usuarioId = newUser._id
+					let newToken = service.createToken(newUser)
+					let newTokenPush = newUser.token_notifications
+					if(req.body.tokenPush != null ) newTokenPush = req.body.tokenPush
+					let update = {token: newToken, token_notifications: newTokenPush}
+
+					User.findByIdAndUpdate(usuarioId, update, (err,usuarioUpdated)=>{
+						if(err) {
+							logger.error(`logIn - Error (500) al guardar el token del usuario: ${err}`)
+							return res.status(500).send({message:`Error al guardar el token del usuario: ${err}`})
+						}
+						logger.info(`logIn - Se actualizo el token del usuario ${usuarioUpdated.email}`)
+						logger.info(`logIn - Se logueo el usuario ${usuarioUpdated.email}`)
+						return res.status(200).send({ message: 'Te has logueado correctamente',
+								token: newToken,
+								name: newUser.name,
+								nickname: newUser.nickname,
+								email: newUser.email,
+								photo: newUser.photo })
+					})		
+				}
+			})
+		//crear usuario
+			}else{
+					let usuarioId = user._id
+					let newToken = service.createToken(user)
+					let newTokenPush = user.token_notifications
+					if(req.body.tokenPush != null ) newTokenPush = req.body.tokenPush
+					let update = {token: newToken, token_notifications: newTokenPush}
+
+					User.findByIdAndUpdate(usuarioId, update, (err,usuarioUpdated)=>{
+						if(err) {
+							logger.error(`logIn - Error (500) al guardar el token del usuario: ${err}`)
+							return res.status(500).send({message:`Error al guardar el token del usuario: ${err}`})
+						}
+						logger.info(`logIn - Se actualizo el token del usuario ${user.email}`)
+						logger.info(`logIn - Se logueo el usuario ${user.email}`)
+						return res.status(200).send({ message: 'Te has logueado correctamente',
+								token: newToken,
+								name: user.name,
+								nickname: user.nickname,
+								email: user.email,
+								photo: user.photo })
+					})		
+			}
+				
+			})
+	
+	});
+
+}
+
+
 /*
 function getUserByEmailAndPsw(email, password){
 	User.findOne({ email: req.body.email, psw: req.body.psw }, (err, user) => {
@@ -285,6 +376,7 @@ function answersSecretQuestionsCorrect(req,res){
 //api.get('/secretQuestions/:email',userControllers.getSecretQuestions)
 //500 - Server error
 //400 - Email invalido
+//401 - usuario registrado por facebook
 //200 - Preguntas secretas
 function getSecretQuestions(req,res){
 	User.findOne({email: req.params.userEmail},(err,user)=>{
@@ -296,9 +388,13 @@ function getSecretQuestions(req,res){
 			logger.error(`getSecretQuestions - Error (400), email invalido: ${req.params.userEmail}`)
 			return res.status(400).send({message: 'El email es invalido'})
 		}
-		logger.info(`getSecretQuestions - ${req.params.userEmail} obtiene las preguntas secretas (preguntas de seguridad)`)
-		return res.status(200).send( {question1: user.question1, question2: user.question2})
-			
+		if(user.facebook){
+			logger.error(`getSecretQuestions - Error (400), El usuario se registro por facebook`)
+			return res.status(401).send({message: 'El usuario se registro por facebook'})
+		}else{
+			logger.info(`getSecretQuestions - ${req.params.userEmail} obtiene las preguntas secretas (preguntas de seguridad)`)
+			return res.status(200).send( {question1: user.question1, question2: user.question2})
+		}
 	})
 }
 
@@ -492,6 +588,7 @@ module.exports={
 	//deleteUser,
 	signUp,
 	logIn,
+	fbLogIn,
 	getUserProfile,
 	updateUser,
 	getTokenRecoverPasswordUser,

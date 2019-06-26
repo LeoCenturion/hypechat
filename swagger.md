@@ -8,7 +8,7 @@ API para la app Hypechat de la materia 75.52 Taller de Programacion 2 de la FIUB
 #### POST
 ##### Summary:
 
-Valida al usuario que quiere ingresar a la app
+Validate the user who wants to access the application.
 
 ##### Parameters
 
@@ -70,21 +70,21 @@ sends user's facebook token for login.
 #### GET
 ##### Summary:
 
-Se muestran los datos (sin pws y token) del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
+returns data (without pws and token) of the user to which the route's email corresponds (put the email without the keys on the sides).
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| email | path | email del usuario del cual se quiere ver el perfil | Yes | string |
+| email | path | email of the user that you want to see the profile. | Yes | string |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful Request | [userProfile](#userprofile) |
-| 400 | email del path no existe. | [Error](#error) |
-| 500 | Fallo el servidor | [Error](#error) |
+| 400 | incalid user email | [Error](#error) |
+| 500 | Server error | [Error](#error) |
 
 ### /profile
 
@@ -104,7 +104,7 @@ updates information fields (with exception of the token), of the user identified
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request | string |
-| 500 | Fallo el servidor | [Error](#error) |
+| 500 | Server error | [Error](#error) |
 
 ### /password
 
@@ -131,20 +131,20 @@ updates password of the user identified by the token, provided in the body.
 #### GET
 ##### Summary:
 
-Se muestran todas las organizaciones(sin pws y token) del usuario al cual le corresponde el email del path (poner el mail sin las llaves en los costados).
+returns all the organizations (without pws and token) of the user to whom the route's email corresponds (put the email without the keys on the sides).
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| email | path | email del usuario del cual se quiere ver todas las organizaciones | Yes | string |
+| email | path | email of the user you want to see all organizations. | Yes | string |
 
 ##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful Request | object |
-| 400 | email del path no existe. | [Error](#error) |
+| 400 | invalid user email | [Error](#error) |
 | 500 | Server error | [Error](#error) |
 
 ### /privateMsj
@@ -174,13 +174,13 @@ returns all user's private messages in the organization
 #### GET
 ##### Description:
 
-Responde si existe o no una organizacion con ese ID
+Answer whether or not there is an organization with that identification
 
 ##### Parameters
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| id | path | organizacion id del usuario del cual se quiere ver si es valida | Yes | string |
+| id | path | organizacion id | Yes | string |
 
 ##### Responses
 
@@ -214,7 +214,7 @@ Create a new organization
 #### POST
 ##### Description:
 
-Agregar un usuario a la organizacion
+Add a user to the organization
 
 ##### Parameters
 
@@ -258,7 +258,7 @@ returns information of organization with id "{organizationID}"
 #### PUT
 ##### Description:
 
-Setea un nuevo nombre a la organizacion
+updates organization's name
 
 ##### Parameters
 
@@ -279,7 +279,7 @@ Setea un nuevo nombre a la organizacion
 #### PUT
 ##### Description:
 
-Setea un nuevo password a la organizacion
+updates organization's password
 
 ##### Parameters
 

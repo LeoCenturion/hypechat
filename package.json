@@ -30,8 +30,6 @@
     "moment": "^2.24.0",
     "mongodb": "^3.2.2",
     "mongoose": "^5.4.22",
-    "passport": "^0.4.0",
-    "passport-facebook": "^3.0.0",
     "should": "^13.1.0",
     "sinon": "^7.3.2",
     "swagger-markdown": "^1.1.6",

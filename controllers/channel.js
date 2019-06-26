@@ -13,7 +13,7 @@ function all(req,res){
 		if (err) {
 			return res.status(500).send({message: `Error al realizar la peticion del Canal: ${err}`})
 		}
-
+		
 		return res.status(200).send({canales: canales})
 	
 	})

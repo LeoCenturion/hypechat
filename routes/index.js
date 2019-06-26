@@ -22,11 +22,7 @@ api.put('/user/:userId', userControllers.updateUser2 )
 //---------REGISTER----------
 api.post('/signUp', userControllers.signUp )
 api.post('/login', userControllers.logIn )
-//api.post('/loginFacebook', (req,res) => {res.status(500).send({message: 'not implemented yet'})})
-//api.post('/logFacebook',userControllers.fbLogIn)
-
-
-
+api.post('/loginFacebook', (req,res) => {res.status(500).send({message: 'not implemented yet'})})
 
 //---------USERS----------
 api.post('/profile/:email', userControllers.getUserProfile)

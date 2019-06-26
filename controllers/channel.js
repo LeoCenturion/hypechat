@@ -134,7 +134,15 @@ function addUserToChannel(req, res){
 							if (err) {
 								return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 							}
-							return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
+							let ss= []
+							ss.push('tito')
+							var promesa = sendToBot(ss,"@tito greet",idOrganization,nameChannel,userEmail,canal._id)
+							promesa.then(function(response) {
+								return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
+							}).catch(function(err){
+								return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal pero no se mando el mensaje de bienvenida'})
+							})
+							
 						})
 						
 					}else{
@@ -146,7 +154,14 @@ function addUserToChannel(req, res){
 						if (err) {
 							return res.status(500).send({message: `Error al realizar la peticion de Organizacion: ${err}`})
 						}
-						return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
+							let ss= []
+							ss.push('tito')
+							var promesa = sendToBot(ss,"@tito greet",idOrganization,nameChannel,userEmail,canal._id)
+							promesa.then(function(response) {
+								return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal'})
+							}).catch(function(err){
+								return res.status(200).send({message: 'El usuario se ha agregado correctamente en el canal pero no se mando el mensaje de bienvenida'})
+							})
 					})
 				}
 			})
@@ -506,10 +521,11 @@ function userAllChannels(req, res){
 }
 
 
-function enviar_bot(mentions,message,id,channel,email,chatID){
+function sendToBot(mentions,message,id,channel,email,chatID){
+
 	return new Promise(function(resolve, reject){
 		if(mentions.includes("tito")){
-			let new_msj = message.replace('@tito ','') 
+			let newMsj = message.replace('@tito ','') 
 			var metadata ={
 				orgId: id,
 				firebaseToken: chatID,
@@ -518,7 +534,7 @@ function enviar_bot(mentions,message,id,channel,email,chatID){
 			  };
 			var postData = JSON.stringify({
 				metadata: metadata,
-				message: new_msj
+				message: newMsj
 				//token: 'asdflakjsfalkdf'
 			  });
 			  console.log('body:', postData);
@@ -580,9 +596,9 @@ function titoCheck(req, res){
 		Channel.findOne({name: channel, id: id},(err, udChannel)=>{
 			if (err) return reject(new Error(`Error al realizar la peticion de Organizacion: ${err}`))	
 		
-			var promesa = enviar_bot(ss,msj,id,channel,usuario.email,udChannel._id)
+			var promesa = sendToBot(ss,msj,id,channel,usuario.email,udChannel._id)
 			promesa.then(function(response) {
-				return res.status(200).send({message: "se ha eviado el post correctamente"});
+				return res.status(200).send({message: msj});
 			}).catch(function(err){
 				return res.status(500).send({message: `Error al enviar el request a tito ${err}`});
 			})	

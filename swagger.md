@@ -966,7 +966,7 @@ create new channel
 | ---- | ----------- | ------ |
 | 200 | Successful request |  |
 | 404 | invalid organization | [Error](#error) |
-| 405 | name of channel yet exist | [Error](#error) |
+| 405 | name of channel alredy exist | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
 ### /channelValid/{id}/{name}
@@ -987,7 +987,7 @@ create new channel
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request |  |
-| 400 | name of channel yet exist | [Error](#error) |
+| 400 | name of channel alredy exist | [Error](#error) |
 | 403 | invalid organization | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
@@ -1009,7 +1009,7 @@ add user to channel
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request |  |
-| 400 | name of channel yet exist | [Error](#error) |
+| 400 | name of channel alredy exist | [Error](#error) |
 | 404 | invalid organization | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
@@ -1031,7 +1031,7 @@ add user to channel
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request |  |
-| 400 | name of channel yet exist | [Error](#error) |
+| 400 | name of channel alredy exist | [Error](#error) |
 | 403 | invalid organization | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
@@ -1285,6 +1285,140 @@ returns array with all channels
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request | [ object ] |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChats/{token}/{id}
+
+#### GET
+##### Summary:
+
+returns user's private message in specific organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChats/{token}
+
+#### GET
+##### Summary:
+
+returns user's private message in no organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChat/{token}/{email}/{id}
+
+#### GET
+##### Summary:
+
+returns information of private chat between user token and user email in organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, email, id | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user token | [Error](#error) |
+| 404 | user email is not member of organization | [Error](#error) |
+| 405 | there is not private chat between users | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChat/{token}/{email}
+
+#### GET
+##### Summary:
+
+returns information of private chat between user token and user email in NO organization
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, email | path |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user token | [Error](#error) |
+| 404 | user email is not member of organization | [Error](#error) |
+| 405 | there is not private chat between users | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChat
+
+#### POST
+##### Summary:
+
+creates a private chat
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, email | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user token | [Error](#error) |
+| 404 | invalid user email | [Error](#error) |
+| 405 | already exist a private chat | [Error](#error) |
+| 406 | invalid organization id | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
+### /privateChat/mention
+
+#### POST
+##### Summary:
+
+sends push notification to user mentioned
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, email, message | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user token or user email | [Error](#error) |
+| 404 | send notification error | [Error](#error) |
 | 500 | Server faild | [Error](#error) |
 
 ### Models

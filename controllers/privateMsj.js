@@ -20,7 +20,7 @@ function all(req,res){
 	})
 }
 
-//devuelve los mensajes privados que tiene un usuario.
+//devuelve los mensajes privados que tiene un usuario fuera de las organizaciones
 //El token debe ser pasado en la url (params)
 function getPrivateMsj(req, res){
     let token = req.params.token
@@ -48,8 +48,8 @@ function getPrivateMsj(req, res){
 	
 }
 
-//devuelve los mensajes privados que tiene un usuario.
-//El token debe ser pasado en el body
+//devuelve los mensajes privados que tiene un usuario en una organizacion
+//El token debe ser pasado en el url
 function getPrivateMsjInOrganization(req, res){
     let token = req.params.token
     let org_id = req.params.id

@@ -1502,6 +1502,10 @@ paths:
 
 
 
+
+
+
+
   /channel:
     post:
       summary: create new channel
@@ -1519,7 +1523,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         405:
-          description: name of channel yet exist
+          description: name of channel alredy exist
           schema:
             $ref: '#/definitions/Error'
         404:
@@ -1551,7 +1555,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         400:
-          description: name of channel yet exist
+          description: name of channel alredy exist
           schema:
             $ref: '#/definitions/Error'
         403:
@@ -1589,7 +1593,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         400:
-          description: name of channel yet exist
+          description: name of channel alredy exist
           schema:
             $ref: '#/definitions/Error'
         404:
@@ -1627,7 +1631,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
         400:
-          description: name of channel yet exist
+          description: name of channel alredy exist
           schema:
             $ref: '#/definitions/Error'
         403:
@@ -2039,6 +2043,264 @@ paths:
           description: Server faild
           schema:
             $ref: '#/definitions/Error'
+
+
+
+
+
+
+
+
+
+  /privateChats/{token}/{id}:
+    get:
+      summary: returns user's private message in specific organization
+      parameters:
+        - in: path
+          name: token, id
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              id:
+                type: string
+                description: id organization
+      responses:
+        200:
+          description: Successful request
+          name: msjs
+          schema:
+            type: object
+            parameters:
+              msjs:
+                type: array
+                items:
+                  type: email
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+
+  /privateChats/{token}:
+    get:
+      summary: returns user's private message in no organization
+      parameters:
+        - in: path
+          name: token, id
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+      responses:
+        200:
+          description: Successful request
+          name: msjs
+          schema:
+            type: object
+            parameters:
+              msjs:
+                type: array
+                items:
+                  type: email
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+
+  /privateChat/{token}/{email}/{id}:
+    get:
+      summary: returns information of private chat between user token and user email in organization
+      parameters:
+        - in: path
+          name: token, email, id
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              email:
+                type: email
+                description: email contact
+              id:
+                type: string
+                description: organization id
+      responses:
+        200:
+          description: Successful request
+          name: private_msj
+          schema:
+            type: object
+            parameters:
+              private_msj:
+                type: object
+                parameters:
+                  _id:
+                    type: string
+                    description: private message id
+                  name:
+                    type: email
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: user email is not member of organization
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: there is not private chat between users
+          schema:
+            $ref: '#/definitions/Error'
+
+  /privateChat/{token}/{email}:
+    get:
+      summary: returns information of private chat between user token and user email in NO organization
+      parameters:
+        - in: path
+          name: token, email
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              email:
+                type: email
+                description: email contact
+      responses:
+        200:
+          description: Successful request
+          name: private_msj
+          schema:
+            type: object
+            parameters:
+              private_msj:
+                type: object
+                parameters:
+                  _id:
+                    type: string
+                    description: private message id
+                  name:
+                    type: email
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: user email is not member of organization
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: there is not private chat between users
+          schema:
+            $ref: '#/definitions/Error'
+
+  /privateChat:
+    post:
+      summary: creates a private chat
+      parameters:
+        - in: body
+          name: token, id, email
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              email:
+                type: email
+                description: email contact
+              id:
+                type: string
+                description: id organization
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: invalid user email
+          schema:
+            $ref: '#/definitions/Error'
+        405:
+          description: already exist a private chat
+          schema:
+            $ref: '#/definitions/Error'
+        406:
+          description: invalid organization id
+          schema:
+            $ref: '#/definitions/Error'
+
+  /privateChat/mention:
+    post:
+      summary: sends push notification to user mentioned
+      parameters:
+        - in: body
+          name: token, id, email, message
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              email:
+                type: email
+                description: email contact
+              id:
+                type: string
+                description: id organization
+              message:
+                type: string
+                description: message to send
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token or user email
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: send notification error
+          schema:
+            $ref: '#/definitions/Error'
+
 
 
 

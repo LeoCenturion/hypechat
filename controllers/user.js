@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const service = require('../services')
 const User = require('../models/user');
 const logger = require('../utils/logger');
+const request = require('request');
 
 function getUser (req, res){
 	let userId = req.params.userId
@@ -129,13 +130,19 @@ function logIn (req, res) {
 }
 
 function fbLogin(req, res){
-	console.log('Entro a la funcion login facebook');
 	let token = req.body.token;
 	let URL = ("https://graph.facebook.com/me?fields=id,name,email&access_token="+token)
 	let email =''
 	let nombre = ''
-	if(token == null ) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
-	return res.status(200).send({message: 'Te has logueado correctamente'})
+	request(URL, { json: true }, (err, res2, body) => {
+		if (err) return res.status(500).send({ message: `Error al loguearse con facebook: ${err}` })
+		email= body.email
+		nombre = body.name
+		return res.status(200).send({ message: 'Te has logueado correctamente',
+		email: body.email,
+		nombre: body.name})
+	
+	});
 }
 
 /*

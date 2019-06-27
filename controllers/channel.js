@@ -5,7 +5,7 @@ const User = require('../models/user');
 const Organization = require('../models/organization');
 const Channel = require('../models/channel');
 const logger = require('../utils/logger');
-const admin = require('../services/sendNotification');
+const admin = require('../sendNotification');
 const https = require('https')
 
 

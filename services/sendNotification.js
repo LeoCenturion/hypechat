@@ -1,6 +1,6 @@
 var admin = require("firebase-admin");
 
-var serviceAccount = require("./hypechat-taller2-firebase-admin.json");
+var serviceAccount = require("../hypechat-taller2-firebase-admin.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

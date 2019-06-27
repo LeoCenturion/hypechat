@@ -6,7 +6,7 @@ const Organization = require('../models/organization');
 const Channel = require('../models/channel');
 const PrivateMsj = require('../models/privateMsj');
 const logger = require('../utils/logger');
-const admin = require('../sendNotification');
+const admin = require('../services/sendNotification');
 
 
 function all(req,res){

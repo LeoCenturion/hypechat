@@ -117,6 +117,11 @@ function addUserToChannel(req, res){
 			if(!moderator.organizations.includes(organization.id)){
 					return res.status(401).send({message: 'El usuario no existe en la organizacion'})
 			}
+			User.findOne({email: userEmail}, (err, addUser)=>{
+				if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
+				if(!addUser) return res.status(406).send({message: 'El usuario a agregar no existe en el sistema'})
+			
+				if(!addUser.organizations.includes(organization.id)) return res.status(401).send({message: 'El usuario no existe en la organizacion'})
 			
             //si esta agregado, me fijo que exista el canal
             if(!organization.channels.includes(nameChannel)) return res.status(402).send({message: 'No existe el canal en la organizacion'})
@@ -166,7 +171,7 @@ function addUserToChannel(req, res){
 				}
 			})
 			
-		
+			})
 		})
 		
 	})

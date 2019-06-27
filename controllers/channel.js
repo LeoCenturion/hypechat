@@ -571,9 +571,7 @@ function sendToBot(mentions,message,id,channel,email,chatID,token){
 			  req.write(postData);
 			  
 			  req.end();
-			  //return resolve("no hay mencion a tito")
-			  
-			  
+			  //return resolve("no hay mencion a tito")			  
 		}else{
 			return resolve("no hay mencion a tito")
 		}

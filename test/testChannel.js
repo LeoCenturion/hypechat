@@ -5,11 +5,14 @@ const mongoose = require('mongoose');
 const assert = require('assert');
 let chai = require('chai');
 let should = chai.should();
+let arrayCompare = require("array-compare")
 
 const channelControllers = require('../controllers/channel');
 const Channel = require('../models/channel');
 const Organization = require('../models/organization');
 const User = require('../models/user');
+
+const https = require('https');
 
 describe('CHANNEL', () => {
     let mongoStub = null;
@@ -22,6 +25,7 @@ describe('CHANNEL', () => {
     let findChannelStub = null;
     let findOneChannelStub = null;
     let findUserStub = null;
+    let requestHttpsStub = null;
     
     beforeEach(() => {
     	let idOrganization = 'idOrganization'
@@ -96,23 +100,40 @@ describe('CHANNEL', () => {
 		}
 
     	userMock.organizations=[organizationMock.id]
+
+    	//mongo mocks
         mongoStub = sinon.stub(mongoose, 'connect').callsFake(() => {});
+
+        //Organization mocks
         findOneOrganizationStub = sinon.stub(Organization, 'findOne').callsFake((_, cb)=> cb(null, organizationMock));
+        updateOneOrganizationStub = sinon.stub(Organization, 'updateOne').callsFake((a, b, cb)=> cb(null, organizationMock));
+
+        //User mock
         findOneUserStub = sinon.stub(User, 'findOne').callsFake((user, cb)=> {if(user.email == userMock2.email){
 	        																		return cb(null,userMock2)}
 																		        cb(null, userMock)});
+        findUserStub = sinon.stub(User, 'find').callsFake((user, cb)=> {if(user.email == userMock2.email){
+	        																		return cb(null,[userMock2])}
+																		        cb(null, [userMock])});
+
+        //Channel mock
         updateOneChannelStub = sinon.stub(Channel, 'updateOne').callsFake((a, b, cb)=> cb(null, channelMock));
         findOneAndUpdateChannelStub = sinon.stub(Channel, 'findOneAndUpdate').callsFake((a,b, cb)=> {if(!cb){return channelMock}
         	cb(null, channelMock)});
-        updateOneOrganizationStub = sinon.stub(Organization, 'updateOne').callsFake((a, b, cb)=> cb(null, organizationMock));
         findOneAndDeleteChannelStub = sinon.stub(Channel, 'findOneAndDelete').callsFake((_, cb)=> cb(null, channelMock));
         findOneChannelStub = sinon.stub(Channel, 'findOne').callsFake((dataChannel, cb)=> {
         	if(dataChannel.name==channelMock.name && dataChannel.id==channelMock.id) return cb(null, channelMock);
         																					cb(null, channelMock2)});
         findChannelStub = sinon.stub(Channel, 'find').callsFake((_, cb)=> cb(null, [channelMock]));
-        findUserStub = sinon.stub(User, 'find').callsFake((user, cb)=> {if(user.email == userMock2.email){
-	        																		return cb(null,[userMock2])}
-																		        cb(null, [userMock])});
+        
+        //Https mocks
+        requestHttpsStub = sinon.stub(https,'request').callsFake((_,cb)=>cb({statusCode: 200,
+        																	on: (algo,cb1)=>{
+        																		if(algo=='data'){return cb1('data')}
+        																	},
+        																	write: (algo)=>{return null;},
+        																	end: ()=>{return;}}))
+
     });
 
     afterEach(() => {
@@ -126,7 +147,7 @@ describe('CHANNEL', () => {
         findChannelStub.restore();
         findOneChannelStub.restore();
         findUserStub.restore();
-        
+        requestHttpsStub.restore();        
     });
 
     it('all succesfull', (done) => {
@@ -385,8 +406,11 @@ describe('CHANNEL', () => {
         			id:organizationMock.id,
         			name: channelMock.name}}
 		res = {status: function(nro){assert.equal(nro,200)
-			return {send:function(obj){obj.should.have.property('channels')
-									return obj}}}}
+			return {send:function(obj){
+				obj.should.have.property('channels')
+				let compare = arrayCompare(obj.channels,[channelMock2.name])
+				assert(compare.missing.length == 0 && compare.added.length == 0)
+				return obj}}}}
 		
 		channelControllers.remove(req,res)
 		done();
@@ -449,6 +473,32 @@ describe('CHANNEL', () => {
 				obj.should.have.property('message')
 									return obj}}}}
 		channelControllers.checkMentionChannel(req,res)
+		done();
+   	});
+
+   	it("titoCheck succesfull without mentions to tito", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:channelMock.id,
+        			message:`hello @${userMock2.email}`,
+        			channel:channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('message')
+				return obj}}}}
+		channelControllers.titoCheck(req,res)
+		done();
+   	});
+
+   	it("titoCheck succesfull with mentions to tito", (done) => {
+        req = {body:{token:'tokenUserMock',
+        			id:channelMock.id,
+        			message:`hello @tito`,
+        			channel:channelMock.name}}
+		res = {status: function(nro){assert.equal(nro,200)
+			return {send:function(obj){
+				obj.should.have.property('message')
+				return obj}}}}
+		channelControllers.titoCheck(req,res)
 		done();
    	});
 });

@@ -10,6 +10,8 @@ let should = chai.should();
 const userControllers = require('../controllers/user');
 const User = require('../models/user');
 
+const https = require('https');
+
 
 
 describe('USER', () => {
@@ -218,21 +220,21 @@ describe('USER', () => {
 			userControllers.logout(req,res)
 			done();
 	   	});
-/*
+
 	   	it('fbLogin no succesfull', (done) => {
 
 	        req = {body:{token: 'userMockFACEBOOKToken'}}
 			res = {status: function(nro){assert.equal(nro,500)
 				return {send:function(obj){
 					console.log(obj)
-					console.lo("HOLAAAA")
+					console.log("HOLAAAA")
 					console.log(obj.message)
 					obj.should.have.property('message');
 					return obj}}}}
 
 			userControllers.fbLogin(req,res)
 			done();
-	   	});*/
+	   	});
 
 	})
 
@@ -240,6 +242,7 @@ describe('USER', () => {
 
 
 	describe('With userMock',()=>{
+		//let getHttpsStub = null;
 	    beforeEach(() => {
 	    	userMock = {
 				_id: '1234qwer',
@@ -264,6 +267,7 @@ describe('USER', () => {
 	    	updateStub = sinon.stub(User, 'update').callsFake((a,b, cb)=> cb(null, userMock));
 	    	findOneAndUpdateStub = sinon.stub(User, 'findOneAndUpdate').callsFake((a, b, cb)=> cb(null, userMock));
 	    	findStub = sinon.stub(User, 'find').callsFake((_, cb)=> cb(null,[userMock]))
+	    	//getHttpsStub = sinon.stub(https, 'get').callsFake((URL,cb)=>cb({on: (data, callback)=>callback(2)}))
 	    });
 
 	    afterEach(() => {
@@ -273,6 +277,7 @@ describe('USER', () => {
 	        updateStub.restore();
 	        findOneAndUpdateStub.restore();
 	        findStub.restore();
+	        //getHttpsStub.restore();
 	    });
 
 	    it('Login user succesfull', (done) => {

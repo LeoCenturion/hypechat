@@ -446,6 +446,9 @@ describe('CHANNEL', () => {
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('channel')
 									//obj.channel.should.be.equal([channelMock.name])
+									let compare = arrayCompare(obj.channel,[channelMock.name])
+									//son dos arrays iguales:
+									assert(compare.missing.length == 0 && compare.added.length == 0)
 									return obj}}}}
 		channelControllers.userChannels(req,res)
 		done();
@@ -458,6 +461,9 @@ describe('CHANNEL', () => {
 		res = {status: function(nro){assert.equal(nro,200)
 			return {send:function(obj){obj.should.have.property('channel')
 									//obj.channel.should.be.equal([channelMock.name])
+									let compare = arrayCompare(obj.channel,[channelMock.name])
+									//son dos arrays iguales:
+									assert(compare.missing.length == 0 && compare.added.length == 0)
 									return obj}}}}
 		channelControllers.userAllChannels(req,res)
 		done();

@@ -268,13 +268,14 @@ function checkMentionPrivado(req, res){
 	let msj = req.body.message
     let userEmail = req.body.email
     let id_organization = req.body.id
-    let texto_org = (userEmail+" en la organizacion: "+id_organization)
-    if(id_organization == null) texto_org = userEmail
+    
 
 	User.findOne({token: token}, (err, user)=>{
 		if (err) return res.status(500).send({message: `Error al realizar la peticion de Usuario: ${err}`})
 		if (!user) return res.status(400).send({message: 'Token invalido'})
 
+        let texto_org = (user.email+" en la organizacion: "+id_organization)
+        if(id_organization == null) texto_org = userEmail
         var payload ={
             notification: {
               "body" : ("Te han @ en el chat con "+texto_org),

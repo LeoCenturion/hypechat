@@ -1286,6 +1286,27 @@ returns array with all channels
 | 200 | Successful request | [ object ] |
 | 500 | Server faild | [Error](#error) |
 
+### /tito
+
+#### POST
+##### Summary:
+
+check if tito was mentioned and tell him the message
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| token, id, channel, message | body |  | No | object |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | Successful request | object |
+| 400 | invalid user token | [Error](#error) |
+| 500 | Server faild | [Error](#error) |
+
 ### /privateChats/{token}/{id}
 
 #### GET

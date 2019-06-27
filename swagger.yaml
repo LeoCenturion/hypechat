@@ -2024,6 +2024,44 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+  /tito:
+    post:
+      summary: check if tito was mentioned and tell him the message
+      parameters:
+        - in: body
+          name: token, id, channel, message
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+                description: user token
+              id:
+                type: string
+                description: id organization
+              name:
+                type: string
+                description: name of channel
+              message:
+                type: string
+                description: message to send
+      responses:
+        200:
+          description: Successful request
+          name: message
+          schema:
+            type: object
+        500:
+          description: Server faild
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: invalid user token
+          schema:
+            $ref: '#/definitions/Error'
+
+
+
 
 
 

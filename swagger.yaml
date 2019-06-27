@@ -8,6 +8,7 @@ host: https://secure-plateau-18239.herokuapp.com/
 schemes:
 - https
 paths:
+  
   /login:
     post:
       summary: Validate the user who wants to access the application.

@@ -44,7 +44,7 @@ Receives user information through the body and registers it as a new user if it 
 | 200 | Succesful request | [user](#user) |
 | 500 | Server error | [Error](#error) |
 
-### /loginFacebook
+### /logFacebook
 
 #### POST
 ##### Summary:
@@ -62,7 +62,6 @@ sends user's facebook token for login.
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 | 200 | Successful request | [user](#user) |
-| 400 | Bad login information | [Error](#error) |
 | 500 | Server error | [Error](#error) |
 
 ### /profile/{userEmail}
@@ -1432,7 +1431,7 @@ sends push notification to user mentioned
 | name | string | user name | No |
 | nickname | string | user nickname | No |
 | email | string | null | No |
-| photo | string | url de la nueva foto del usuario | No |
+| photo | string | url potho | No |
 
 #### signUpCredentials
 
@@ -1442,7 +1441,7 @@ sends push notification to user mentioned
 | name | string | user name | No |
 | nickname | string | user nickname | No |
 | email | string | null | Yes |
-| photo | string | url de la nueva foto del usuario | No |
+| photo | string | url photo | No |
 
 #### logInCredentials
 
@@ -1464,7 +1463,7 @@ sends push notification to user mentioned
 | name | string | user name | No |
 | nickname | string | user nickname | No |
 | email | string | null | No |
-| photo | string | url de la nueva foto del usuario | No |
+| photo | string | url photo | No |
 
 #### Channel
 

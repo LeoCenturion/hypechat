@@ -50,7 +50,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   
-  /loginFacebook:
+  /logFacebook:
     post:
       summary: sends user's facebook token for login.
       parameters:
@@ -64,10 +64,6 @@ paths:
           description: Successful request
           schema:
             $ref: '#/definitions/user'
-        400:
-          description: Bad login information
-          schema:
-            $ref: '$/definitions/Error'
         500:
           description: Server error
           schema:
@@ -2309,7 +2305,7 @@ definitions:
         description: 
       photo:
         type: string
-        description: url de la nueva foto del usuario
+        description: url potho
   signUpCredentials:
     type: object
     required:
@@ -2330,7 +2326,7 @@ definitions:
         description: 
       photo:
         type: string
-        description: url de la nueva foto del usuario
+        description: url photo
   logInCredentials:
     type: object
     required:
@@ -2366,7 +2362,7 @@ definitions:
         description: 
       photo:
         type: string
-        description: url de la nueva foto del usuario
+        description: url photo
   Channel:
     type: object
     properties:

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "array-compare": "^2.0.0",
-    "async": "^2.6.2",
+    "async": "^3.2.2",
     "await": "^0.2.6",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
